@@ -1,13 +1,13 @@
 color extractColorFromImage(final PImage newImg) {
   newImg.loadPixels();
   color r = 0, g = 0, b = 0;
- 
+
   for (final color c : newImg.pixels) {
     r += c >> 020 & 0xFF;
     g += c >> 010 & 0xFF;
     b += c        & 0xFF;
   }
- 
+
   r /= newImg.pixels.length;
   g /= newImg.pixels.length;
   b /= newImg.pixels.length;

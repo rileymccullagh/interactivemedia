@@ -1,4 +1,4 @@
 color[] loadAnalPalette() {
-colorsAnal = colorHarmony.Analogous(hexValue);
-return colorsAnal;
+  colorsAnal = colorHarmony.Analogous(hexValue);
+  return colorsAnal;
 }
