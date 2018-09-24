@@ -19,7 +19,7 @@ public class PanTiltZoom extends PApplet {
 	}
 	
     public void settings(){
-
+    	size(1000,600,P3D);
     }
 
     public void setup(){

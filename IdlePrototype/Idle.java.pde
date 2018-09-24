@@ -1,19 +1,17 @@
-package ptz;
-
 import processing.core.PApplet;
 
 class Idle {
   PApplet parent;
 
   DigitalRain dr;
-  //TextureCube tc;
+  TextureCube tc;
   Background bg;
 
   Idle(PApplet p) {
     this.parent = p;
 
     bg = new Background(this.parent);
-    //tc = new TextureCube(this.parent);
+    tc = new TextureCube(this.parent);
     dr = new DigitalRain(this.parent);
   }
 
@@ -24,6 +22,6 @@ class Idle {
     dr.randomise();
     dr.draw();
   // tc.loadTextures();
-   // tc.draw();
+    tc.draw();
   }
 }
