@@ -1,4 +1,4 @@
-import processing.core.PApplet;
+import processing.core.PApplet; // I'm sure this entire class will be replaced soon. 
 
 class Background {
   PApplet parent;

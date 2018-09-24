@@ -1,6 +1,8 @@
 import processing.core.PApplet;
 import java.util.Random;
 
+// supporting class for DigitalRain. most of this is copied from that one processing guy. 
+
 class RainInformation {
 
   float x;

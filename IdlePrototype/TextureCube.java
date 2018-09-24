@@ -1,5 +1,7 @@
 import processing.core.PApplet;
 
+// this is the class for the cube, but it is being weird and has lost all functionality as we have moved away from processing. 
+
 class TextureCube {
 
   PApplet parent;
