@@ -137,7 +137,8 @@ class Ball {
 
 
 class sortBallByX implements Comparator<Ball> {
-  public int compare(Ball lhs, Ball rhs) {
+  @Override
+public int compare(Ball lhs, Ball rhs) {
     return (lhs.x - rhs.x);
   }
 }

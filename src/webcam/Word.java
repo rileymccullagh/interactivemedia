@@ -5,10 +5,8 @@ import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.io.IOException;
 import java.util.*;
-import processing.core.*;
 
 public class Word {
 	
@@ -55,7 +53,8 @@ public class Word {
 	    List<Map.Entry<String, Integer>> list =
 	            new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
 	    Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-	        public int compare(Map.Entry<String, Integer> o1,
+	        @Override
+			public int compare(Map.Entry<String, Integer> o1,
 	                           Map.Entry<String, Integer> o2) {
 	            return (o2.getValue()).compareTo(o1.getValue());
 	        }

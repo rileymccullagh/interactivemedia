@@ -1,7 +1,6 @@
 package ptz;
 
 import processing.core.PApplet;
-import processing.core.PGraphics;
 import webcam.Camera;
 import drummachine.DrumMachine;
 import barballview.Engine_Ball_Bar;
@@ -33,7 +32,7 @@ class Active {
 		}
 
 		parent.image(cam.getNext(),0,0);
-		parent.print("asdf");
+		PApplet.print("asdf");
 		
 	}
 }

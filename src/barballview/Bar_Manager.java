@@ -201,7 +201,7 @@ class Bar_Manager {
 
 
     float gradiant = (float)(ball.y - ball.y_old) / (float)(ball.x - ball.x_old);
-    float y_intercept = ball.y - (float)(gradiant * ball.x_old);
+    float y_intercept = ball.y - gradiant * ball.x_old;
 
     float x = (bar_height_curr - y_intercept) / gradiant;
     float bar_intercept = 0;
