@@ -8,6 +8,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="sound.jar"/>
 	<classpathentry kind="lib" path="jsyn-20171016.jar"/>
+	<classpathentry kind="lib" path="minim.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java 8"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
