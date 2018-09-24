@@ -1,5 +1,9 @@
 package ptz;
 
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import processing.core.PApplet;
 
 public class PanTiltZoom extends PApplet {
@@ -18,17 +22,23 @@ public class PanTiltZoom extends PApplet {
 		PApplet.main("ptz.PanTiltZoom");
 	}
 	
-    public void settings(){
-    	size(1000,600,P3D);
+    @Override
+	public void settings(){
+    	fullScreen(P3D);
     }
 
-    public void setup(){
+    @Override
+	public void setup(){
     	active = new Active(this);
         idle = new Idle(this);
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+
+        System.out.println("asdf");
         
     }
 
-    public void draw(){
+    @Override
+	public void draw(){
     	switch(state) {
 	        case ACTIVE:
 	          // draw the active object

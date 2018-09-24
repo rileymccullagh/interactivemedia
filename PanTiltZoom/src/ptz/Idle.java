@@ -25,5 +25,6 @@ class Idle {
     dr.draw();
   // tc.loadTextures();
    // tc.draw();
+
   }
 }

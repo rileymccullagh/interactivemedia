@@ -17,12 +17,13 @@ class DigitalRain {
 
   DigitalRain(PApplet p) {
     this.parent = p;
-    x = parent.random(parent.width);
+    x = parent.random(800);
     y = parent.random(-500, -5);
     z = parent.random(0, 20);
     yspeed = PApplet.map(z, 0, 20, 1, 3);
     len = PApplet.map(z, 0, 20, 10, 20);
     boxWidth = PApplet.map(z, 0, 20, 0, 20);
+    
   }
   
   void randomise() {
