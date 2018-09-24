@@ -1,5 +1,3 @@
-package acidhouse;
-
 import processing.sound.*;
 import com.corajr.loom.*;
 
