@@ -1,5 +1,8 @@
 package webcam;
 
+// cameras from here work
+// https://www.insecam.org/en/bytype/Vivotek/
+
 import processing.core.PApplet;
 import processing.core.PImage;
 
