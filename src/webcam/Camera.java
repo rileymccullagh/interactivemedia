@@ -27,3 +27,4 @@ public class Camera {
 	  this.newImage = true;
 	}
 }
+

@@ -21,67 +21,68 @@ public class PanTiltZoom extends PApplet {
 	public static void main(String[] args) {
 		PApplet.main("ptz.PanTiltZoom");
 	}
-	
-    @Override
+
+	@Override
 	public void settings(){
-    	fullScreen(P3D);
-    }
+		fullScreen(P3D);
+	}
 
-    @Override
+	@Override
 	public void setup(){
-    	active = new Active(this);
-        idle = new Idle(this);
-        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+		active = new Active(this);
+		idle = new Idle(this);
+		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 
-        System.out.println("asdf");
-        
-    }
+		System.out.println("asdf");
 
-    @Override
+	}
+
+	@Override
 	public void draw(){
-    	switch(state) {
-	        case ACTIVE:
-	          // draw the active object
-	          active.draw();
-	          
-	          // check if we have elapsed the active timeframe
-	          if(millis() > timeAtTransition + millisActive) {
-	            this.transition(false);
-	          }
-	          break;
-	          
-	        case IDLE:
-	          // draw the active object
-	          idle.draw();
-	          
-	          // check if we have elapsed the active timeframe
-	          if(millis() > timeAtTransition + millisIdle) {
-	            this.transition(true);
-	          }
-	          break;
-	          
-	        case ACTIVE_TO_IDLE:
-	          // transition from active to idle
-	          //print("active to idle");
-	          break;
-	          
-	        case IDLE_TO_ACTIVE:
-	          // transition from idle to active
-	          //print("idle to active");
-	          break;
-    	}
-    }
-    
-    void transition(boolean toActive) {
-        if (toActive) {
-          //print("idle to active");
-          state = State.ACTIVE;
-          timeAtTransition = millis();
-        } else {
-          //print("active to idle");
-          state = State.IDLE;
-          activeHasBeenReinstantiated = false;
-          timeAtTransition = millis();
-        }
-      }
+		switch(state) {
+		case ACTIVE:
+			// draw the active object
+			active.draw();
+
+			// check if we have elapsed the active timeframe
+			if(millis() > timeAtTransition + millisActive) {
+				this.transition(false);
+			}
+			break;
+
+		case IDLE:
+			// draw the active object
+			idle.draw();
+
+			// check if we have elapsed the active timeframe
+			if(millis() > timeAtTransition + millisIdle) {
+				this.transition(true);
+			}
+			break;
+
+		case ACTIVE_TO_IDLE:
+			// transition from active to idle
+			//print("active to idle");
+			break;
+
+		case IDLE_TO_ACTIVE:
+			// transition from idle to active
+			//print("idle to active");
+			break;
+		}
+	}
+
+	void transition(boolean toActive) {
+		if (toActive) {
+			//print("idle to active");
+			state = State.ACTIVE;
+			timeAtTransition = millis();
+		} else {
+			//print("active to idle");
+			state = State.IDLE;
+			activeHasBeenReinstantiated = false;
+			timeAtTransition = millis();
+		}
+	}
 }
+
