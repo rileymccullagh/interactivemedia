@@ -15,13 +15,17 @@ class Idle {
     dr = new DigitalRain(this.parent);
   }
 
+  void setup() {
+
+    dr.setup();
+  }
 
 
   void draw() {
     bg.draw();
-    dr.randomise();
+
     dr.draw();
-  // tc.loadTextures();
+    // tc.loadTextures();
     tc.draw();
   }
 }
