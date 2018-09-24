@@ -2,7 +2,7 @@ package ptz;
 
 import processing.core.PApplet;
 
-public class MainView extends PApplet {
+public class PanTiltZoom extends PApplet {
 	final int millisActive     = 5000;
 	final int millisIdle       = 5000;
 	final int millisTransition = 5000;
@@ -15,7 +15,7 @@ public class MainView extends PApplet {
 	int timeAtTransition = 0;
 
 	public static void main(String[] args) {
-		PApplet.main("ptz.MainView");
+		PApplet.main("ptz.PanTiltZoom");
 	}
 	
     public void settings(){
