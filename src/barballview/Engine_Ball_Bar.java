@@ -26,7 +26,7 @@ public class Engine_Ball_Bar {
   public PGraphics draw(float[] values) {
     this.update(values);
     pg.beginDraw();
-    pg.background(0,0,0,0);
+    pg.clear();
     pg.textSize(ball_manager.getRadius() * 2);
     pg.textAlign(PConstants.CENTER, PConstants.CENTER);
     String displaytext = "0123456789";
