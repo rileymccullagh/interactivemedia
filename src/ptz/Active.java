@@ -17,13 +17,14 @@ class Active {
 	Active(PApplet p) {
 		this.parent = p;
 		this.fft = new FFT(this.parent);
-		this.engine = new Engine_Ball_Bar(p.width, p.height, fft.values.length, p);
+		this.engine = new Engine_Ball_Bar(p.width / 3, p.height / 3, fft.values.length, p);
 		this.dm = new DrumMachine(this.parent);
 		this.cam = new Camera(this.parent);
 	}
 
 	void draw() {
-//		parent.background(51, 51, 126);
+		parent.clear();
+ 		//parent.background(51, 51, 126);
 		fft.update();
 
 		if(parent.millis() > lastTrigger +5000) {
@@ -32,7 +33,7 @@ class Active {
 		}
 
 		parent.image(cam.getNext(),0,0);
-		PApplet.print("asdf");
+		parent.image(engine.draw(fft.values), 0, 0);
 		
 	}
 }
