@@ -15,7 +15,7 @@ public class Camera {
     this.parent = p;
     getAsync();
   }
-   
+  int num = 0;
   public PImage getNext() {
 	  //System.out.println("Getting");
 	  if (retrieving == false) {
@@ -25,7 +25,8 @@ public class Camera {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				current = parent.loadImage("http://85.187.13.43:8080/cgi-bin/viewer/video.jpg?r=1537798410");
+				num++;
+				current = parent.loadImage("http://85.187.13.43:8080/cgi-bin/viewer/video.jpg?r=153779841" + num);
 				retrieving = false;
 				System.out.println("EXECUTED ASYNC");
 			}
