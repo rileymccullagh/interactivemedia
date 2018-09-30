@@ -1,5 +1,8 @@
 package ptz;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import barballview.Engine_Ball_Bar;
 //import drummachine.DrumMachine;
 import processing.core.PApplet;
@@ -13,7 +16,7 @@ class Active {
 	boolean retrieving = false;
 	//DrumMachine dm;
 	int lastTrigger = 0;
-	String current_url;
+	List<String> current_urls = new ArrayList<String>();
 	Active(PApplet p) {
 		this.parent = p;
 		this.fft = new FFT(this.parent);
@@ -26,8 +29,14 @@ class Active {
 
 	void draw() {
 		if (retrieving == false) {
-			current_url = cam.cameras.get(0);
-			cam.download_multiple_images(current_url, 30); 
+			//cam.download_multiple_images(cam.cameras.get(1), 30); 
+			
+			//current_urls.add(cam.cameras.get(0));
+			current_urls.add(cam.cameras.get(1));
+			current_urls.add(cam.cameras.get(2));
+			current_urls.add(cam.cameras.get(3));
+			cam.download_multiple_images_in_sequence(current_urls, 3, 12); 
+			
 			retrieving = true;
 		}
 		parent.clear();
@@ -39,7 +48,17 @@ class Active {
 			lastTrigger = parent.millis();
 		}
 
-		parent.image(cam.getNextImage(current_url),0,0);
+		int i = 0;
+		int img_width = parent.width / current_urls.size();
+		int img_height = parent.height;
+		//parent.image(cam.getNextImage(cam.cameras.get(1)),0,0);
+		
+		for (String entry : current_urls) {
+			parent.image(cam.getNextImage(entry),i * img_width, 0, img_width, img_height);
+			++i;
+		}
+		
+		
 		//parent.image(engine.draw(fft.values), 0, 0);
 		
 	}

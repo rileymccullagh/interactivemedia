@@ -74,7 +74,7 @@ public class Camera {
 	List<Thread> running_threads = new ArrayList<Thread>();
 
 	int num_of_threads = 0;
-	final int max_number_of_retrieval_threads = 3;
+	final int max_number_of_retrieval_threads = 9;
 	String current_url = ""; //Changes per webcam
 	boolean cancel_threads = false;
 
@@ -122,7 +122,9 @@ public class Camera {
 		 * cause future issues, and this solution suffices. 
 		 */
 		
-		while (cancel_threads){ }
+		while (cancel_threads){ 
+			System.out.println("HANGING IN WAITING FOR CANCEL");
+		}
 		download_multiple_images(url, amount_of_images, 0, amount_of_images);
 	}
 	
@@ -134,54 +136,81 @@ public class Camera {
 		}
 	}
 
+	public void download_multiple_images_in_sequence (List<String> images, final int how_many_before_next_image, final int how_many_total) {
+		new Thread (new Runnable() {
+			int how_many_total_copy = how_many_total;
+			int how_many_before_next_image_copy = how_many_before_next_image;
+			@Override
+			public void run() {
+				while (how_many_total_copy > 0) {
+					for (String item : images) {
+						download_multiple_images(item, how_many_before_next_image_copy);
+						
+						while (num_of_threads > 0) {
+							System.out.println("Num of threads holding up: " + num_of_threads);
+							try {
+								TimeUnit.SECONDS.sleep(1);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					how_many_total_copy -= how_many_before_next_image_copy;
+				}
+			}
+		}
+	).start();
+		
+		
+		
+		
+	}
 	/*
-	 * This is a recursive function, the parent caller must set earliest start to 0.
+	 * This is a recursive function, the parent caller must set max_num_of_recursive_calls start to 0.
 	 */
 	private void download_multiple_images(String camera_url, int amount_of_images, int first_index, int max_num) {
-		final int pos_to_start = first_index;
-		final int amount_of_images_copy = amount_of_images;
+		if (amount_of_images < 0) { 
+			prune_images(camera_url);
+			if (max_num > images_retrieved.get(camera_url).size()) {
+				amount_of_images = first_index - images_retrieved.get(camera_url).size();
+				first_index = images_retrieved.get(camera_url).size();
+			} else {
+				return; 
+			}
+		}
 		
+
+		/*
+		 *  Lets say that due to an error occuring, you have the following in the array: 
+		 *  YYYNYYY
+		 *  Instead of just starting to insert at the end, we check one by one to see if each 
+		 *  image is valid. So in this instance, when i = 3 it will realise it is an invalid 
+		 *  image, then it will begin to retrieve that image instead. 
+		 *  
+		 *  The first_index val ensures that the next recursive calll does not simultaneously
+		 *  begin retrieving i = 3, by starting instead at 3
+		 *	
+		 */
+
+		for (int i = first_index; i < images_retrieved.get(camera_url).size(); ++i){
+			if (images_retrieved.get(camera_url).get(i).height <= 0) {
+				break;
+			} 
+			first_index++;
+		}
+
+		final int pos_to_start = first_index;
+		final int image_amount = amount_of_images;
+		++num_of_threads;
 		new Thread (new Runnable() {
-			int position_to_insert = pos_to_start; //Don't move this into run
-			int thread_num = num_of_threads; 
-			int image_amount = amount_of_images_copy;
+			final int position_to_insert = pos_to_start; //Don't move this into run
+			final int thread_num = num_of_threads - 1; 
 			final String url_of_image = camera_url;
 			@Override
 			public void run() {
-				if (amount_of_images < 0) { 
-					prune_images(camera_url);
-					if (max_num > images_retrieved.get(camera_url).size()) {
-						image_amount = first_index - images_retrieved.get(camera_url).size();
-						position_to_insert = images_retrieved.get(camera_url).size();
-					} else {
-						return; 
-					}
-				}
+				System.out.println("Initialised thread: " + thread_num + " for " + url_of_image);
 				
-
-				/*
-				 *  Lets say that due to an error occuring, you have the following in the array: 
-				 *  YYYNYYY
-				 *  Instead of just starting to insert at the end, we check one by one to see if each 
-				 *  image is valid. So in this instance, when i = 3 it will realise it is an invalid 
-				 *  image, then it will begin to retrieve that image instead. 
-				 *  
-				 *  The first_index val ensures that the next recursive calll does not simultaneously
-				 *  begin retrieving i = 3, by starting instead at 3
-				 *	
-				 */
-
-				for (int i = position_to_insert; i < images_retrieved.get(camera_url).size(); ++i){
-					if (images_retrieved.get(camera_url).get(i).height <= 0) {
-						break;
-					} 
-					position_to_insert++;
-				}
-
-				
-				
-				
-				++num_of_threads;
 				try{
 					/* 
 					 * We can't push to the end of the list, as for example: Thread #5 may 
@@ -230,7 +259,7 @@ public class Camera {
 				}
 			}
 		}).start();
-	}
+}
 	
 	public boolean validate_image (String camera_url, int image_index) {
 		

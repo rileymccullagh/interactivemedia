@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import processing.core.PApplet;
 
 public class PanTiltZoom extends PApplet {
-	final int millisActive     = 60000;
+	final int millisActive     = 600000;
 	final int millisIdle       = 5000;
 	final int millisTransition = 60000;
 
