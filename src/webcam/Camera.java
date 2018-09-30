@@ -208,7 +208,6 @@ public class Camera {
 		return true;
 	}
 
-	private int latest_retrieved = 0; 
 	//Will also loopback
 	public PImage getNextImage() {
 		if (images.isEmpty()){
