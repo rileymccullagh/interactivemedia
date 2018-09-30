@@ -24,7 +24,8 @@ public class PanTiltZoom extends PApplet {
 
 	@Override
 	public void settings(){
-		fullScreen(P3D);
+		//fullScreen(P3D);
+		size(640,480);
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class PanTiltZoom extends PApplet {
 		active = new Active(this);
 		idle = new Idle(this);
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-
+		
 		System.out.println("asdf");
 
 	}
