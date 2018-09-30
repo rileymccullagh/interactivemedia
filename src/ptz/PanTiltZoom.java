@@ -7,9 +7,9 @@ import java.io.PrintStream;
 import processing.core.PApplet;
 
 public class PanTiltZoom extends PApplet {
-	final int millisActive     = 2000000;
+	final int millisActive     = 60000;
 	final int millisIdle       = 5000;
-	final int millisTransition = 5000;
+	final int millisTransition = 60000;
 
 	Idle idle;
 	Active active;
@@ -80,6 +80,7 @@ public class PanTiltZoom extends PApplet {
 			//print("idle to active");
 			state = State.ACTIVE;
 			timeAtTransition = millis();
+			active.destructor(); 
 			active = new Active(this);
 		} else {
 			//print("active to idle");

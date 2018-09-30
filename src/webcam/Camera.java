@@ -1,7 +1,9 @@
 package webcam;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +16,7 @@ import processing.core.PImage;
 public class Camera {
 
 	private static final List<String> wikis;
-	private static final List<String> cameras;
+	public static final List<String> cameras; //Its final, may as well expose it
 	private static int lastCamera;
 
 	static {
@@ -64,21 +66,26 @@ public class Camera {
 	}
 	
 	PApplet parent;
-	List<PImage> images = new ArrayList<PImage>();
+	 
+	Map<String,List<PImage>> images_retrieved = new HashMap<String,List<PImage>>();
+	Map<String, Integer> latest_image = new HashMap<String,Integer>(); //Changes per webcam
+	
 	PImage empty_image;
+	List<Thread> running_threads = new ArrayList<Thread>();
 
-	int num_of_images = 0;
 	int num_of_threads = 0;
-	final int max_number_of_retrieval_threads = 9;
-
-
-	String url = ""; //Changes per webcam
-	int latest_image = 0; //Changes per webcam
+	final int max_number_of_retrieval_threads = 3;
+	String current_url = ""; //Changes per webcam
+	boolean cancel_threads = false;
 
 	public Camera(PApplet p) {
 		this.parent = p;
 		empty_image = p.createImage(0, 0, 0);
 		
+		for (String entry : cameras) {
+			images_retrieved.put(entry, new ArrayList<PImage>());
+			latest_image.put(entry, 0);
+		}
 		// get a random camera from the list
 		Random rand = new Random();
 		int  camNum = rand.nextInt(cameras.size());
@@ -87,34 +94,55 @@ public class Camera {
 			camNum = camNum % cameras.size();
 		}
 		
-		url = cameras.get(camNum);
+		current_url = cameras.get(camNum);
 	}
 
-	public void prune_images () {
-		for (int i = -1; i < images.size() - 1; i++) {
-			if (validate_image(i + 1) == false) {
-				images.remove(i + 1);
+	public void prune_images (String camera_url) {
+		for (int i = -1; i < images_retrieved.get(current_url).size() - 1; i++) {
+			if (validate_image(current_url, i + 1) == false) {
+				images_retrieved.get(current_url).remove(i + 1);
 			}
 		}
 	}
 	/* 
-	 * This function will start download the next x images, each in their own thread
-	 * However if an error occured when downloading an image previously, it will attempt
-	 * to redownload that image
+	 * This function will start download the next x images, each in their own thread.
+	 * This wont execute however until it cancels all current threads. 
 	 */
-	public void download_multiple_images(int amount_of_images) {
-		download_multiple_images(amount_of_images, 0, amount_of_images);
+	public void download_multiple_images(String url, int amount_of_images) {
+		if (num_of_threads > 0) {
+			cancel_threads = true;
+			System.out.println("Cancelling Threads");
+		}
+		
+		/*
+		 * We have to wait until the threads are all cancelled before proceeidng
+		 * currently however, unfortunately this will cause each current thread to 
+		 * download its current image. 
+		 * This can be fixed if we start making a new thread class, but that may 
+		 * cause future issues, and this solution suffices. 
+		 */
+		
+		while (cancel_threads){ }
+		download_multiple_images(url, amount_of_images, 0, amount_of_images);
+	}
+	
+	public void cancel_threads () {
+		
+		if (num_of_threads > 0) {
+			cancel_threads = true;
+			System.out.println("Cancelling Threads");
+		}
 	}
 
 	/*
 	 * This is a recursive function, the parent caller must set earliest start to 0.
 	 */
-	private void download_multiple_images(int amount_of_images, int first_index, int max_num) {
+	private void download_multiple_images(String camera_url, int amount_of_images, int first_index, int max_num) {
 		if (amount_of_images < 0) { 
-			prune_images();
-			if (max_num > images.size()) {
-				amount_of_images = first_index - images.size();
-				first_index = images.size();
+			prune_images(camera_url);
+			if (max_num > images_retrieved.get(camera_url).size()) {
+				amount_of_images = first_index - images_retrieved.get(camera_url).size();
+				first_index = images_retrieved.get(camera_url).size();
 			} else {
 				return; 
 			}
@@ -133,8 +161,8 @@ public class Camera {
 		 *	
 		 */
 
-		for (int i = first_index; i < images.size(); ++i){
-			if (images.get(i).height <= 0) {
+		for (int i = first_index; i < images_retrieved.get(camera_url).size(); ++i){
+			if (images_retrieved.get(camera_url).get(i).height <= 0) {
 				break;
 			} 
 			first_index++;
@@ -145,24 +173,18 @@ public class Camera {
 		new Thread (new Runnable() {
 			final int position_to_insert = pos_to_start; //Don't move this into run
 			final int thread_num = num_of_threads; 
+			final String url_of_image = camera_url;
 			@Override
 			public void run() {
 				++num_of_threads;
 				try{
-					
 					/* 
-					 * We call this from here, that way if we want to add a delay between 
-					 * each retrieval it takes place outside of the main thread. 
+					 * We can't push to the end of the list, as for example: Thread #5 may 
+					 * finish earlier than Thread #4, what we do is put in an empty entry
+					 * which is later overriden 
 					 */
-
-					
-
-					/* This function may not be necessarily appending to the end of the list, 
-					 * or it may be appending more further back than the end of the list
-					 * so we do the following to fill the array up
-					 */
-					while(position_to_insert > images.size()){
-						images.add(empty_image);
+					while(position_to_insert > images_retrieved.get(url_of_image).size()){
+						images_retrieved.get(url_of_image).add(empty_image);
 					}
 
 					boolean slept = false;
@@ -170,47 +192,68 @@ public class Camera {
 						TimeUnit.SECONDS.sleep(1);
 						slept = true;
 					}
+					/*
+					 * When we fire 5 threads, even if we initialise them in order the parent.loadimage(url)
+					 * function will not necessarily be called in order, meaning thread 5 may retrieve before
+					 * thread 4. This will cause the images to become out of order. Adding a small delay will 
+					 * ensure that the threads run in sequence. 
+					 */
+					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); } 
 					
-					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); }
-					
-					download_multiple_images(image_amount - 1, position_to_insert + 1, max_num);
-					PImage new_image = parent.loadImage(url);
-					
-					//An error may have occured, so we only insert on success
-					if (new_image != null) {
-						images.set(position_to_insert, new_image);
-						System.out.println("Inserted at: " + position_to_insert + " thread num: " + thread_num);
-						//Must be done constantly to ensure the retrieval function will get a valid -sequence- 
+					if (cancel_threads == false) {
+						download_multiple_images(url_of_image, image_amount - 1, position_to_insert + 1, max_num);
+						PImage new_image = parent.loadImage(camera_url);
+						
+						//An error may occur, so we only insert on success
+						if (validate_image(new_image) && cancel_threads == false) {
+							images_retrieved.get(url_of_image).set(position_to_insert, new_image);
+							System.out.println("Inserted at: " + position_to_insert + " thread num: " + thread_num);
+							//Must be done constantly to ensure the retrieval function will get a valid -sequence- 
+						} else {
+							System.out.println("Image invalid or thread cancelled");
+						}
+					} else {
+						System.out.println("Thread Cancelled");
 					}
 				} catch (Exception e) {
-					//System.out.println("Error at: " + Integer.toString(current_number) + " i = " position_to_insert);
+					//Swallow the exception
 				}
 				--num_of_threads;
+				if (cancel_threads && num_of_threads == 0) {
+					cancel_threads = false;
+					
+				}
 			}
 		}).start();
 	}
 	
-	final int see_through_pixel = -8355712; //This means the download had an error and skipped a portion
+	public boolean validate_image (String camera_url, int image_index) {
+		
+		if (images_retrieved.get(camera_url).size() < image_index + 1) {
+			return false;
+		}
+		PImage frame = images_retrieved.get(camera_url).get(image_index);
+		return validate_image(frame);
+
+	}
 	
-	public boolean validate_image (int image_index) {
-		if (images.size() < image_index + 1) {
-			return false;
-		} 
-		if (images.get(image_index) == null) {
+	final int see_through_pixel = -8355712; //This means the download had an error and skipped a portion
+	public boolean validate_image (PImage image) {
+		if (image == null) {
 			return false;
 		}
-		if (images.get(image_index).height <= 0 | images.get(image_index).width <= 0 ) {
+		if (image.height <= 0 | image.width <= 0 ) {
 			return false;
 		}
-		if (images.get(image_index).pixels[((images.get(image_index).width * images.get(image_index).height)) - 1] == see_through_pixel) {
+		if (image.pixels[((image.width * image.height)) - 1] == see_through_pixel) {
 			return false;
 		}
 		return true;
 	}
 
 	//Will also loopback
-	public PImage getNextImage() {
-		if (images.isEmpty()){
+	public PImage getNextImage(String camera_url) {
+		if (images_retrieved.get(camera_url).isEmpty()){
 			return empty_image;
 		} else {
 			/*
@@ -218,18 +261,16 @@ public class Camera {
 			 * however this should be handled in get_multiple_images()
 			 * last_valid_image = get_largest_sequence_of_valid_images_from_0();
 			 */
-
 			if (num_of_threads == 0) {
-				prune_images();
+				prune_images(camera_url);
+			}
+			latest_image.put(camera_url, latest_image.get(camera_url) + 1);
+			while (validate_image(camera_url, latest_image.get(camera_url)) == false) {
+				latest_image.put(camera_url, latest_image.get(camera_url) + 1);
+				latest_image.put(camera_url, latest_image.get(camera_url) % images_retrieved.get(camera_url).size());
 			}
 			
-			++latest_image;
-			while (validate_image(latest_image) == false) {
-				++latest_image;
-				latest_image %= images.size();
-			}
-			
-			return images.get(latest_image);
+			return images_retrieved.get(camera_url).get(latest_image.get(camera_url));
 		}
 	}
 

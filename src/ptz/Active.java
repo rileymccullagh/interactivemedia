@@ -13,7 +13,7 @@ class Active {
 	boolean retrieving = false;
 	//DrumMachine dm;
 	int lastTrigger = 0;
-
+	String current_url;
 	Active(PApplet p) {
 		this.parent = p;
 		this.fft = new FFT(this.parent);
@@ -26,7 +26,8 @@ class Active {
 
 	void draw() {
 		if (retrieving == false) {
-			cam.download_multiple_images(30); 
+			current_url = cam.cameras.get(0);
+			cam.download_multiple_images(current_url, 30); 
 			retrieving = true;
 		}
 		parent.clear();
@@ -38,8 +39,13 @@ class Active {
 			lastTrigger = parent.millis();
 		}
 
-		parent.image(cam.getNextImage(),0,0);
+		parent.image(cam.getNextImage(current_url),0,0);
 		//parent.image(engine.draw(fft.values), 0, 0);
 		
+	}
+	
+	//We need to cancel the threads in cam before we destroy this object
+	void destructor() {
+		cam.cancel_threads();
 	}
 }
