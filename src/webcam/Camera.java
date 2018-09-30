@@ -3,8 +3,7 @@ package webcam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-
+import java.util.concurrent.TimeUnit;
 
 // cameras from here work
 // https://www.insecam.org/en/bytype/Vivotek/
@@ -73,7 +72,7 @@ public class Camera {
 
 
 	String url = ""; //Changes per webcam
-	int latest_image = 1538256987; //Changes per webcam
+	int latest_image = 0; //Changes per webcam
 
 	int longest_sequence_of_valid_images_from_0 = 0; //Number of images in List<Pimage> images  that are valid, starting from 0
 
@@ -100,7 +99,13 @@ public class Camera {
 		}
 		return images.size() - 1;
 	}
-
+	public void prune_images () {
+		for (int i = -1; i < images.size() - 1; i++) {
+			if (images.get(i + 1).height <= 0) {
+				images.remove(i + 1);
+			}
+		}
+	}
 	/* 
 	 * This function will start download the next x images, each in their own thread
 	 * However if an error occured when downloading an image previously, it will attempt
@@ -140,18 +145,19 @@ public class Camera {
 		final int pos_to_start = first_index;
 
 		new Thread (new Runnable() {
-			int position_to_insert = pos_to_start; //Don't move this into run
-			//int num_of_img = amount
+			final int position_to_insert = pos_to_start; //Don't move this into run
+			final int thread_num = num_of_threads; 
 			@Override
 			public void run() {
-				num_of_threads++;
+				++num_of_threads;
 				try{
+					TimeUnit.MILLISECONDS.sleep(500);
 					/* 
 					 * We call this from here, that way if we want to add a delay between 
 					 * each retrieval it takes place outside of the main thread. 
 					 */
 
-					download_multiple_images(amount_of_images - 1, pos_to_start + 1);
+					
 
 					/* This function may not be necessarily appending to the end of the list, 
 					 * or it may be appending more further back than the end of the list
@@ -161,22 +167,39 @@ public class Camera {
 						images.add(empty_image);
 					}
 
-
+					
+					download_multiple_images(amount_of_images - 1, position_to_insert + 1);
 					PImage new_image = parent.loadImage(url);
-
+					
 					//An error may have occured, so we only insert on success
 					if (new_image != null) {
 						images.set(position_to_insert, new_image);
-						System.out.println("Inserted at: " + position_to_insert);
+						System.out.println("Inserted at: " + position_to_insert + " thread num: " + thread_num);
 						//Must be done constantly to ensure the retrieval function will get a valid -sequence- 
 						longest_sequence_of_valid_images_from_0 = get_largest_sequence_of_valid_images_from_0();
 					}
 				} catch (Exception e) {
 					//System.out.println("Error at: " + Integer.toString(current_number) + " i = " position_to_insert);
 				}
-				num_of_threads--;
+				--num_of_threads;
 			}
 		}).start();
+	}
+	public boolean validate_image (int image_index) {
+		if (images.size() < image_index + 1) {
+			return false;
+		} 
+		if (images.get(image_index) == null) {
+			return false;
+		}
+		
+		if (images.get(image_index).height == 0 | images.get(image_index).width == 0 ) {
+			return false;
+		}
+		if (images.get(image_index).pixels[((images.get(image_index).width * images.get(image_index).height)) - 1] > 0) {
+			return false;
+		}
+		return true;
 	}
 
 	private int latest_retrieved = 0; 
@@ -195,14 +218,19 @@ public class Camera {
 				latest_retrieved = 0;
 			}
 			if (num_of_threads == 0) {
-				longest_sequence_of_valid_images_from_0 = get_largest_sequence_of_valid_images_from_0();
 				System.out.println("We have: " + longest_sequence_of_valid_images_from_0 + " valid images");
 				System.out.println("Starting new retrieval");
-				download_multiple_images(2);
+				prune_images();
+				//download_multiple_images(2);
 			}
-
-			System.out.println("Rendering:  " + latest_retrieved % images.size());
-			return images.get(latest_retrieved % images.size());
+			
+			++latest_image;
+			while (validate_image(latest_image) == false) {
+				++latest_image;
+				latest_image %= images.size();
+			}
+			
+			return images.get(latest_image);
 		}
 	}
 

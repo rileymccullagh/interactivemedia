@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import processing.core.PApplet;
 
 public class PanTiltZoom extends PApplet {
-	final int millisActive     = 20000;
+	final int millisActive     = 2000000;
 	final int millisIdle       = 5000;
 	final int millisTransition = 5000;
 
@@ -25,7 +25,8 @@ public class PanTiltZoom extends PApplet {
 	@Override
 	public void settings(){
 		//fullScreen(P3D);
-		size(640,480);
+		size(1280,720);
+		//frameRate(60);
 	}
 
 	@Override
@@ -33,6 +34,7 @@ public class PanTiltZoom extends PApplet {
 		active = new Active(this);
 		idle = new Idle(this);
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+		frameRate(1);
 		
 		System.out.println("asdf");
 
