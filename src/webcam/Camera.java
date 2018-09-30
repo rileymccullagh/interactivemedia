@@ -69,6 +69,7 @@ public class Camera {
 
 	int num_of_images = 0;
 	int num_of_threads = 0;
+	final int max_number_of_retrieval_threads = 3;
 
 
 	String url = ""; //Changes per webcam
@@ -151,7 +152,7 @@ public class Camera {
 			public void run() {
 				++num_of_threads;
 				try{
-					TimeUnit.MILLISECONDS.sleep(500);
+					
 					/* 
 					 * We call this from here, that way if we want to add a delay between 
 					 * each retrieval it takes place outside of the main thread. 
@@ -167,6 +168,13 @@ public class Camera {
 						images.add(empty_image);
 					}
 
+					boolean slept = false;
+					while (num_of_threads >= max_number_of_retrieval_threads) {
+						TimeUnit.SECONDS.sleep(1);
+						slept = true;
+					}
+					
+					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); }
 					
 					download_multiple_images(amount_of_images - 1, position_to_insert + 1);
 					PImage new_image = parent.loadImage(url);
@@ -185,6 +193,9 @@ public class Camera {
 			}
 		}).start();
 	}
+	
+	final int see_through_pixel = -8355712; //This means the download had an error and skipped a portion
+	
 	public boolean validate_image (int image_index) {
 		if (images.size() < image_index + 1) {
 			return false;
@@ -192,11 +203,10 @@ public class Camera {
 		if (images.get(image_index) == null) {
 			return false;
 		}
-		
 		if (images.get(image_index).height == 0 | images.get(image_index).width == 0 ) {
 			return false;
 		}
-		if (images.get(image_index).pixels[((images.get(image_index).width * images.get(image_index).height)) - 1] > 0) {
+		if (images.get(image_index).pixels[((images.get(image_index).width * images.get(image_index).height)) - 1] == see_through_pixel) {
 			return false;
 		}
 		return true;
@@ -214,14 +224,9 @@ public class Camera {
 			 * last_valid_image = get_largest_sequence_of_valid_images_from_0();
 			 */
 
-			if (++latest_retrieved >= longest_sequence_of_valid_images_from_0){
-				latest_retrieved = 0;
-			}
 			if (num_of_threads == 0) {
-				System.out.println("We have: " + longest_sequence_of_valid_images_from_0 + " valid images");
-				System.out.println("Starting new retrieval");
+				
 				prune_images();
-				//download_multiple_images(2);
 			}
 			
 			++latest_image;
