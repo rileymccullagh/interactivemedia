@@ -27,7 +27,7 @@ class Active {
 	void draw() {
 		parent.loadImage("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Logo_apple_pnh.png/493px-Logo_apple_pnh.png");
 		if (retrieving == false) {
-			cam.get_amount_of_images(6); 
+			cam.download_multiple_images(6); 
 			retrieving = true;
 		}
 		parent.clear();
@@ -39,7 +39,7 @@ class Active {
 			lastTrigger = parent.millis();
 		}
 
-		parent.image(cam.getNext(),0,0);
+		parent.image(cam.getNextImage(),0,0);
 		parent.image(engine.draw(fft.values), 0, 0);
 		
 	}
