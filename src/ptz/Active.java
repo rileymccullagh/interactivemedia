@@ -26,7 +26,7 @@ class Active {
 
 	void draw() {
 		if (retrieving == false) {
-			cam.download_multiple_images(6); 
+			cam.download_multiple_images(30); 
 			retrieving = true;
 		}
 		parent.clear();

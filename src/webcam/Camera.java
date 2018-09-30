@@ -69,13 +69,11 @@ public class Camera {
 
 	int num_of_images = 0;
 	int num_of_threads = 0;
-	final int max_number_of_retrieval_threads = 3;
+	final int max_number_of_retrieval_threads = 9;
 
 
 	String url = ""; //Changes per webcam
 	int latest_image = 0; //Changes per webcam
-
-	int longest_sequence_of_valid_images_from_0 = 0; //Number of images in List<Pimage> images  that are valid, starting from 0
 
 	public Camera(PApplet p) {
 		this.parent = p;
@@ -92,17 +90,9 @@ public class Camera {
 		url = cameras.get(camNum);
 	}
 
-	public int get_largest_sequence_of_valid_images_from_0() {
-		for (int i = 0; i < images.size(); ++i){
-			if (images.get(i) == null | images.get(i).height <= 0){
-				return i;
-			}
-		}
-		return images.size() - 1;
-	}
 	public void prune_images () {
 		for (int i = -1; i < images.size() - 1; i++) {
-			if (images.get(i + 1).height <= 0) {
+			if (validate_image(i + 1) == false) {
 				images.remove(i + 1);
 			}
 		}
@@ -113,15 +103,23 @@ public class Camera {
 	 * to redownload that image
 	 */
 	public void download_multiple_images(int amount_of_images) {
-		download_multiple_images(amount_of_images, 0);
+		download_multiple_images(amount_of_images, 0, amount_of_images);
 	}
 
 	/*
 	 * This is a recursive function, the parent caller must set earliest start to 0.
 	 */
-	private void download_multiple_images(int amount_of_images, int first_index) {
-		if (amount_of_images < 0) { return; }
-		int image_to_download  = latest_image; //We start at the latest image, and work backwards
+	private void download_multiple_images(int amount_of_images, int first_index, int max_num) {
+		if (amount_of_images < 0) { 
+			prune_images();
+			if (max_num > images.size()) {
+				amount_of_images = first_index - images.size();
+				first_index = images.size();
+			} else {
+				return; 
+			}
+		}
+		
 
 		/*
 		 *  Lets say that due to an error occuring, you have the following in the array: 
@@ -139,12 +137,11 @@ public class Camera {
 			if (images.get(i).height <= 0) {
 				break;
 			} 
-			image_to_download--;
 			first_index++;
 		}
 
 		final int pos_to_start = first_index;
-
+		final int image_amount = amount_of_images;
 		new Thread (new Runnable() {
 			final int position_to_insert = pos_to_start; //Don't move this into run
 			final int thread_num = num_of_threads; 
@@ -176,7 +173,7 @@ public class Camera {
 					
 					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); }
 					
-					download_multiple_images(amount_of_images - 1, position_to_insert + 1);
+					download_multiple_images(image_amount - 1, position_to_insert + 1, max_num);
 					PImage new_image = parent.loadImage(url);
 					
 					//An error may have occured, so we only insert on success
@@ -184,7 +181,6 @@ public class Camera {
 						images.set(position_to_insert, new_image);
 						System.out.println("Inserted at: " + position_to_insert + " thread num: " + thread_num);
 						//Must be done constantly to ensure the retrieval function will get a valid -sequence- 
-						longest_sequence_of_valid_images_from_0 = get_largest_sequence_of_valid_images_from_0();
 					}
 				} catch (Exception e) {
 					//System.out.println("Error at: " + Integer.toString(current_number) + " i = " position_to_insert);
@@ -203,7 +199,7 @@ public class Camera {
 		if (images.get(image_index) == null) {
 			return false;
 		}
-		if (images.get(image_index).height == 0 | images.get(image_index).width == 0 ) {
+		if (images.get(image_index).height <= 0 | images.get(image_index).width <= 0 ) {
 			return false;
 		}
 		if (images.get(image_index).pixels[((images.get(image_index).width * images.get(image_index).height)) - 1] == see_through_pixel) {
@@ -225,7 +221,6 @@ public class Camera {
 			 */
 
 			if (num_of_threads == 0) {
-				
 				prune_images();
 			}
 			
