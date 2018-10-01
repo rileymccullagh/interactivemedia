@@ -74,7 +74,7 @@ public class Camera {
 	List<Thread> running_threads = new ArrayList<Thread>();
 
 	int num_of_threads = 0;
-	final int max_number_of_retrieval_threads = 9;
+	final int max_number_of_retrieval_threads = 5;
 	String current_url = ""; //Changes per webcam
 	boolean cancel_threads = false;
 
@@ -159,12 +159,7 @@ public class Camera {
 					how_many_total_copy -= how_many_before_next_image_copy;
 				}
 			}
-		}
-	).start();
-		
-		
-		
-		
+		}).start();
 	}
 	/*
 	 * This is a recursive function, the parent caller must set max_num_of_recursive_calls start to 0.
