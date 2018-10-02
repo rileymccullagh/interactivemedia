@@ -73,8 +73,11 @@ public class Camera {
 	PImage empty_image;
 	List<Thread> running_threads = new ArrayList<Thread>();
 
-	int num_of_threads = 0;
-	final int max_number_of_retrieval_threads = 5;
+	
+	final int max_number_of_retrieval_threads = 6;
+	int num_of_threads = 0; //The current number of running threads
+	int threads_being_initialised = 0; //Threads that are NOT running, but WILL run 
+	
 	String current_url = ""; //Changes per webcam
 	boolean cancel_threads = false;
 
@@ -104,33 +107,23 @@ public class Camera {
 			}
 		}
 	}
-
-	int threads_being_initialised = 0;
-	/* 
-	 * This function will start download the next x images, each in their own thread.
-	 * This wont execute however until it cancels all current threads. 
-	 */
-	public void download_multiple_images(String url, int amount_of_images) {
-		if (num_of_threads > 0) {
-			cancel_threads = true;
-			System.out.println("Cancelling Threads");
-		}
-		
-		/*
-		 * We have to wait until the threads are all cancelled before proceeidng
-		 * currently however, unfortunately this will cause each current thread to 
-		 * download its current image. 
-		 * This can be fixed if we start making a new thread class, but that may 
-		 * cause future issues, and this solution suffices. 
-		 */
-		
-		while (cancel_threads){ 
-			System.out.println("HANGING IN WAITING FOR CANCEL");
-		}
-		threads_being_initialised += amount_of_images;
-		download_multiple_images(url, amount_of_images, 0, amount_of_images);
+	public void cancel_threads_then_download_images (String url, int amount_of_images ) {
+		new Thread (new Runnable() {
+			@Override
+			public void run() {
+				cancel_threads();
+				
+				while (cancel_threads){ 
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (Exception e) {
+						
+					}
+				}
+				download_multiple_images(url, amount_of_images);
+			}});
 	}
-	
+
 	public void cancel_threads () {
 		
 		if (num_of_threads > 0) {
@@ -138,11 +131,19 @@ public class Camera {
 			System.out.println("Cancelling Threads");
 		}
 	}
+	
+
+	/* 
+	 * This function will start download the next x images, each in their own thread.
+	*/
+	public void download_multiple_images(String url, int amount_of_images) {
+				threads_being_initialised += amount_of_images;
+				download_multiple_images(url, amount_of_images, 0, amount_of_images);
+	}
+	
 	/*
-	*	How many before next image is like, 3 in a row, then get 3 in a row for the next image...
+	*	how_many_before_next_image means: download 3 in a row, then get 3 in a row for the next image...
 	*	How many total is how many do you want to retrieve in total
-	*
-	*
 	*/
 	public void download_multiple_images_in_sequence (List<String> images, final int how_many_before_next_image, final int how_many_total) {
 		new Thread (new Runnable() {
@@ -152,6 +153,7 @@ public class Camera {
 			public void run() {
 				while (how_many_total_copy > 0) {
 					for (String item : images) {
+						
 						/*
 						*  Lets say images.size() = 6
 						*  The max number of threads is 12
@@ -164,7 +166,6 @@ public class Camera {
 						*  Remember, we want to run as many in SEQUENCE as possible, or else the feed has gaps
 						*/
 
-						//WARNING, WE CAN'T GUARANTEE NUM_OF_THREADS IS TIMELY
 						while (num_of_threads + threads_being_initialised + how_many_before_next_image > max_number_of_retrieval_threads)
 						{
 							System.out.println("Num of threads holding up: " + num_of_threads);
@@ -174,24 +175,8 @@ public class Camera {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							if (num_of_threads == 0) {
-								break;
-							}
-
 						}
 						download_multiple_images(item, how_many_before_next_image_copy);
-						
-						/*
-						 * The following is a bodge
-						 * Above, we check that we can fit enough threads in order to have them run in sequence
-						 * However, we may return to above when only half those threads are initialised! 
-						 * Then we will accidentally spawn a bunch of new threads, which may be broken up!
-						 * 
-						 * Therefore we have a delay. 
-						 * I welcome all suggestions to fix this issue
-						*/
-						
-						//TimeUnit.SECONDS.sleep(1);
 					}
 					how_many_total_copy -= how_many_before_next_image_copy;
 				}
@@ -203,8 +188,9 @@ public class Camera {
 	 * Don't ever call this function. Call the other one which calls this one. 
 	*/
 	private void download_multiple_images(String camera_url, int amount_of_images, int first_index, int max_num) {
+		
 		if (amount_of_images < 0) { 
-			prune_images(camera_url);
+			//prune_images(camera_url);
 			if (max_num > images_retrieved.get(camera_url).size()) {
 				amount_of_images = first_index - images_retrieved.get(camera_url).size();
 				first_index = images_retrieved.get(camera_url).size();
@@ -215,19 +201,12 @@ public class Camera {
 		
 
 		/*
-		 *  Lets say that due to an error occuring, you have the following in the array: 
-		 *  YYYNYYY
-		 *  Instead of just starting to insert at the end, we check one by one to see if each 
-		 *  image is valid. So in this instance, when i = 3 it will realise it is an invalid 
-		 *  image, then it will begin to retrieve that image instead. 
-		 *  
-		 *  The first_index val ensures that the next recursive calll does not simultaneously
-		 *  begin retrieving i = 3, by starting instead at 3
-		 *	
-		 */
+		 *  The first_index val ensures that the next recursive call does not simultaneously
+		 *  begin retrieving i = 3, by starting instead at 3.
+		*/
 
 		for (int i = first_index; i < images_retrieved.get(camera_url).size(); ++i){
-			if (images_retrieved.get(camera_url).get(i).height <= 0) {
+			if (validate_image(camera_url,i) == false) {
 				break;
 			} 
 			first_index++;
@@ -294,16 +273,15 @@ public class Camera {
 				}
 			}
 		}).start();
-}
+	}
 	
 	public boolean validate_image (String camera_url, int image_index) {
 		
-		if (images_retrieved.get(camera_url).size() < image_index + 1) {
+		if (images_retrieved.get(camera_url).size() - 1 < image_index) {
 			return false;
 		}
 		PImage frame = images_retrieved.get(camera_url).get(image_index);
 		return validate_image(frame);
-
 	}
 	
 	final int see_through_pixel = -8355712; //This means the download had an error and skipped a portion
@@ -320,25 +298,29 @@ public class Camera {
 		return true;
 	}
 
-	//Will also loopback
 	public PImage getNextImage(String camera_url) {
 		if (images_retrieved.get(camera_url).isEmpty()){
 			return empty_image;
 		} else {
-			/*
-			 * if you are having issues with this function, you may need to do the following, 
-			 * however this should be handled in get_multiple_images()
-			 * last_valid_image = get_largest_sequence_of_valid_images_from_0();
-			 */
 			if (num_of_threads == 0) {
-				prune_images(camera_url);
-			}
-			latest_image.put(camera_url, latest_image.get(camera_url) + 1);
-			while (validate_image(camera_url, latest_image.get(camera_url)) == false) {
-				latest_image.put(camera_url, latest_image.get(camera_url) + 1);
-				latest_image.put(camera_url, latest_image.get(camera_url) % images_retrieved.get(camera_url).size());
+				//prune_images(camera_url);
 			}
 			
+			latest_image.put(camera_url, latest_image.get(camera_url) + 1);
+			
+			boolean looped_already = false;
+			while (validate_image(camera_url, latest_image.get(camera_url)) == false) {
+				latest_image.put(camera_url, latest_image.get(camera_url) + 1);
+				
+				if (latest_image.get(camera_url) > images_retrieved.get(camera_url).size() - 1) {
+					if (looped_already) {
+						return empty_image;
+					} else {
+						latest_image.put(camera_url, 0);
+						looped_already = true;
+					}
+				}
+			}
 			return images_retrieved.get(camera_url).get(latest_image.get(camera_url));
 		}
 	}
