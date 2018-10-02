@@ -104,6 +104,8 @@ public class Camera {
 			}
 		}
 	}
+
+	int threads_being_initialised = 0;
 	/* 
 	 * This function will start download the next x images, each in their own thread.
 	 * This wont execute however until it cancels all current threads. 
@@ -125,6 +127,7 @@ public class Camera {
 		while (cancel_threads){ 
 			System.out.println("HANGING IN WAITING FOR CANCEL");
 		}
+		threads_being_initialised += amount_of_images;
 		download_multiple_images(url, amount_of_images, 0, amount_of_images);
 	}
 	
@@ -135,7 +138,12 @@ public class Camera {
 			System.out.println("Cancelling Threads");
 		}
 	}
-
+	/*
+	*	How many before next image is like, 3 in a row, then get 3 in a row for the next image...
+	*	How many total is how many do you want to retrieve in total
+	*
+	*
+	*/
 	public void download_multiple_images_in_sequence (List<String> images, final int how_many_before_next_image, final int how_many_total) {
 		new Thread (new Runnable() {
 			int how_many_total_copy = how_many_total;
@@ -144,9 +152,21 @@ public class Camera {
 			public void run() {
 				while (how_many_total_copy > 0) {
 					for (String item : images) {
-						download_multiple_images(item, how_many_before_next_image_copy);
-						
-						while (num_of_threads > 0) {
+						/*
+						*  Lets say images.size() = 6
+						*  The max number of threads is 12
+						*  We want 6 images in total
+						*  We want 3 images in sequence
+						*
+						*  If we are already running 10 threads, running another 3 will put us over the limit
+						*  so instead we will wait for another to finish execution.
+						*
+						*  Remember, we want to run as many in SEQUENCE as possible, or else the feed has gaps
+						*/
+
+						//WARNING, WE CAN'T GUARANTEE NUM_OF_THREADS IS TIMELY
+						while (num_of_threads + threads_being_initialised + how_many_before_next_image > max_number_of_retrieval_threads)
+						{
 							System.out.println("Num of threads holding up: " + num_of_threads);
 							try {
 								TimeUnit.SECONDS.sleep(1);
@@ -154,7 +174,24 @@ public class Camera {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+							if (num_of_threads == 0) {
+								break;
+							}
+
 						}
+						download_multiple_images(item, how_many_before_next_image_copy);
+						
+						/*
+						 * The following is a bodge
+						 * Above, we check that we can fit enough threads in order to have them run in sequence
+						 * However, we may return to above when only half those threads are initialised! 
+						 * Then we will accidentally spawn a bunch of new threads, which may be broken up!
+						 * 
+						 * Therefore we have a delay. 
+						 * I welcome all suggestions to fix this issue
+						*/
+						
+						//TimeUnit.SECONDS.sleep(1);
 					}
 					how_many_total_copy -= how_many_before_next_image_copy;
 				}
@@ -163,7 +200,8 @@ public class Camera {
 	}
 	/*
 	 * This is a recursive function, the parent caller must set max_num_of_recursive_calls start to 0.
-	 */
+	 * Don't ever call this function. Call the other one which calls this one. 
+	*/
 	private void download_multiple_images(String camera_url, int amount_of_images, int first_index, int max_num) {
 		if (amount_of_images < 0) { 
 			prune_images(camera_url);
@@ -198,6 +236,7 @@ public class Camera {
 		final int pos_to_start = first_index;
 		final int image_amount = amount_of_images;
 		++num_of_threads;
+		--threads_being_initialised;
 		new Thread (new Runnable() {
 			final int position_to_insert = pos_to_start; //Don't move this into run
 			final int thread_num = num_of_threads - 1; 
@@ -218,7 +257,7 @@ public class Camera {
 
 					boolean slept = false;
 					while (num_of_threads >= max_number_of_retrieval_threads) {
-						TimeUnit.SECONDS.sleep(1);
+						TimeUnit.MILLISECONDS.sleep(250);
 						slept = true;
 					}
 					/*
@@ -226,7 +265,9 @@ public class Camera {
 					 * function will not necessarily be called in order, meaning thread 5 may retrieve before
 					 * thread 4. This will cause the images to become out of order. Adding a small delay will 
 					 * ensure that the threads run in sequence. 
-					 */
+					 * 
+					 * An alternative explanation is that this disorganisation is caused by println. 
+					*/
 					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); } 
 					
 					if (cancel_threads == false) {
@@ -250,7 +291,6 @@ public class Camera {
 				--num_of_threads;
 				if (cancel_threads && num_of_threads == 0) {
 					cancel_threads = false;
-					
 				}
 			}
 		}).start();
