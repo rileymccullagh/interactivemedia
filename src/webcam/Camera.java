@@ -302,8 +302,8 @@ public class Camera {
 		if (images_retrieved.get(camera_url).isEmpty()){
 			return empty_image;
 		} else {
-			if (num_of_threads == 0) {
-				//prune_images(camera_url);
+			if (num_of_threads == 0 && threads_being_initialised == 0) {
+				prune_images(camera_url);
 			}
 			
 			latest_image.put(camera_url, latest_image.get(camera_url) + 1);
