@@ -25,7 +25,7 @@ public class PanTiltZoom extends PApplet {
 	@Override
 	public void settings(){
 		//fullScreen(P3D);
-		size(1920,1080);
+		size(2160,1080);
 		//frameRate(60);
 	}
 

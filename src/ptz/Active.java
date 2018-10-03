@@ -26,10 +26,10 @@ class Active {
 		
 		//cam.get_amount_of_images(30);
 		current_urls.add(cam.cameras.get(0));
-		current_urls.add(cam.cameras.get(1));
+		current_urls.add(cam.cameras.get(5));
 		
-		//current_urls.add(cam.cameras.get(2));
-		//current_urls.add(cam.cameras.get(5));
+		current_urls.add(cam.cameras.get(2));
+		current_urls.add(cam.cameras.get(1));
 		/*current_urls.add(cam.cameras.get(5));
 		current_urls.add(cam.cameras.get(7)); */
 		cam.download_multiple_images_in_sequence(current_urls, 6, 12, 2); 

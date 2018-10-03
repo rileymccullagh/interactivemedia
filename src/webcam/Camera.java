@@ -131,7 +131,9 @@ public class Camera {
 						temp = new ArrayList<String>();
 					}
 				}
-				
+				if (wrapped_list.isEmpty() == false ) {
+					wrapped_list.add(temp);
+				}
 				List<ArrayList<Thread>> queue = new ArrayList<ArrayList<Thread>>();
 				
 				int insertion_index = 0;
@@ -150,7 +152,7 @@ public class Camera {
 										String url = item;
 										@Override
 										public void run() {
-											
+											System.out.println("running at: " + url + " at: "  + insert_at);
 											images_retrieved.get(url).set(insert_at, parent.loadImage(url));
 											System.out.println("Inserted at: " + url + " at: "  + insert_at);
 										}}));
@@ -168,7 +170,7 @@ public class Camera {
 				for (int i = 0; i < queue.get(0).size() -1; i++) {
 					queue.get(0).get(i).start();
 					try {
-						TimeUnit.MILLISECONDS.sleep(100);
+						TimeUnit.MILLISECONDS.sleep(250);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -184,10 +186,10 @@ public class Camera {
 					}
 					if (any_alive == false) {
 						queue.remove(0);
-					
 						if (queue.size() == 0) {
 							break;
 						}
+						
 						for (Thread t : queue.get(0)) {
 							t.start();
 							try {
@@ -197,6 +199,7 @@ public class Camera {
 								e.printStackTrace();
 							}
 						}
+						
 					}
 				}
 			}
