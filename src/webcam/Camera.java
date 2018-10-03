@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
+import java.util.Queue;
 // cameras from here work
 // https://www.insecam.org/en/bytype/Vivotek/
 
@@ -74,15 +74,16 @@ public class Camera {
 	List<Thread> running_threads = new ArrayList<Thread>();
 
 	
-	final int max_number_of_retrieval_threads = 6;
+	int max_number_of_retrieval_threads = 24;
 	int num_of_threads = 0; //The current number of running threads
 	int threads_being_initialised = 0; //Threads that are NOT running, but WILL run 
 	
 	String current_url = ""; //Changes per webcam
 	boolean cancel_threads = false;
 
-	public Camera(PApplet p) {
+	public Camera(PApplet p, int max_num_of_threads) {
 		this.parent = p;
+		max_number_of_retrieval_threads = max_num_of_threads;
 		empty_image = p.createImage(0, 0, 0);
 		
 		for (String entry : cameras) {
@@ -137,48 +138,117 @@ public class Camera {
 	 * This function will start download the next x images, each in their own thread.
 	*/
 	public void download_multiple_images(String url, int amount_of_images) {
-				threads_being_initialised += amount_of_images;
-				download_multiple_images(url, amount_of_images, 0, amount_of_images);
+		threads_being_initialised += amount_of_images;
+		final int expansion_size = images_retrieved.get(url).size() + amount_of_images;
+		final int end_of_list = images_retrieved.get(url).size();
+				
+		while (images_retrieved.get(url).size() < expansion_size) {
+			images_retrieved.get(url).add(empty_image);
+		}
+			
+		
+		for (int i = end_of_list; i < expansion_size; i++) {
+			final int j = i;
+			new Thread (new Runnable() {
+				final int insertion_index = j;
+				@Override
+				public void run() {
+					PImage new_image = parent.loadImage(url);
+					System.out.println("Inserting for: " + url + " at: "  + insertion_index);
+					images_retrieved.get(url).set(insertion_index, new_image);
+				}
+			}).start();
+			
+			try {
+				TimeUnit.MILLISECONDS.sleep(1000); 
+			} catch (Exception e) {
+				System.out.println("Hello");
+			}
+		}
 	}
 	
 	/*
 	*	how_many_before_next_image means: download 3 in a row, then get 3 in a row for the next image...
 	*	How many total is how many do you want to retrieve in total
 	*/
-	public void download_multiple_images_in_sequence (List<String> images, final int how_many_before_next_image, final int how_many_total) {
+	public void download_multiple_images_in_sequence (List<String> images, final int how_many_before_next_image, int how_many_total, int feeds_at_a_time) {
 		new Thread (new Runnable() {
-			int how_many_total_copy = how_many_total;
-			int how_many_before_next_image_copy = how_many_before_next_image;
+			int amount_remaining = how_many_total;
 			@Override
 			public void run() {
-				while (how_many_total_copy > 0) {
+				for (int i = 0; i < how_many_total + 1; i++) {
 					for (String item : images) {
-						
-						/*
-						*  Lets say images.size() = 6
-						*  The max number of threads is 12
-						*  We want 6 images in total
-						*  We want 3 images in sequence
-						*
-						*  If we are already running 10 threads, running another 3 will put us over the limit
-						*  so instead we will wait for another to finish execution.
-						*
-						*  Remember, we want to run as many in SEQUENCE as possible, or else the feed has gaps
-						*/
-
-						while (num_of_threads + threads_being_initialised + how_many_before_next_image > max_number_of_retrieval_threads)
-						{
-							System.out.println("Num of threads holding up: " + num_of_threads);
-							try {
-								TimeUnit.SECONDS.sleep(1);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						download_multiple_images(item, how_many_before_next_image_copy);
+						images_retrieved.get(item).add(empty_image);
 					}
-					how_many_total_copy -= how_many_before_next_image_copy;
+				}
+				
+				List<ArrayList<Thread>> queue = new ArrayList<ArrayList<Thread>>();
+				
+				int insertion_index = 0;
+				while (amount_remaining > 0 ) {
+					ArrayList<Thread> inner_queue = new ArrayList<Thread>();
+					int feeds_at_a_time_counter = feeds_at_a_time;
+					for (String item : images) {
+						for (int j = 0; j < how_many_before_next_image; j++) {
+							
+							final int insert_at = insertion_index + j;
+							inner_queue.add(new Thread (new Runnable() 
+								{
+									String url = item;
+									@Override
+									public void run() {
+										PImage new_image = parent.loadImage(url);
+										System.out.println("Inserting for: " + url + " at: "  + insert_at);
+										images_retrieved.get(url).set(insert_at, new_image);
+									}}));
+							
+						}
+						feeds_at_a_time_counter--;
+						if (feeds_at_a_time_counter == 0) {
+							ArrayList<Thread> inner_queue_clone = new ArrayList<Thread>(inner_queue);
+							queue.add(inner_queue_clone);
+							inner_queue = new ArrayList<Thread>();
+							feeds_at_a_time_counter = feeds_at_a_time;
+						}	
+					} 
+					insertion_index  += how_many_before_next_image;
+					amount_remaining -= how_many_before_next_image;
+					if (inner_queue.size() > 0) {
+						queue.add(inner_queue);
+					}
+				}
+				for (int i = 0; i < queue.get(0).size() -1; i++) {
+					queue.get(0).get(i).start();
+					try {
+						TimeUnit.MILLISECONDS.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				while (true) {
+					boolean any_alive = false;
+					for (Thread running : queue.get(0)) {
+						if (running.isAlive()) {
+							any_alive = true;
+						}
+					}
+					if (any_alive == false) {
+						queue.remove(0);
+					}
+					if (queue.size() == 0) {
+						break;
+					}
+					for (Thread t : queue.get(0)) {
+						t.start();
+						try {
+							TimeUnit.MILLISECONDS.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}).start();
@@ -187,42 +257,32 @@ public class Camera {
 	 * This is a recursive function, the parent caller must set max_num_of_recursive_calls start to 0.
 	 * Don't ever call this function. Call the other one which calls this one. 
 	*/
-	private void download_multiple_images(String camera_url, int amount_of_images, int first_index, int max_num) {
+	private void download_multiple_images(String camera_url, int amount_of_images, final int insertion_index, int max_num) {
 		
-		if (amount_of_images < 0) { 
-			//prune_images(camera_url);
+		
+		
+		if (amount_of_images == 0) {
+			return;
+			/* prune_images(camera_url);
 			if (max_num > images_retrieved.get(camera_url).size()) {
-				amount_of_images = first_index - images_retrieved.get(camera_url).size();
-				first_index = images_retrieved.get(camera_url).size();
+				amount_of_images = last_index - images_retrieved.get(camera_url).size();
 			} else {
 				return; 
 			}
+			*/
 		}
 		
 
-		/*
-		 *  The first_index val ensures that the next recursive call does not simultaneously
-		 *  begin retrieving i = 3, by starting instead at 3.
-		*/
-
-		for (int i = first_index; i < images_retrieved.get(camera_url).size(); ++i){
-			if (validate_image(camera_url,i) == false) {
-				break;
-			} 
-			first_index++;
-		}
-
-		final int pos_to_start = first_index;
-		final int image_amount = amount_of_images;
+		
 		++num_of_threads;
 		--threads_being_initialised;
+		
 		new Thread (new Runnable() {
-			final int position_to_insert = pos_to_start; //Don't move this into run
 			final int thread_num = num_of_threads - 1; 
 			final String url_of_image = camera_url;
 			@Override
 			public void run() {
-				System.out.println("Initialised thread: " + thread_num + " for " + url_of_image);
+				System.out.println("Initialised thread: " + thread_num + " for " + url_of_image + " will insert at: " + insertion_index);
 				
 				try{
 					/* 
@@ -230,15 +290,15 @@ public class Camera {
 					 * finish earlier than Thread #4, what we do is put in an empty entry
 					 * which is later overriden 
 					 */
-					while(position_to_insert > images_retrieved.get(url_of_image).size()){
-						images_retrieved.get(url_of_image).add(empty_image);
-					}
-
+					
+					
 					boolean slept = false;
+					
 					while (num_of_threads >= max_number_of_retrieval_threads) {
-						TimeUnit.MILLISECONDS.sleep(250);
+						TimeUnit.MILLISECONDS.sleep(1000);
 						slept = true;
 					}
+					
 					/*
 					 * When we fire 5 threads, even if we initialise them in order the parent.loadimage(url)
 					 * function will not necessarily be called in order, meaning thread 5 may retrieve before
@@ -247,17 +307,16 @@ public class Camera {
 					 * 
 					 * An alternative explanation is that this disorganisation is caused by println. 
 					*/
-					if (slept == false) { TimeUnit.MILLISECONDS.sleep(500); } 
+					if (slept == false) { TimeUnit.MILLISECONDS.sleep(250); } 
 					
 					if (cancel_threads == false) {
-						download_multiple_images(url_of_image, image_amount - 1, position_to_insert + 1, max_num);
+						download_multiple_images(url_of_image, amount_of_images - 1, insertion_index + 1, max_num);
 						PImage new_image = parent.loadImage(camera_url);
 						
 						//An error may occur, so we only insert on success
 						if (validate_image(new_image) && cancel_threads == false) {
-							images_retrieved.get(url_of_image).set(position_to_insert, new_image);
-							System.out.println("Inserted at: " + position_to_insert + " thread num: " + thread_num);
-							//Must be done constantly to ensure the retrieval function will get a valid -sequence- 
+							images_retrieved.get(url_of_image).set(insertion_index, new_image);
+							System.out.println("Inserted at: " + insertion_index + " thread num: " + thread_num);
 						} else {
 							System.out.println("Image invalid or thread cancelled");
 						}
@@ -303,7 +362,7 @@ public class Camera {
 			return empty_image;
 		} else {
 			if (num_of_threads == 0 && threads_being_initialised == 0) {
-				prune_images(camera_url);
+				//prune_images(camera_url);
 			}
 			
 			latest_image.put(camera_url, latest_image.get(camera_url) + 1);
