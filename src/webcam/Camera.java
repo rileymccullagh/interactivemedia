@@ -137,13 +137,14 @@ public class Camera {
 				int insertion_index = 0;
 				while (amount_remaining > 0 ) {
 					
-					int feeds_at_a_time_counter = feeds_at_a_time;
+					
 					for (ArrayList<String> inner_list : wrapped_list) {
 						ArrayList<Thread> inner_queue = new ArrayList<Thread>();
 						for (String item : inner_list) {
 							for (int j = 0; j < how_many_before_next_image; j++) {
 								
 								final int insert_at = insertion_index + j;
+								System.out.println("Created at: " + item + " at: "  + insert_at);
 								inner_queue.add(new Thread (new Runnable() 
 									{
 										String url = item;
@@ -156,12 +157,13 @@ public class Camera {
 								
 							}	
 						} 
-						insertion_index  += how_many_before_next_image;
-						amount_remaining -= how_many_before_next_image;
+						
 						if (inner_queue.size() > 0) {
 							queue.add(inner_queue);
 						}
 					}
+					insertion_index  += how_many_before_next_image;
+					amount_remaining -= how_many_before_next_image;
 				}
 				for (int i = 0; i < queue.get(0).size() -1; i++) {
 					queue.get(0).get(i).start();
