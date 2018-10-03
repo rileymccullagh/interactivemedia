@@ -117,42 +117,50 @@ public class Camera {
 					}
 				}
 				
+				ArrayList<ArrayList<String>> wrapped_list = new ArrayList<ArrayList<String>>();
+				ArrayList<String> temp = new ArrayList<String>();
+				int counter = feeds_at_a_time;
+				for (String item : images) {
+					temp.add(item);
+					
+					counter--;
+					if (counter == 0) {
+						counter = feeds_at_a_time;
+						ArrayList<String> copy = new ArrayList<String>(temp);
+						wrapped_list.add(copy);
+						temp = new ArrayList<String>();
+					}
+				}
+				
 				List<ArrayList<Thread>> queue = new ArrayList<ArrayList<Thread>>();
 				
 				int insertion_index = 0;
 				while (amount_remaining > 0 ) {
-					ArrayList<Thread> inner_queue = new ArrayList<Thread>();
+					
 					int feeds_at_a_time_counter = feeds_at_a_time;
-					for (String item : images) {
-						for (int j = 0; j < how_many_before_next_image; j++) {
-							
-							final int insert_at = insertion_index + j;
-							inner_queue.add(new Thread (new Runnable() 
-								{
-									String url = item;
-									@Override
-									public void run() {
-										
-										images_retrieved.get(url).set(insert_at, parent.loadImage(url));
-										System.out.println("Inserted at: " + url + " at: "  + insert_at);
-									}}));
-							
-						}
-						feeds_at_a_time_counter--;
-						if (feeds_at_a_time_counter == 0) {
-							ArrayList<Thread> inner_queue_clone = new ArrayList<Thread>();
-							for (Thread t : inner_queue) {
-								inner_queue_clone.add(t);
-							}
+					for (ArrayList<String> inner_list : wrapped_list) {
+						ArrayList<Thread> inner_queue = new ArrayList<Thread>();
+						for (String item : inner_list) {
+							for (int j = 0; j < how_many_before_next_image; j++) {
+								
+								final int insert_at = insertion_index + j;
+								inner_queue.add(new Thread (new Runnable() 
+									{
+										String url = item;
+										@Override
+										public void run() {
+											
+											images_retrieved.get(url).set(insert_at, parent.loadImage(url));
+											System.out.println("Inserted at: " + url + " at: "  + insert_at);
+										}}));
+								
+							}	
+						} 
+						insertion_index  += how_many_before_next_image;
+						amount_remaining -= how_many_before_next_image;
+						if (inner_queue.size() > 0) {
 							queue.add(inner_queue);
-							inner_queue = new ArrayList<Thread>();
-							feeds_at_a_time_counter = feeds_at_a_time;
-						}	
-					} 
-					insertion_index  += how_many_before_next_image;
-					amount_remaining -= how_many_before_next_image;
-					if (inner_queue.size() > 0) {
-						queue.add(inner_queue);
+						}
 					}
 				}
 				for (int i = 0; i < queue.get(0).size() -1; i++) {
@@ -174,17 +182,18 @@ public class Camera {
 					}
 					if (any_alive == false) {
 						queue.remove(0);
-					}
-					if (queue.size() == 0) {
-						break;
-					}
-					for (Thread t : queue.get(0)) {
-						t.start();
-						try {
-							TimeUnit.MILLISECONDS.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+					
+						if (queue.size() == 0) {
+							break;
+						}
+						for (Thread t : queue.get(0)) {
+							t.start();
+							try {
+								TimeUnit.MILLISECONDS.sleep(100);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				}
