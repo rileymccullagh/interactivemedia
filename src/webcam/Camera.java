@@ -167,7 +167,7 @@ public class Camera {
 					insertion_index  += how_many_before_next_image;
 					amount_remaining -= how_many_before_next_image;
 				}
-				for (int i = 0; i < queue.get(0).size() -1; i++) {
+				for (int i = 0; i < queue.get(0).size() ; i++) {
 					queue.get(0).get(i).start();
 					try {
 						TimeUnit.MILLISECONDS.sleep(250);
