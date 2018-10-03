@@ -80,7 +80,6 @@ public class PanTiltZoom extends PApplet {
 			//print("idle to active");
 			state = State.ACTIVE;
 			timeAtTransition = millis();
-			active.destructor(); 
 			active = new Active(this);
 		} else {
 			//print("active to idle");

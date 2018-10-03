@@ -22,14 +22,14 @@ class Active {
 		this.fft = new FFT(this.parent);
 		this.engine = new Engine_Ball_Bar(p.width / 3, p.height / 3, fft.values.length, p);
 		//this.dm = new DrumMachine(this.parent);
-		this.cam = new Camera(this.parent, 24);
+		this.cam = new Camera(this.parent);
 		
 		//cam.get_amount_of_images(30);
-		current_urls.add(cam.cameras.get(8));
+		current_urls.add(cam.cameras.get(1));
+		current_urls.add(cam.cameras.get(0));
 		current_urls.add(cam.cameras.get(2));
-		current_urls.add(cam.cameras.get(3));
-		/*current_urls.add(cam.cameras.get(4));
 		current_urls.add(cam.cameras.get(5));
+		/*current_urls.add(cam.cameras.get(5));
 		current_urls.add(cam.cameras.get(7)); */
 		cam.download_multiple_images_in_sequence(current_urls, 6, 12, 2); 
 	}
@@ -57,8 +57,4 @@ class Active {
 		
 	}
 	
-	//We need to cancel the threads in cam before we destroy this object
-	void destructor() {
-		cam.cancel_threads();
-	}
 }
