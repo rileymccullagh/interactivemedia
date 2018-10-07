@@ -5,6 +5,7 @@ import processing.core.PApplet;
 public class AcidGenerator {
 	PApplet parent;
 	public DrumMachine drumMachine;
+	public BassSynth bassSynth;
 	Vortex vortex;
 
 	int tempo = 128;
@@ -14,14 +15,24 @@ public class AcidGenerator {
 		this.parent = parent;
 		
 		drumMachine = new DrumMachine(parent);
+		drumMachine.output.setTempo(tempo);
+		drumMachine.output.playNote(0, 0.25f, drumMachine);
+		
+		bassSynth = new BassSynth(parent);
+		bassSynth.output.setTempo(tempo);
+		bassSynth.output.playNote(0, 0.25f, bassSynth);
+		
 		vortex = new Vortex(parent, drumMachine.output);
+		
 	}
 	
 	public void update() {
-		if(parent.millis() - lastTrigger >= (60000/(tempo*4))) {
-			drumMachine.trigger();
-			lastTrigger = parent.millis();
-		}
-//		vortex.draw();
+		drumMachine.updateFFT();
+		vortex.draw();
+	}
+	
+	public void willMoveFromActive(int transitionTime) {
+		drumMachine.output.shiftGain(0, -80, transitionTime);
+		bassSynth.output.shiftGain(0, -80, transitionTime);
 	}
 }

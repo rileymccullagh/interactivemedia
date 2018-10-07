@@ -22,4 +22,8 @@ class Active {
 		acidGenerator.update();
 		parent.image(histogram.draw(acidGenerator.drumMachine.spectrum), 0, 0);	
 	}
+	
+	void willMoveFromActive(int transitionTime) {
+		acidGenerator.willMoveFromActive(transitionTime);
+	}
 }

@@ -8,8 +8,6 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
-import processing.opengl.PShader;
-
 
 public class PanTiltZoom extends PApplet {
 	boolean fullscreen = true;
@@ -21,7 +19,7 @@ public class PanTiltZoom extends PApplet {
 	
 	final int millisActive     = 30000;
 	final int millisIdle       = 5000;
-	final int millisTransition = 5000;
+	final int millisTransition = 10000;
 
 	Idle idle;
 	Active active;
@@ -168,6 +166,7 @@ public class PanTiltZoom extends PApplet {
 				state = State.INIT_TO_IDLE;
 			} else {
 				state = State.ACTIVE_TO_IDLE;
+				active.willMoveFromActive(millisTransition/2);
 			}
 			activeHasBeenReinitialised = false;
 			timeAtTransition = millis();
@@ -188,7 +187,7 @@ public class PanTiltZoom extends PApplet {
 		PImage clean = get();  
 	    background(0);
 		
-	    // needs to be done like this because filter(BLUR) is hideously slow
+	    // needs to be done like this because filter(BLUR) is hideously slow	
 	    if(!greenHasBeenBlurred) {
 			green.beginDraw();
 			green.tint(0, 255, 0);
@@ -220,9 +219,6 @@ public class PanTiltZoom extends PApplet {
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
 		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
 		smooth();
-
 	}
-
-	
 }
 
