@@ -188,6 +188,7 @@ public class PanTiltZoom extends PApplet {
 		PImage clean = get();  
 	    background(0);
 		
+	    // needs to be done like this because filter(BLUR) is hideously slow
 	    if(!greenHasBeenBlurred) {
 			green.beginDraw();
 			green.tint(0, 255, 0);
