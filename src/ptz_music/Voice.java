@@ -1,19 +1,24 @@
 package ptz_music;
 
 import processing.core.PApplet;
-import processing.sound.SoundFile;
+
+import ddf.minim.*;
 
 class Voice {
-	SoundFile file;
+	AudioPlayer player;
 	PApplet parent;
+	Minim minim;
+	String filename;
 
-	public Voice(PApplet p, String filename) {
-		this.parent = p;
-		file = new SoundFile(this.parent, filename);
+	public Voice(PApplet parent, String filename) {
+		this.parent = parent;
+		minim = new Minim(this.parent);
+		this.filename = filename;
+		
 	}
 
 	void trigger() {
-		file.play();
+		player = minim.loadFile(filename);
+		player.play();
 	}
-
 }

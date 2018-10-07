@@ -6,14 +6,20 @@ import java.io.PrintStream;
 
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
+import processing.core.PGraphics;
+
 
 public class PanTiltZoom extends PApplet {
+	boolean fullscreen = false;
 	PFont titlefont;
+	PGraphics red, green, blue;
+
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
-	final int millisIdle       = 15000;
-	final int millisTransition = 10000;
+	final int millisIdle       = 100;
+	final int millisTransition = 100;
 
 	Idle idle;
 	Active active;
@@ -34,8 +40,11 @@ public class PanTiltZoom extends PApplet {
 
 	@Override
 	public void settings(){
-//		fullScreen(P3D);
-		size(640, 480);
+		if(fullscreen) {
+			fullScreen(P3D);
+		} else {
+			size(640, 480, P3D);
+		}
 		smooth();
 	}
 
@@ -45,16 +54,21 @@ public class PanTiltZoom extends PApplet {
 		active = new Active(this);
 		idle = new Idle(this);
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-		titlefont = createFont("newwatch.ttf", (int)height/4);
+		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
-		drawTitle();
+		red = createGraphics( width, height, P2D);  
+		green = createGraphics( width, height, P2D);  
+		blue = createGraphics( width, height, P2D);
 	}
 
 	@Override
 	public void draw(){
-		if (wait) return;
+		if (wait) {
+			drawTitle();
+			return;
+		}
 		int fadeTime = millis() - timeAtTransition;
 		switch(state) {
 			case INIT:
@@ -160,12 +174,43 @@ public class PanTiltZoom extends PApplet {
 	}
 	
 	void drawTitle() {
+		
+		// print title
 		background(0);
 		textFont(titlefont);
 		textAlign(RIGHT);
-		textSize((int)height/4);
+		textSize((int)height/8);
 		fill(131, 245, 45);
-		text("Pan\nTilt\nZoom", width-10, height/4); 
+		text("Pan\nTilt\nZoom", width-10, height/2); 
+		
+		// color aberration
+		PImage clean = get();  
+	    background(0);
+
+	    red.beginDraw();
+		red.tint(255, 0, 0);
+		red.image(clean, 0, 0);
+		red.endDraw();
+		
+		green.beginDraw();
+		green.tint(0, 255, 0);
+		green.image(clean, 0, 0);
+		green.endDraw();
+		
+		blue.beginDraw();
+		blue.tint(0, 0, 255);
+		blue.image(clean, 0, 0);
+		blue.endDraw();
+		
+		int redRandom = -(int)random(1, 4);
+		int blueRandom = (int)random(1, 4);
+
+		image( red.get(), redRandom, redRandom);
+		blend( green.get(), 0, 0, width, height, 0, 0, width, height, ADD);
+		blend( blue.get(), blueRandom, blueRandom, width, height, 0, 0, width, height, ADD);
+		if ( random(1) < .1 ) { 
+		    filter(BLUR, (int)random(2));
+		}
 	}
 	
 }

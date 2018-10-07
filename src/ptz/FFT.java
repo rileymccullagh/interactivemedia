@@ -2,7 +2,7 @@ package ptz;
 
 import processing.core.PApplet;
 
-class FFT {
+public class FFT {
   PApplet parent;
   public float[] values;
   
