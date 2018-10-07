@@ -1,20 +1,17 @@
 package ptz_music;
 
 import processing.core.PApplet;
-import ptz.FFT;
 
 public class AcidGenerator {
 	PApplet parent;
-	FFT fft;
-	DrumMachine drumMachine;
+	public DrumMachine drumMachine;
 	Vortex vortex;
 
 	int tempo = 128;
 	int lastTrigger = 0;
 	
-	public AcidGenerator(PApplet parent, FFT fft) {
+	public AcidGenerator(PApplet parent) {
 		this.parent = parent;
-		this.fft = fft;
 		
 		drumMachine = new DrumMachine(parent);
 		vortex = new Vortex(parent, drumMachine.output);
@@ -25,6 +22,6 @@ public class AcidGenerator {
 			drumMachine.trigger();
 			lastTrigger = parent.millis();
 		}
-		vortex.draw();
+//		vortex.draw();
 	}
 }
