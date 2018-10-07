@@ -8,12 +8,14 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = false;
+	boolean fullscreen = true;
 	PFont titlefont;
-	PGraphics red, green, blue;
+	PGraphics green, glow, noise;
+	boolean greenHasBeenBlurred = false;
 
 	boolean wait = true;
 	
@@ -57,9 +59,9 @@ public class PanTiltZoom extends PApplet {
 		frameRate(60);
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
-		red = createGraphics( width, height, P2D);  
-		green = createGraphics( width, height, P2D);  
-		blue = createGraphics( width, height, P2D);
+		green = createGraphics(width, height, P2D);  
+		glow = createGraphics(width, height, P2D);
+		noise = createGraphics(width/2, height/2, P2D);
 	}
 
 	@Override
@@ -179,38 +181,47 @@ public class PanTiltZoom extends PApplet {
 		textFont(titlefont);
 		textAlign(RIGHT);
 		textSize((int)height/8);
-		fill(131, 245, 45);
+		fill(255);
 		text("Pan\nTilt\nZoom", width-10, height/2); 
 		
 		// color aberration
 		PImage clean = get();  
 	    background(0);
+		
+	    if(!greenHasBeenBlurred) {
+			green.beginDraw();
+			green.tint(0, 255, 0);
+			green.image(clean, 0, 0);
+			green.filter(BLUR, 10);
+			green.endDraw();
+			greenHasBeenBlurred = true;
+	    }
 
-	    red.beginDraw();
-		red.tint(255, 0, 0);
-		red.image(clean, 0, 0);
-		red.endDraw();
-		
-		green.beginDraw();
-		green.tint(0, 255, 0);
-		green.image(clean, 0, 0);
-		green.endDraw();
-		
-		blue.beginDraw();
-		blue.tint(0, 0, 255);
-		blue.image(clean, 0, 0);
-		blue.endDraw();
-		
-		int redRandom = -(int)random(1, 4);
-		int blueRandom = (int)random(1, 4);
-
-		image( red.get(), redRandom, redRandom);
-		blend( green.get(), 0, 0, width, height, 0, 0, width, height, ADD);
-		blend( blue.get(), blueRandom, blueRandom, width, height, 0, 0, width, height, ADD);
-		if ( random(1) < .1 ) { 
-		    filter(BLUR, (int)random(2));
+		noise.beginDraw();
+		noise.background(255);
+		noise.loadPixels();
+		for (int x=0; x<noise.pixels.length; x++)
+		{
+			noise.pixels[x] = color( random(15) );
 		}
+		noise.updatePixels();
+		noise.endDraw();
+
+		int offset = (int)random(0, 10);
+		if(offset > 8) {
+			offset = 1;
+		} else {
+			offset = 0;
+		}
+		
+		noSmooth();
+		image(clean.get(), offset, 0);
+		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
+		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
+		smooth();
+
 	}
+
 	
 }
 
