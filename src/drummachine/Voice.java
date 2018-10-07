@@ -3,7 +3,7 @@ package drummachine;
 import processing.core.PApplet;
 import processing.sound.SoundFile;
 
-class Voice {
+public class Voice {
 	SoundFile file;
 	PApplet parent;
 

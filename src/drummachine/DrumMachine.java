@@ -16,9 +16,12 @@ public class DrumMachine {
     }
   }
   
-  public void trigger(int voice) {
+  public int trigger(int voice) {
     if(voice>=0 && voice<voices.length) {
       voices[voice].trigger();
+      return 1;
+    }else{
+      return 2;
     }
   }
 }

@@ -1,11 +1,11 @@
 package ptz;
 
-import processing.core.PApplet;
+import processing.core.*;
 
 class FFT {
   PApplet parent;
   public float[] values;
-  
+  public float value;
   
   FFT(PApplet p) {
     this.parent = p;
@@ -16,5 +16,13 @@ class FFT {
 	for(int i = 0; i<this.values.length; i++) {
 		values[i] = parent.random(1);
 	}
+  }
+  
+  public float[] getValue() {
+	  return values;
+  }
+  
+  public void setValue(float value) {
+	  this.value = value;
   }
 }
