@@ -146,7 +146,7 @@ public class Camera {
 							for (int j = 0; j < how_many_before_next_image; j++) {
 								
 								final int insert_at = insertion_index + j;
-//								System.out.println("Created at: " + item + " at: "  + insert_at);
+//								System.out.sln("Created at: " + item + " at: "  + insert_at);
 								inner_queue.add(new Thread (new Runnable() 
 									{
 										String url = item;

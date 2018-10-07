@@ -35,11 +35,14 @@ public class PanTiltZoom extends PApplet {
 		idle = new Idle(this);
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		frameRate(60);
+		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
 	}
 
 	@Override
 	public void draw(){
+		int fadeTime = millis() - timeAtTransition;
+
 		switch(state) {
 			case INIT:
 				this.transition(false);
@@ -65,49 +68,59 @@ public class PanTiltZoom extends PApplet {
 				break;
 			
 			case INIT_TO_IDLE:
+				if(fadeTime > millisTransition/2) {
+					idle.draw();
+				}
 				fade();
 				break;
 	
 			case ACTIVE_TO_IDLE:
+				if(fadeTime < millisTransition/2) {
+					active.draw();
+				} else {
+					idle.draw();
+				}
 				fade();
 				break;
 	
 			case IDLE_TO_ACTIVE:
+				if(fadeTime < millisTransition/2) {
+					idle.draw();
+				} else {
+					active.draw();
+				}
 				fade();
 				break;
 		}
 	}
 	
 	void fade() {
+		// get how far through the fade we are
+		int fadeTime = millis() - timeAtTransition;
+
 		// check if we are in a state of transition
-		if((millis() - timeAtTransition) < millisTransition) {
-			// get how far through the fade we are
-			int fadeTime = millis() - timeAtTransition;
+		if(fadeTime < millisTransition) {
 			//calculate how much the fade should be.
 			float fadeAmount = 0;
 			//if we are in the first half of the transition, fade to black
-			if (fadeTime/millisTransition<0.5) {
+			if (fadeTime < millisTransition/2) {
+				System.out.println("Fading out");
 				fadeAmount = map(fadeTime, 0, millisTransition/2, 0, 255);
 			} else { //otherwise, fade from black
+				System.out.println("Fading in");
 				fadeTime = fadeTime - millisTransition/2;
 				fadeAmount = map(fadeTime, 0, millisTransition/2, 255, 0);
 			}
 			// make the correct fades
+			System.out.println(fadeTime + "/" + millisTransition);
+			System.out.println("Fading: " + fadeAmount);
 			fill(0, fadeAmount);
 			rect(0, 0, width, height);
 			
-			//check if we need to move from a transition state to a steady state
+		//check if we need to move from a transition state to a steady state
 		} else if (state != State.ACTIVE && state != State.IDLE) {
 			//change to the correct steady state
 			switch(state) {
-				case INIT_TO_IDLE:
-					state = State.IDLE;
-					break;
-		
-				case ACTIVE_TO_IDLE:
-					state = State.IDLE;
-					break;
-		
 				case IDLE_TO_ACTIVE:
 					state = State.ACTIVE;
 					break;
