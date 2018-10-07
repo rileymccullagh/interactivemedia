@@ -1,4 +1,4 @@
-package barballview;
+package ptz_histogram;
 
 import processing.core.PGraphics;
 import processing.core.PConstants;

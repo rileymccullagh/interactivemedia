@@ -1,4 +1,4 @@
-package barballview;
+package ptz_histogram;
 
 class Ball_Bar_Collision {
   Ball_Bar_Collision(Collision_Side collision, int bar) {
