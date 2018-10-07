@@ -32,10 +32,10 @@ public class DrumMachine {
     patterns[0][8] = true;
     patterns[0][12] = true;
     
-    patterns[7][2] = true;
-    patterns[7][6] = true;
-    patterns[7][10] = true;
-    patterns[7][14] = true;
+    patterns[8][2] = true;
+    patterns[8][6] = true;
+    patterns[8][10] = true;
+    patterns[8][14] = true;
   }
   
   public void trigger() {

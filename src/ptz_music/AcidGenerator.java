@@ -7,7 +7,7 @@ public class AcidGenerator {
 	PApplet parent;
 	FFT fft;
 	DrumMachine drumMachine;
-//	Vortex vortex;
+	Vortex vortex;
 
 	int tempo = 128;
 	int lastTrigger = 0;
@@ -17,7 +17,7 @@ public class AcidGenerator {
 		this.fft = fft;
 		
 		drumMachine = new DrumMachine(parent);
-//		vortex = new Vortex(parent);
+		vortex = new Vortex(parent, drumMachine.output);
 	}
 	
 	public void update() {
@@ -25,6 +25,6 @@ public class AcidGenerator {
 			drumMachine.trigger();
 			lastTrigger = parent.millis();
 		}
-//		vortex.draw();
+		vortex.draw();
 	}
 }
