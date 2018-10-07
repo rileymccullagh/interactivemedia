@@ -1,4 +1,4 @@
-package barballview;
+package ptz_histogram;
 
 class Ball_Pair {
   Ball_Pair(Ball b1, Ball b2) {
