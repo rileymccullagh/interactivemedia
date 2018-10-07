@@ -8,13 +8,13 @@ import ptz_histogram.*;
 class Active {
 	PApplet parent;
 	FFT fft;
-	Engine_Ball_Bar histogram;
+//	Engine_Ball_Bar histogram;
 	AcidGenerator acidGenerator;
 	
 	Active(PApplet p) {
 		this.parent = p;
 		this.fft = new FFT(this.parent);
-		this.histogram = new Engine_Ball_Bar(p.width, p.height, fft.values.length, p);
+//		this.histogram = new Engine_Ball_Bar(p.width, p.height, fft.values.length, p);
 		this.acidGenerator = new AcidGenerator(parent, fft);
 	}
 
@@ -22,6 +22,6 @@ class Active {
 		parent.clear();
 		acidGenerator.update();
 		fft.update();
-		parent.image(histogram.draw(fft.values), 0, 0);	
+//		parent.image(histogram.draw(fft.values), 0, 0);	
 	}
 }

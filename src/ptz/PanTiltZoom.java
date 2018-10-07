@@ -51,7 +51,6 @@ public class PanTiltZoom extends PApplet {
 	@Override
 	public void setup(){
 		frame.setBackground(new java.awt.Color(0, 0, 0));
-		active = new Active(this);
 		idle = new Idle(this);
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
