@@ -12,7 +12,7 @@ class Background {
   void draw() {
 
     bgi = parent.loadImage("space.png");
-    bgi.resize(parent.height,parent.width);
+    bgi.resize(parent.width,parent.height);
     parent.image(bgi,0,0);
   }
 }
