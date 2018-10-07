@@ -1,4 +1,4 @@
-package webcam;
+package ptz_camera;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,15 +146,15 @@ public class Camera {
 							for (int j = 0; j < how_many_before_next_image; j++) {
 								
 								final int insert_at = insertion_index + j;
-								System.out.println("Created at: " + item + " at: "  + insert_at);
+//								System.out.println("Created at: " + item + " at: "  + insert_at);
 								inner_queue.add(new Thread (new Runnable() 
 									{
 										String url = item;
 										@Override
 										public void run() {
-											System.out.println("running at: " + url + " at: "  + insert_at);
+//											System.out.println("running at: " + url + " at: "  + insert_at);
 											images_retrieved.get(url).set(insert_at, parent.loadImage(url));
-											System.out.println("Inserted at: " + url + " at: "  + insert_at);
+//											System.out.println("Inserted at: " + url + " at: "  + insert_at);
 										}}));
 								
 							}	

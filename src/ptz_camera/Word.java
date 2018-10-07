@@ -1,4 +1,5 @@
-//package webcam;
+package ptz_camera;
+//package ptz_camera;
 //
 //import org.jsoup.*;
 //import org.jsoup.nodes.Document;

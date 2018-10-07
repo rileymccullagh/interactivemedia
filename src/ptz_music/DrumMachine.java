@@ -1,4 +1,4 @@
-package drummachine;
+package ptz_music;
 
 import processing.core.PApplet;
 

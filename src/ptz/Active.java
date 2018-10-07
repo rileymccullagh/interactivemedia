@@ -3,10 +3,10 @@ package ptz;
 import java.util.ArrayList;
 import java.util.List;
 
-import barballview.Engine_Ball_Bar;
 //import drummachine.DrumMachine;
 import processing.core.PApplet;
-import webcam.Camera;
+import ptz_camera.Camera;
+import ptz_histogram.Engine_Ball_Bar;
 
 class Active {
 	PApplet parent;
@@ -24,14 +24,13 @@ class Active {
 		//this.dm = new DrumMachine(this.parent);
 		this.cam = new Camera(this.parent);
 		
-		//cam.get_amount_of_images(30);
 		current_urls.add(cam.cameras.get(0));
 		current_urls.add(cam.cameras.get(5));
 		
 		current_urls.add(cam.cameras.get(2));
 		current_urls.add(cam.cameras.get(1));
 		current_urls.add(cam.cameras.get(4));
-		current_urls.add(cam.cameras.get(3)); 
+		current_urls.add(cam.cameras.get(3));
 		cam.download_multiple_images_in_sequence(current_urls, 6, 12, 6); 
 	}
 
@@ -54,7 +53,7 @@ class Active {
 		}
 		
 		
-		//parent.image(engine.draw(fft.values), 0, 0);
+		parent.image(engine.draw(fft.values), 0, 0);
 		
 	}
 	
