@@ -50,9 +50,9 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.pushMatrix();
 		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
-		parent.translate(parent.width / 2, parent.height / 2, -200);
-		parent.rotateY(a1);
-		parent.rotateX(a2);
+		parent.translate(parent.width / 2, parent.height / 2, 0);
+		parent.rotateY(parent.frameCount*PApplet.PI/360);
+		parent.rotateX(parent.frameCount*PApplet.PI/720);
 		parent.scale(50);
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);

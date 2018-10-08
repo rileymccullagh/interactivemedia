@@ -10,18 +10,16 @@ public class Idle {
 	PApplet parent;
 
 	// Let's start with all the classes that we will need in the main project.
-	DigitalRain dr;
-	TextureCube tc;
-	TextureSphere ts;
 	Background bg;
 	colorAverage ca;
+	DigitalRain dr;
+	TextureCube tc;
 	
-
 	ColorHarmony colorHarmony = new ColorHarmony(parent);
 
-	Color rainColor;
-	Color[] colorsComp = new Color[8];
-	Color[] colorsAnal = new Color[8];
+	int rainColor;
+	int[] colorsComp = new int[8];
+	int[] colorsAnal = new int[8];
 
 	// The variables.
 	int i;
@@ -38,13 +36,16 @@ public class Idle {
 	Idle(PApplet p) {
 		this.parent = p;
 		bg = new Background(this.parent);
-		dr = new DigitalRain(this.parent);
 		ca = new colorAverage(this.parent);
+		dr = new DigitalRain(this.parent);
 		tc = new TextureCube(this.parent);
 	}
 
 	void draw() {
 		bg.draw();
+		ca.getAverageColor(bg.get());
+		colorsAnal = colorHarmony.Analogous(ca.getAverageColor(bg.get()));
+		colorsComp = colorHarmony.Complementary(ca.getAverageColor(bg.get()));
 		dr.draw();
 		tc.draw();
 	}

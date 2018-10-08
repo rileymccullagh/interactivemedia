@@ -16,7 +16,7 @@ class DigitalRain {
 	}
 
 	void draw() {
-		parent.translate(0, 0, -500);
+		parent.translate(0, 0, 100);
 		for (int i = 0; i < rain.length; i++) {
 			rain[i].fall();
 			rain[i].show();

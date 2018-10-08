@@ -12,23 +12,22 @@ import processing.opengl.PShader;
 
 
 public class PanTiltZoom extends PApplet {
-
-	boolean fullscreen = true;
+	boolean fullscreen = false;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 
 	boolean wait = true;
 	
-	final int millisActive     = 30000;
-	final int millisIdle       = 5000;
-	final int millisTransition = 5000;
+	final int millisActive     = 1000;
+	final int millisIdle       = 600000;
+	final int millisTransition = 1000;
 
 	Idle idle;
 	Active active;
 
 	State state = State.INIT;
-
+	
 	boolean activeHasBeenReinitialised = false;
 	int timeAtTransition = 0;
 
@@ -58,7 +57,7 @@ public class PanTiltZoom extends PApplet {
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
-		idle.draw(); // initial fade in doesn't work without this??
+		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
@@ -76,28 +75,9 @@ public class PanTiltZoom extends PApplet {
 			case INIT:
 				drawTitle();
 				this.transition(false);
-			}
-			break;
-
-		case IDLE:
-			// draw the active object
-			idle.draw();
-
-			// check if we have elapsed the idle timeframe
-			if (millis() > timeAtTransition + millisIdle) {
-				this.transition(true);
-			}
-			break;
-
-		case INIT_TO_IDLE:
-			if (fadeTime > millisTransition / 2) {
-				idle.draw();
-			}
-			fade();
-			break;
-
-		case ACTIVE_TO_IDLE:
-			if (fadeTime < millisTransition / 2) {
+				break;
+			case ACTIVE:
+				// draw the active object
 				active.draw();
 				
 				// check if we have elapsed the active time frame
@@ -144,16 +124,15 @@ public class PanTiltZoom extends PApplet {
 				break;
 		}
 	}
-
+	
 	void fade() {
 		// get how far through the fade we are
 		int fadeTime = millis() - timeAtTransition;
 
 		// check if we are in a state of transition
-		if (fadeTime < millisTransition) {
-			// calculate how much the fade should be.
+		if(fadeTime < millisTransition) {
+			//calculate how much the fade should be.
 			float fadeAmount = 0;
-
 			//if we are in the first half of the transition, fade to black
 			if (fadeTime < millisTransition/2) {
 				fadeAmount = map(fadeTime, 0, millisTransition/2, 0, 255);
@@ -164,28 +143,28 @@ public class PanTiltZoom extends PApplet {
 			// make the correct fades
 			fill(0, fadeAmount);
 			rect(0, 0, width, height);
-
-			// check if we need to move from a transition state to a steady state
+			
+		//check if we need to move from a transition state to a steady state
 		} else if (state != State.ACTIVE && state != State.IDLE) {
-			// change to the correct steady state
-			switch (state) {
-			case IDLE_TO_ACTIVE:
-				state = State.ACTIVE;
-				break;
-			default:
-				state = State.IDLE;
-				break;
+			//change to the correct steady state
+			switch(state) {
+				case IDLE_TO_ACTIVE:
+					state = State.ACTIVE;
+					break;
+				default:
+					state = State.IDLE;
+					break;
 			}
 		}
 	}
-
+	
 	void transition(boolean toActive) {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
 			active = new Active(this);
 		} else {
-			if (state == State.INIT) {
+			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
 			} else {
 				state = State.ACTIVE_TO_IDLE;
@@ -236,11 +215,9 @@ public class PanTiltZoom extends PApplet {
 			offset = 0;
 		}
 		
-		noSmooth();
 		image(clean.get(), offset, 0);
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
 		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
-		smooth();
 
 	}
 
