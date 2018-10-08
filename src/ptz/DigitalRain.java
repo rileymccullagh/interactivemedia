@@ -9,13 +9,11 @@ class DigitalRain {
 
 	DigitalRain(PApplet p) {
 		this.parent = p;
-		
+
 		for (int i = 0; i < rain.length; i++) {
 			rain[i] = new RainInformation(parent);
 		}
 	}
-
-
 
 	void draw() {
 		parent.translate(0, 0, -500);

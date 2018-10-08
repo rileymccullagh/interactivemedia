@@ -3,6 +3,8 @@
 // high frequency words found in the locations matching wikipedia page. 
 package ptz;
 
+import java.awt.Color;
+
 import processing.core.*;
 
 class RainInformation {
@@ -15,6 +17,7 @@ class RainInformation {
 	int tCount; // Determines a metaStr to be displayed from 6 options.
 	int boxWidth;
 	int textS;
+	float[] rainColor;
 	String metaStr;
 	// Color rainColor;
 	PFont mono; // Using a google Inconsolata-Bold font.
@@ -29,6 +32,8 @@ class RainInformation {
 		boxWidth = (int) PApplet.map(z, 0, 20, 4, 29); // Scales the width of the text field, to force each character of
 														// a string to appear on a single line
 		// rainColor = parent.colorsComp[(int)parent.random(8)]; // gives each instance
+		// Color rainColor =
+		// Color((parent.random(1,255)),(parent.random(1,255)),(parent.random(1,255)));
 		// a generated color from an array of 8 complementary colors.
 		textS = (int) PApplet.map(z, 0, 20, 5, 33); // scales text size with Z value
 		tCount = (int) parent.random(1, 10); // Determines a metaStr to be displayed from 6 options.
