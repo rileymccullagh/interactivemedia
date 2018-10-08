@@ -37,7 +37,7 @@ class Idle {
 
 	Idle(PApplet p) {
 		this.parent = p;
-		objectID = 2;//(int)parent.random(1,10);  // (int)parent.random(1,10);
+		objectID = 3;//(int)parent.random(1,10);  // (int)parent.random(1,10);
 		bg = new Background(this.parent);
 		dr = new DigitalRain(this.parent);
 		// ca = new colorAverage(this.parent);

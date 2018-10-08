@@ -48,12 +48,13 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 
 	void draw() {
 		parent.pushMatrix();
+		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
 		parent.translate(parent.width / 2, parent.height / 2, -200);
 		parent.rotateY(a1);
 		parent.rotateX(a2);
 		parent.scale(50);
-		parent.beginShape(parent.QUADS);
+		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);
 		parent.texture(tex1);
 
@@ -65,6 +66,8 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 
 		parent.endShape();
 
+		parent.beginShape(PApplet.QUADS);
+
 		parent.texture(tex2);
 		// -Z "back" face
 		parent.vertex(1, -1, -1, 0, 0);
@@ -73,7 +76,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.vertex(1, 1, -1, 0, 1);
 		parent.endShape();
 
-		parent.beginShape(parent.QUADS);
+		parent.beginShape(PApplet.QUADS);
 		parent.texture(tex3);
 		// +Y "bottom" face
 		parent.vertex(-1, 1, 1, 0, 0);
@@ -82,7 +85,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.vertex(-1, 1, -1, 0, 1);
 		parent.endShape();
 
-		parent.beginShape(parent.QUADS);
+		parent.beginShape(PApplet.QUADS);
 
 		parent.texture(tex4);
 		// -Y "top" face
@@ -92,7 +95,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.vertex(-1, -1, 1, 0, 1);
 		parent.endShape();
 
-		parent.beginShape(parent.QUADS);
+		parent.beginShape(PApplet.QUADS);
 
 		parent.texture(tex5);
 		// +X "right" face
@@ -102,7 +105,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.vertex(1, 1, 1, 0, 1);
 		parent.endShape();
 
-		parent.beginShape(parent.QUADS);
+		parent.beginShape(PApplet.QUADS);
 
 		parent.texture(tex6);
 		// -X "left" face
