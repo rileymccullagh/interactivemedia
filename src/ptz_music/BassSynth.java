@@ -5,9 +5,13 @@ import processing.core.PApplet;
 import ddf.minim.*;
 import ddf.minim.ugens.*;
 import ddf.minim.analysis.*;
+import javax.sound.midi.*;
+
 
 public class BassSynth  {
 	PApplet parent;
+	
+	Synthesizer synth;
 		
 	int currentStep = 0;
 	Minim minim;
@@ -27,6 +31,10 @@ public class BassSynth  {
 		output = minim.getLineOut();
 				
 		fft = new FFT(output.bufferSize(), output.sampleRate());
+		
+	    synth = MidiSystem.getSynthesizer();
+	    synth.open();
+
 		
 	}
 

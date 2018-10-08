@@ -9,7 +9,7 @@ class Idle {
   DigitalRain dr;
   //TextureCube tc;
   Background bg;
-  Vortex vortex;
+//  Vortex vortex;
   IdleMusic idleMusic;
 
 
@@ -21,7 +21,7 @@ class Idle {
     bg = new Background(this.parent);
     //tc = new TextureCube(this.parent);
     dr = new DigitalRain(this.parent);
-	vortex = new Vortex(parent, idleMusic.output);
+//	vortex = new Vortex(parent, idleMusic.output);
 
   }
 
@@ -29,7 +29,7 @@ class Idle {
 
   void draw() {
     bg.draw();
-	vortex.draw();
+//	vortex.draw();
 
     dr.randomise();
     dr.draw();
