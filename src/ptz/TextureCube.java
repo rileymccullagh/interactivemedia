@@ -28,7 +28,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 
 	TextureCube(PApplet p) {
 		this.parent = p;
-		
+
 		tex1 = parent.loadImage(url1, "jpeg");
 		tex2 = parent.loadImage(url2, "jpeg");
 		tex3 = parent.loadImage(url3, "jpeg");
@@ -49,12 +49,12 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 	void draw() {
 		parent.pushMatrix();
 		parent.noStroke();
-		parent.translate(parent.width / 2, parent.height / 2, 100);
+		parent.translate(parent.width / 2, parent.height / 2, -200);
 		parent.rotateY(a1);
 		parent.rotateX(a2);
 		parent.scale(100);
 		parent.beginShape(parent.QUADS);
-		// parent.fill(0, 0, 0);
+		parent.fill(0, 0, 0);
 		parent.texture(tex1);
 
 		// +Z "front" face
