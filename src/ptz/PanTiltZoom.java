@@ -18,8 +18,8 @@ public class PanTiltZoom extends PApplet {
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
-	final int millisIdle       = 5000;
-	final int millisTransition = 10000;
+	final int millisIdle       = 1000;
+	final int millisTransition = 1000;
 
 	Idle idle;
 	Active active;
@@ -208,7 +208,9 @@ public class PanTiltZoom extends PApplet {
 		noise.endDraw();
 
 		int offset = (int)random(0, 10);
-		if(offset > 8) {
+		if(offset == 9) {
+			offset = -1;
+		} else if (offset == 1){
 			offset = 1;
 		} else {
 			offset = 0;
@@ -217,7 +219,7 @@ public class PanTiltZoom extends PApplet {
 		noSmooth();
 		image(clean.get(), offset, 0);
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
-		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
+		blend(green.get(), 0, 0, width, height, offset, 0, width+offset, height, ADD);
 		smooth();
 	}
 }

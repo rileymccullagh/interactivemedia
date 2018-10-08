@@ -1,4 +1,4 @@
-package ptz_music;
+package ptz;
 
 import processing.core.PImage;
 import processing.core.PApplet;

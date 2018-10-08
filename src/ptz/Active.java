@@ -12,15 +12,16 @@ class Active {
 	
 	Active(PApplet parent) {
 		this.parent = parent;
-		this.acidGenerator = new AcidGenerator(parent);
-		this.histogram = new Engine_Ball_Bar(parent.width, parent.height, acidGenerator.drumMachine.bands, parent);
-
+		acidGenerator = new AcidGenerator(parent);		
+		histogram = new Engine_Ball_Bar(parent.width, parent.height, acidGenerator.drumMachine.bands, parent);
+		
+		acidGenerator.output.playNote(0, 0.25f, acidGenerator);		
 	}
 
 	void draw() {
 		parent.clear();
 		acidGenerator.update();
-		parent.image(histogram.draw(acidGenerator.drumMachine.spectrum), 0, 0);	
+//		parent.image(histogram.draw(acidGenerator.drumMachine.spectrum), 0, 0);	
 	}
 	
 	void willMoveFromActive(int transitionTime) {

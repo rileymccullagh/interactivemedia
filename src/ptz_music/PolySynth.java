@@ -35,5 +35,4 @@ public class PolySynth implements Instrument {
 		}
 		output.playNote(0, 0.25f, this);
 	}
-	
 }

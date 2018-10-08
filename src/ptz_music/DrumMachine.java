@@ -6,13 +6,12 @@ import ddf.minim.*;
 import ddf.minim.ugens.*;
 import ddf.minim.analysis.*;
 
-public class DrumMachine implements Instrument {
+public class DrumMachine {
 	PApplet parent;
 	Sampler[] voices = new Sampler[11];
 	boolean[][] patterns = new boolean[11][16];
-	int currentStep = 0;
 	Minim minim;
-	AudioOutput output;
+	public AudioOutput output;
 
 	FFT fft;
 	public int bands = 8;
@@ -25,8 +24,7 @@ public class DrumMachine implements Instrument {
 		output = minim.getLineOut();
 		fft = new FFT(output.bufferSize(), output.sampleRate());
 
-		String[] files = { "bd.wav", "sd.wav", "rs.wav", "cp.wav", "ht.wav", "mt.wav", "lt.wav", "ch.wav", "oh.wav",
-				"rd.wav", "cr.wav" };
+		String[] files = { "bd.wav", "sd.wav", "rs.wav", "cp.wav", "ht.wav", "mt.wav", "lt.wav", "ch.wav", "oh.wav", "rd.wav", "cr.wav" };
 
 		for (int i = 0; i < 11; i++) {
 			voices[i] = new Sampler(files[i], 4, minim);
@@ -45,22 +43,12 @@ public class DrumMachine implements Instrument {
 		patterns[8][14] = true;
 	}
 
-	@Override
-	public void noteOn(float dur) {
+	public void noteOn(int step) {
 		for (int i = 0; i < patterns.length; i++) {
-			if (patterns[i][currentStep]) {
+			if (patterns[i][step]) {
 				voices[i].trigger();
 			}
 		}
-	}
-
-	@Override
-	public void noteOff() {
-		currentStep++;
-		if (currentStep >= 16) {
-			currentStep = 0;
-		}
-		output.playNote(0, 0.25f, this);
 	}
 
 	public void updateFFT() {
@@ -68,8 +56,7 @@ public class DrumMachine implements Instrument {
 		fft.linAverages(bands);
 
 		for (int i = 0; i < bands; i++) {
-			spectrum[i] = PApplet.map(fft.getBand(i), 0.0f, 150.0f, 0.0f, 1.0f);
-
+			spectrum[i] = PApplet.map(fft.getBand(i), 0.0f, 500.0f, 0.0f, 1.0f);
 		}
 	}
 	

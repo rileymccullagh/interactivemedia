@@ -6,7 +6,7 @@ import ddf.minim.*;
 import ddf.minim.ugens.*;
 import ddf.minim.analysis.*;
 
-public class BassSynth implements Instrument {
+public class BassSynth  {
 	PApplet parent;
 		
 	int currentStep = 0;
@@ -30,21 +30,11 @@ public class BassSynth implements Instrument {
 		
 	}
 
-	@Override
 	public void noteOn(float arg0) {
 		for (int i = 0; i < pattern.length; i++) {
 			if (pattern[i]>0) {
 				//trigger ya synth here
 			}
 		}
-	}
-	
-	@Override
-	public void noteOff() {
-		currentStep++;
-		if (currentStep >= 16) {
-			currentStep = 0;
-		}
-		output.playNote(0, 0.25f, this);
 	}
 }
