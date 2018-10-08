@@ -52,7 +52,7 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		parent.translate(parent.width / 2, parent.height / 2, -200);
 		parent.rotateY(a1);
 		parent.rotateX(a2);
-		parent.scale(100);
+		parent.scale(50);
 		parent.beginShape(parent.QUADS);
 		parent.fill(0, 0, 0);
 		parent.texture(tex1);
