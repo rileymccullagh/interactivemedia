@@ -44,8 +44,6 @@ public class Idle {
 	void draw() {
 		bg.draw();
 		ca.getAverageColor(bg.get());
-		colorsAnal = colorHarmony.Analogous(ca.getAverageColor(bg.get()));
-		colorsComp = colorHarmony.Complementary(ca.getAverageColor(bg.get()));
 		dr.draw();
 		tc.draw();
 	}

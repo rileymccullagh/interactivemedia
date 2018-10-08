@@ -38,7 +38,11 @@ class colorAverage { // This class is possible due to the colorharmony library a
 		b /= img.pixels.length;
 
 		System.out.println(r + "," + g + "," + b);
+		hexValue = colorHarmony.P52Hex(parent.color(r, g, b));
+		colorsAnal = colorHarmony.Analogous(hexValue);
+		colorsComp = colorHarmony.Complementary(hexValue);
 		return parent.color(r, g, b);
+		
 
 	}
 }
