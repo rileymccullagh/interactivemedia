@@ -37,7 +37,6 @@ public class BassSynth implements Instrument {
 				//trigger ya synth here
 			}
 		}
-		
 	}
 	
 	@Override
