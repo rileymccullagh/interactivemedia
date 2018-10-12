@@ -71,20 +71,20 @@ class Ball {
   float overlap_depth (PVector rhs, int radius) {
     return (float)(((radius) * 2.0) - get_Position().sub(rhs).mag());
   }
+  byte terminal_velocity = 15;
+  byte gravity_x = 0;
+  byte gravity_y = 1;
 
   void update() {
     x_old = x; 
     y_old = y;
-
-    byte terminal_velocity = 15;
-    byte gravity_x = 0;
-    byte gravity_y = 1;
 
     x += vel_x;
     y += vel_y; 
 
     vel_x += accel_x;
     vel_y += accel_y;
+    
     if (vel_x < 0) {
       vel_x = (byte)(Math.max(vel_x, -terminal_velocity));
     } else {
