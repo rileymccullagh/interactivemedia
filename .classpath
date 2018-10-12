@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="com/cage/colorharmony/|com/cage/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/com/cage/colorharmony"/>
+	<classpathentry excluding="colorharmony/" kind="src" path="src/com/cage"/>
 	<classpathentry exported="true" kind="lib" path="library/core.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/gluegen-rt-natives-linux-aarch64.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/gluegen-rt-natives-linux-amd64.jar"/>
@@ -22,7 +24,7 @@
 	<classpathentry exported="true" kind="lib" path="library/jsyn-20171016.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/minim.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/sound.jar"/>
-	<classpathentry exported="true" kind="lib" path="library/colorharmony.jar"/>
+	<classpathentry exported="true" kind="lib" path="library/colorharmony.jar" sourcepath="src/com/cage/colorharmony/com/cage/colorharmony"/>
 	<classpathentry exported="true" kind="lib" path="library/tritonus_share.jar"/>
 	<classpathentry exported="true" kind="lib" path="library/tritonus_aos.jar"/>
 	<classpathentry kind="lib" path="library/mp3spi1.9.5.jar"/>

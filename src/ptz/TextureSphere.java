@@ -2,8 +2,7 @@ package ptz;
 
 import processing.core.*;
 
-class TextureSphere { // Generates a 3D sphere with a texture mapped onto it.
-	// Like before, the texture will be replaced in future by a webcam feed.
+class TextureSphere {
 
 	PApplet parent;
 
@@ -16,7 +15,7 @@ class TextureSphere { // Generates a 3D sphere with a texture mapped onto it.
 	TextureSphere(PApplet p) {
 		this.parent = p;
 		tex1 = parent.loadImage(url1, "jpeg");
-		globe = parent.createShape(this.parent.SPHERE, 175);
+		globe = parent.createShape(PApplet.SPHERE, 175);
 		globe.setTexture(tex1);
 
 	}

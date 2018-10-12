@@ -1,18 +1,14 @@
 package ptz;
 
-import java.awt.Color;
-
 import com.cage.colorharmony.ColorHarmony;
 
 import processing.core.*;
 
-class colorAverage { // This class is possible due to the colorharmony library and posts on this
-						// thread
-						// https://forum.processing.org/two/discussion/15573/get-the-average-rgb-from-pixels
+public class colorAverage {
 
 	PApplet parent;
 
-	ColorHarmony colorHarmony = new ColorHarmony(parent);
+	ColorHarmony colorHarmony;
 
 	int[] colorsComp = new int[8];
 	int[] colorsAnal = new int[8];
@@ -20,11 +16,12 @@ class colorAverage { // This class is possible due to the colorharmony library a
 
 	colorAverage(PApplet parent) {
 		this.parent = parent;
-		int detail = 50;
+		colorHarmony = new ColorHarmony(parent);
+		
 
 	}
 
-	int getAverageColor(PImage img) {
+	String getAverageColor(PImage img) {
 		img.loadPixels();
 		int r = 0, g = 0, b = 0;
 		for (int i = 0; i < img.pixels.length; i++) {
@@ -37,12 +34,21 @@ class colorAverage { // This class is possible due to the colorharmony library a
 		g /= img.pixels.length;
 		b /= img.pixels.length;
 
-		System.out.println(r + "," + g + "," + b);
 		hexValue = colorHarmony.P52Hex(parent.color(r, g, b));
-		colorsAnal = colorHarmony.Analogous(hexValue);
-		colorsComp = colorHarmony.Complementary(hexValue);
-		return parent.color(r, g, b);
-		
+		// colorsAnal = colorHarmony.Analogous(hexValue);
+	    // 	colorsComp = colorHarmony.Complementary(hexValue);
+		System.out.println("hexValue is " +hexValue);
+		return hexValue;
+	}
 
+	int [] loadAnal(String hexValue) {
+		colorsAnal = colorHarmony.Analogous(hexValue);
+		System.out.println("colorAnal is " + colorsAnal[(int)parent.random(8)]);
+		return colorsAnal;
+	}
+	int [] loadComp(String hexValue) {
+		colorsComp = colorHarmony.Complementary(hexValue);
+		System.out.println("colorsComp is " + colorsComp[(int)parent.random(8)]);
+		return colorsComp;
 	}
 }

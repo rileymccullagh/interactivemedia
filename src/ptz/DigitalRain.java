@@ -16,11 +16,12 @@ class DigitalRain {
 	}
 
 	void draw() {
-		parent.translate(0, 0, 100);
+		parent.pushMatrix();
+		parent.translate(0,0,-100);
 		for (int i = 0; i < rain.length; i++) {
 			rain[i].fall();
 			rain[i].show();
 		}
-		parent.translate(0, 0, 500);
+		parent.popMatrix();
 	}
 }

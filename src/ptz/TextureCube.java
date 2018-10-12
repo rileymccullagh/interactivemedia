@@ -2,17 +2,10 @@ package ptz;
 
 import processing.core.*;
 
-class TextureCube { // This is a very basic class to just generate a 3d cube and generate a texture
-					// on each side.
-	// Future versions will have each face's texture be a webcam feed instead of a
-	// randomly generated image.
-	// Some credit to processing docs for the 3D cube coordinates
-	// https://processing.org/examples/texturecube.html
+class TextureCube {
 
 	PApplet parent;
 
-	float a1; // some rotation
-	float a2; // some rotation
 	PImage tex1;
 	PImage tex2;
 	PImage tex3;
@@ -37,22 +30,13 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 		tex6 = parent.loadImage(url6, "jpeg");
 	}
 
-//	void setup() {
-//		tex1 = parent.loadImage(url1, "jpeg");
-//		tex2 = parent.loadImage(url2, "jpeg");
-//		tex3 = parent.loadImage(url3, "jpeg");
-//		tex4 = parent.loadImage(url4, "jpeg");
-//		tex5 = parent.loadImage(url5, "jpeg");
-//		tex6 = parent.loadImage(url6, "jpeg");
-//	}
-
 	void draw() {
 		parent.pushMatrix();
 		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
 		parent.translate(parent.width / 2, parent.height / 2, 0);
-		parent.rotateY(parent.frameCount*PApplet.PI/360);
-		parent.rotateX(parent.frameCount*PApplet.PI/720);
+		parent.rotateY(parent.frameCount * PApplet.PI / 360);
+		parent.rotateX(parent.frameCount * PApplet.PI / 720);
 		parent.scale(50);
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);
@@ -116,8 +100,5 @@ class TextureCube { // This is a very basic class to just generate a 3d cube and
 
 		parent.endShape();
 		parent.popMatrix();
-
-		a1 += .02;
-		a2 += .025;
 	}
 }

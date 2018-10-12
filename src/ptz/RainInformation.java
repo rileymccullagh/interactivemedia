@@ -3,13 +3,12 @@
 // high frequency words found in the locations matching wikipedia page. 
 package ptz;
 
-import java.awt.Color;
-
 import processing.core.*;
 
 class RainInformation {
 	PApplet parent;
-
+	colorAverage ca;	
+	Background bg;
 	float x;
 	float y;
 	float z;
@@ -17,26 +16,27 @@ class RainInformation {
 	int tCount; // Determines a metaStr to be displayed from 6 options.
 	int boxWidth;
 	int textS;
-	float[] rainColor;
 	String metaStr;
-	// Color rainColor;
 	PFont mono; // Using a google Inconsolata-Bold font.
+	int rainColor;
+	
 
 	RainInformation(PApplet p) {
 		this.parent = p;
+		ca = new colorAverage(parent);
+		bg = new Background(parent);
+		ca.loadAnal(ca.getAverageColor(bg.get()));
+		ca.loadComp(ca.getAverageColor(bg.get()));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
 		x = parent.random(parent.width); // gives each drop a random x value
 		y = parent.random(-1700, -800); // gives each drop a random y value
 		z = parent.random(0, 20); // gives each drop a random z value
 		yspeed = PApplet.map(z, 0, 20, 0, 1);
-		boxWidth = (int) PApplet.map(z, 0, 20, 4, 29); // Scales the width of the text field, to force each character of
-														// a string to appear on a single line
-		// rainColor = parent.colorsComp[(int)parent.random(8)]; // gives each instance
-		// Color rainColor =
-		// Color((parent.random(1,255)),(parent.random(1,255)),(parent.random(1,255)));
-		// a generated color from an array of 8 complementary colors.
+		boxWidth = (int) PApplet.map(z, 0, 20, 4, 29); // Scales the width of the text field, to wforce each character of
 		textS = (int) PApplet.map(z, 0, 20, 5, 33); // scales text size with Z value
 		tCount = (int) parent.random(1, 10); // Determines a metaStr to be displayed from 6 options.
+		rainColor = ca.colorsComp[(int) parent.random(8)];
+		System.out.println("CONSTRUCTA ca hex is " + ca.hexValue);
 	}
 
 	void fall() {
@@ -64,10 +64,12 @@ class RainInformation {
 		} else {
 			metaStr = "ERRORLOL";
 		}
-		// textAlign(LEFT);
+		
 		parent.textFont(mono); // Needed to have a monospaced font for the boxWidth to work.
 		parent.textSize(textS);
 		parent.text(metaStr, x, y, boxWidth, 1000);
-		parent.fill(0);
+		parent.fill(rainColor);
+	    System.out.println("SHOW CA hex is " + ca.hexValue);
+	    System.out.println("raincolor is " + rainColor);
 	}
 }
