@@ -12,7 +12,8 @@ public class BassSynth  {
 	PApplet parent;
 	
 	Synthesizer synth;
-		
+	MidiChannel[] channels;	
+	
 	int currentStep = 0;
 	Minim minim;
 	AudioOutput output;
@@ -31,11 +32,20 @@ public class BassSynth  {
 		output = minim.getLineOut();
 				
 		fft = new FFT(output.bufferSize(), output.sampleRate());
-		
-	    synth = MidiSystem.getSynthesizer();
-	    synth.open();
-
-		
+		try {
+		    synth = MidiSystem.getSynthesizer();
+		    synth.open();
+		    Soundbank sounds = MidiSystem.getSoundbank( parent.createInput("303.sf2") );
+		    synth.loadAllInstruments( sounds );
+		    channels = synth.getChannels();
+		} catch( MidiUnavailableException ex )
+		{
+	        System.out.println("No default synthesizer found.");
+	    }
+	    catch( Exception ex )
+	    {
+		    System.out.println(ex.toString());
+	    }
 	}
 
 	public void noteOn(float arg0) {
