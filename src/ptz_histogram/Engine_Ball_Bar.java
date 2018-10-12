@@ -12,9 +12,13 @@ public class Engine_Ball_Bar {
   private Bar_Manager bar_manager;
   private Ball_Manager ball_manager;
   
-  public Engine_Ball_Bar (int screen_width, int screen_height, int num_of_bars, PApplet parent) {
-    this.bar_manager = new Bar_Manager(screen_width, screen_height, num_of_bars);
-    this.ball_manager = new Ball_Manager(15, (int)(Math.ceil(screen_width * 0.03))); 
+  
+  
+
+  //If bar_color is smaller than the number of balls, it will cycle through the colors
+  public Engine_Ball_Bar (int screen_width, int screen_height, int num_of_bars, int num_of_balls, PApplet parent, int[] ball_color, int[][] bar_color, int[] text_color, String text) {
+    this.bar_manager = new Bar_Manager(screen_width, screen_height, num_of_bars, bar_color);
+    this.ball_manager = new Ball_Manager(num_of_balls, (int)(Math.ceil(screen_width * 0.03)), ball_color, text_color, text); 
     this.screen_width = screen_width; 
     this.screen_height = screen_height;
     ball_manager.reset_balls(screen_width);
@@ -29,13 +33,9 @@ public class Engine_Ball_Bar {
     pg.clear();
     pg.textSize(ball_manager.getRadius() * 2);
     pg.textAlign(PConstants.CENTER, PConstants.CENTER);
-    String displaytext = "0123456789";
-    int[] red = {255,0,0};
-    int[] green = {0,255,0}; 
-    int[] blue = {0,0,255};
 
-    pg = ball_manager.draw(pg, displaytext, blue, green);
-    pg = bar_manager.draw(pg, new int[][]{red, green, blue});
+    pg = ball_manager.draw(pg);
+    pg = bar_manager.draw(pg);
     pg.endDraw();
     return pg;
   }
