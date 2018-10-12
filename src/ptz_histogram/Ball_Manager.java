@@ -6,9 +6,16 @@ import java.util.Arrays;
 class Ball_Manager {
   private Ball[] balls;
   private int radius;
-  Ball_Manager(int ball_count, int radius) {
+  private String displaytext; 
+  private int[] ball_color; 
+  private int[] text_color;
+
+  Ball_Manager(int ball_count, int radius, int[] ball_color, int[] text_color, String displaytext) {
     balls = new Ball[ball_count];
     this.radius = radius;
+    this.ball_color = ball_color; 
+    this.text_color = text_color;
+    this.displaytext = displaytext;
   }
   void update_balls() {
     for (Ball ball : balls) {
@@ -27,7 +34,7 @@ class Ball_Manager {
       balls[i] = new Ball();
       balls[i].x = (short)((i * 60) %  screen_width);
       balls[i].y = (short)((15 * i) % screen_width);
-      balls[i].vel_x = (byte)(15);
+      balls[i].vel_x = (byte)(1);
     }
   }
 
@@ -63,7 +70,7 @@ class Ball_Manager {
    Arrays.sort(balls, new sortBallByX()); 
   }
   
-  PGraphics draw(PGraphics pg, String displaytext, int[] ball_color, int[] text_color) {
+  PGraphics draw(PGraphics pg) {
     for (int i = 0; i < balls.length; i++) {
       pg = balls[i].draw(pg, radius, displaytext.charAt(i % displaytext.length()), ball_color, text_color);
     }
