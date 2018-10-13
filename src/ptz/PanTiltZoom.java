@@ -9,13 +9,18 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
 
+import processing.opengl.PShader;
+import ptz_camera.Word;
+
+
+
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = true;
+	boolean fullscreen = false;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 
-	boolean wait = true;
+	boolean wait = false;
 	
 	final int millisActive     = 30000;
 	final int millisIdle       = 1000;
@@ -31,6 +36,9 @@ public class PanTiltZoom extends PApplet {
 
 	public static void main(String[] args) {
 		PApplet.main("ptz.PanTiltZoom");
+		Word w = new Word();
+		String[] out = w.frequencyAnalysis("https://en.wikipedia.org/wiki/Mount_Laurel,_New_Jersey", 10);
+		System.out.println("Data");
 	}
 	
 	@Override
@@ -43,7 +51,7 @@ public class PanTiltZoom extends PApplet {
 		if(fullscreen) {
 			fullScreen(P3D);
 		} else {
-			size(640, 480, P3D);
+			size(320, 240, P3D);
 		}
 		smooth();
 	}
