@@ -7,7 +7,7 @@ import processing.core.*;
 
 class RainInformation {
 	PApplet parent;
-	colorAverage ca;	
+	colorAverage ca;
 	Background bg;
 	float x;
 	float y;
@@ -19,7 +19,6 @@ class RainInformation {
 	String metaStr;
 	PFont mono; // Using a google Inconsolata-Bold font.
 	int rainColor;
-	
 
 	RainInformation(PApplet p) {
 		this.parent = p;
@@ -28,25 +27,23 @@ class RainInformation {
 		ca.loadAnal(ca.getAverageColor(bg.get()));
 		ca.loadComp(ca.getAverageColor(bg.get()));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
-		x = parent.random(parent.width); // gives each drop a random x value
-		y = parent.random(-1700, -800); // gives each drop a random y value
+		x = parent.random((parent.width * 3)); // gives each drop a random x value
+		y = parent.random(-2000, -500); // gives each drop a random y value
 		z = parent.random(0, 20); // gives each drop a random z value
 		yspeed = PApplet.map(z, 0, 20, 0, 1);
-		boxWidth = (int) PApplet.map(z, 0, 20, 4, 29); // Scales the width of the text field, to wforce each character of
+		boxWidth = (int) PApplet.map(z, 0, 20, 4, 29); // Scales the width of the text field, to wforce each character
 		textS = (int) PApplet.map(z, 0, 20, 5, 33); // scales text size with Z value
 		tCount = (int) parent.random(1, 10); // Determines a metaStr to be displayed from 6 options.
 		rainColor = ca.colorsComp[(int) parent.random(8)];
-		System.out.println("CONSTRUCTA ca hex is " + ca.hexValue);
 	}
 
 	void fall() {
-		y = y + 1; // Makes them fall
-		// just a little bit of gravity
-		yspeed = yspeed + 1; // add gravity to speed
-
+		y = y + yspeed; // Makes them fall
+		float grav = PApplet.map(z, 0, 20, 0, (float) .05); // just a little bit of gravity
+		yspeed = yspeed + grav; // add gravity to speed
 		if (y > parent.height) { // reset once below the screen
-			y = parent.random(-1000, -600);
-			yspeed = PApplet.map(z, 0, 20, 0, 1);
+			y = parent.random(-2000, -400);
+			yspeed = PApplet.map(z, 0, 20, 0, (float) 0.5);
 		}
 	}
 
@@ -64,12 +61,11 @@ class RainInformation {
 		} else {
 			metaStr = "ERRORLOL";
 		}
-		
+		parent.pushMatrix();
 		parent.textFont(mono); // Needed to have a monospaced font for the boxWidth to work.
 		parent.textSize(textS);
 		parent.text(metaStr, x, y, boxWidth, 1000);
 		parent.fill(rainColor);
-	    System.out.println("SHOW CA hex is " + ca.hexValue);
-	    System.out.println("raincolor is " + rainColor);
+		parent.popMatrix();
 	}
 }

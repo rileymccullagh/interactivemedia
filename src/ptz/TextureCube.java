@@ -37,7 +37,8 @@ class TextureCube {
 		parent.translate(parent.width / 2, parent.height / 2, 0);
 		parent.rotateY(parent.frameCount * PApplet.PI / 360);
 		parent.rotateX(parent.frameCount * PApplet.PI / 720);
-		parent.scale(50);
+		parent.scale(PApplet.map((float)parent.height+(float)parent.width, (float)0,((float)parent.height+(float)parent.width)*2,(float)40,(float)100));
+
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);
 		parent.texture(tex1);
@@ -99,6 +100,7 @@ class TextureCube {
 		parent.vertex(-1, 1, -1, 0, 1);
 
 		parent.endShape();
+
 		parent.popMatrix();
 	}
 }

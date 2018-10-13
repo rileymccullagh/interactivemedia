@@ -18,15 +18,10 @@ public class PanTiltZoom extends PApplet {
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 
-	boolean wait = false;
+	boolean wait = true;
 	
-<<<<<<< HEAD
-	final int millisActive     = 1000;
-	final int millisIdle       = 600000;
-=======
 	final int millisActive     = 30000;
-	final int millisIdle       = 1000;
->>>>>>> master
+	final int millisIdle       = 1000000000;
 	final int millisTransition = 1000;
 
 	Idle idle;
@@ -54,7 +49,7 @@ public class PanTiltZoom extends PApplet {
 		if(fullscreen) {
 			fullScreen(P3D);
 		} else {
-			size(320, 240, P3D);
+			size(480, 360, P3D);
 		}
 		smooth();
 	}

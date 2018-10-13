@@ -17,7 +17,6 @@ public class colorAverage {
 	colorAverage(PApplet parent) {
 		this.parent = parent;
 		colorHarmony = new ColorHarmony(parent);
-		
 
 	}
 
@@ -35,20 +34,16 @@ public class colorAverage {
 		b /= img.pixels.length;
 
 		hexValue = colorHarmony.P52Hex(parent.color(r, g, b));
-		// colorsAnal = colorHarmony.Analogous(hexValue);
-	    // 	colorsComp = colorHarmony.Complementary(hexValue);
-		System.out.println("hexValue is " +hexValue);
 		return hexValue;
 	}
 
-	int [] loadAnal(String hexValue) {
+	int[] loadAnal(String hexValue) {
 		colorsAnal = colorHarmony.Analogous(hexValue);
-		System.out.println("colorAnal is " + colorsAnal[(int)parent.random(8)]);
 		return colorsAnal;
 	}
-	int [] loadComp(String hexValue) {
+
+	int[] loadComp(String hexValue) {
 		colorsComp = colorHarmony.Complementary(hexValue);
-		System.out.println("colorsComp is " + colorsComp[(int)parent.random(8)]);
 		return colorsComp;
 	}
 }
