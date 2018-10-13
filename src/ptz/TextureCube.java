@@ -34,7 +34,7 @@ class TextureCube {
 		parent.pushMatrix();
 		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
-		parent.translate(parent.width / 2, parent.height / 2, 0);
+		parent.translate(parent.width / 2, parent.height / 2, -200);
 		parent.rotateY(parent.frameCount * PApplet.PI / 360);
 		parent.rotateX(parent.frameCount * PApplet.PI / 720);
 		parent.scale(PApplet.map((float)parent.height+(float)parent.width, (float)0,((float)parent.height+(float)parent.width)*2,(float)40,(float)100));

@@ -21,8 +21,8 @@ public class PanTiltZoom extends PApplet {
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
-	final int millisIdle       = 1000000000;
-	final int millisTransition = 1000;
+	final int millisIdle       = 10000;
+	final int millisTransition = 5000;
 
 	Idle idle;
 	Active active;
