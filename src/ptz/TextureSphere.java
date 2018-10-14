@@ -20,11 +20,11 @@ class TextureSphere {
 
 	void setFeed(Feed feed) {
 		this.feed = feed;
-		globe.setTexture(feed.getNextImage());
+		globe.setTexture(feed.getNextImage(parent, 3));
 	}
 	
 	void draw() {
-		parent.image(feed.getNextImage(), 0, 0);
+		parent.image(feed.getNextImage(parent, 3), 0, 0);
 		parent.pushMatrix();
 		parent.translate(parent.width / 2, parent.height / 2, -200);
 		parent.rotateY(a1);
@@ -34,7 +34,7 @@ class TextureSphere {
 		parent.popMatrix();
 		a1 += .02;
 		a2 += .025;
-		globe.setTexture(feed.getNextImage());
+		globe.setTexture(feed.getNextImage(parent, 3));
 		globe.draw(parent.g);
 	}
 }

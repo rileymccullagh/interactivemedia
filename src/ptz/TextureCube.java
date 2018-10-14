@@ -24,7 +24,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);
-		parent.texture(feeds.get(0).getNextImage());
+		parent.texture(feeds.get(0).getNextImage(parent, 3));
 
 		// +Z "front" face
 		parent.vertex(-1, -1, 1, 0, 0);
@@ -36,7 +36,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(feeds.get(1).getNextImage());
+		parent.texture(feeds.get(1).getNextImage(parent, 3));
 		// -Z "back" face
 		parent.vertex(1, -1, -1, 0, 0);
 		parent.vertex(-1, -1, -1, 1, 0);
@@ -45,7 +45,7 @@ class TextureCube {
 		parent.endShape();
 
 		parent.beginShape(PApplet.QUADS);
-		parent.texture(feeds.get(2).getNextImage());
+		parent.texture(feeds.get(2).getNextImage(parent, 3));
 		// +Y "bottom" face
 		parent.vertex(-1, 1, 1, 0, 0);
 		parent.vertex(1, 1, 1, 1, 0);
@@ -55,7 +55,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(feeds.get(3).getNextImage());
+		parent.texture(feeds.get(3).getNextImage(parent, 3));
 		// -Y "top" face
 		parent.vertex(-1, -1, -1, 0, 0);
 		parent.vertex(1, -1, -1, 1, 0);
@@ -65,7 +65,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(feeds.get(4).getNextImage());
+		parent.texture(feeds.get(4).getNextImage(parent, 3));
 		// +X "right" face
 		parent.vertex(1, -1, 1, 0, 0);
 		parent.vertex(1, -1, -1, 1, 0);
@@ -75,7 +75,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(feeds.get(5).getNextImage());
+		parent.texture(feeds.get(5).getNextImage(parent, 3));
 		// -X "left" face
 		parent.vertex(-1, -1, -1, 0, 0);
 		parent.vertex(-1, -1, 1, 1, 0);

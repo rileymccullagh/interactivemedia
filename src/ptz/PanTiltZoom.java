@@ -40,10 +40,6 @@ public class PanTiltZoom extends PApplet {
 
 	public static void main(String[] args) {
 		PApplet.main("ptz.PanTiltZoom");
-		
-		Word w = new Word();
-		String[] out = w.frequencyAnalysis("https://en.wikipedia.org/wiki/Mount_Laurel,_New_Jersey", 10);
-		System.out.println("Data");
 	}
 	
 	@Override
@@ -70,12 +66,13 @@ public class PanTiltZoom extends PApplet {
 		frameRate(60);
 		
 		Collections.shuffle(feeds);
-		Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
+		//Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,0);
+		//Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
 		
 		idle = new Idle(this, feeds.subList(0, 6));
 		
-		idle.draw(); //initial fade in doesn't work without this??
-		background(0);
+		//idle.draw(); //initial fade in doesn't work without this??
+		//background(0);
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
@@ -85,6 +82,7 @@ public class PanTiltZoom extends PApplet {
 
 	@Override
 	public void draw(){
+		System.out.println("Beginning draw");
 		if (wait) {
 			drawTitle();
 			return;
