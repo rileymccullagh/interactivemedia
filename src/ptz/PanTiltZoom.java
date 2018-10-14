@@ -66,13 +66,13 @@ public class PanTiltZoom extends PApplet {
 		frameRate(60);
 		
 		Collections.shuffle(feeds);
-		//Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,0);
-		//Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
+		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,0);
+		Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
 		
 		idle = new Idle(this, feeds.subList(0, 6));
 		
-		//idle.draw(); //initial fade in doesn't work without this??
-		//background(0);
+		idle.draw(); //initial fade in doesn't work without this??
+		background(0);
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
