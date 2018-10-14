@@ -45,6 +45,9 @@ public class Camera {
 		}
 	}
 
+	public Feed get_feed(int i) {
+		return feeds.get(i);
+	}
 	public void shuffle_feeds () {
 		Collections.shuffle(feeds);
 	}
@@ -87,6 +90,13 @@ public class Camera {
 		return images_ret;
 	}
 	
+	public List<Feed> get_feeds (int count) {
+		List<Feed> ret_feeds = new ArrayList<Feed>();
+		for (int i = 0; i < count; i++) {
+			ret_feeds.add(feeds.get(i));
+		}
+		return ret_feeds;
+	}
 
 }
 

@@ -3,6 +3,7 @@ package ptz;
 import java.util.List;
 
 import processing.core.*;
+import ptz_camera.Feed;
 
 class TextureCube {
 
@@ -12,7 +13,7 @@ class TextureCube {
 		this.parent = p;
 	}
 
-	void draw(List<PImage> images) {
+	void draw(List<Feed> feeds) {
 		parent.pushMatrix();
 		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
@@ -23,7 +24,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);
-		parent.texture(images.get(0));
+		parent.texture(feeds.get(0).getNextImage());
 
 		// +Z "front" face
 		parent.vertex(-1, -1, 1, 0, 0);
@@ -35,7 +36,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(images.get(1));
+		parent.texture(feeds.get(1).getNextImage());
 		// -Z "back" face
 		parent.vertex(1, -1, -1, 0, 0);
 		parent.vertex(-1, -1, -1, 1, 0);
@@ -44,7 +45,7 @@ class TextureCube {
 		parent.endShape();
 
 		parent.beginShape(PApplet.QUADS);
-		parent.texture(images.get(2));
+		parent.texture(feeds.get(2).getNextImage());
 		// +Y "bottom" face
 		parent.vertex(-1, 1, 1, 0, 0);
 		parent.vertex(1, 1, 1, 1, 0);
@@ -54,7 +55,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(images.get(3));
+		parent.texture(feeds.get(3).getNextImage());
 		// -Y "top" face
 		parent.vertex(-1, -1, -1, 0, 0);
 		parent.vertex(1, -1, -1, 1, 0);
@@ -64,7 +65,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(images.get(4));
+		parent.texture(feeds.get(4).getNextImage());
 		// +X "right" face
 		parent.vertex(1, -1, 1, 0, 0);
 		parent.vertex(1, -1, -1, 1, 0);
@@ -74,7 +75,7 @@ class TextureCube {
 
 		parent.beginShape(PApplet.QUADS);
 
-		parent.texture(images.get(5));
+		parent.texture(feeds.get(5).getNextImage());
 		// -X "left" face
 		parent.vertex(-1, -1, -1, 0, 0);
 		parent.vertex(-1, -1, 1, 1, 0);

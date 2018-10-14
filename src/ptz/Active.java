@@ -1,8 +1,12 @@
 package ptz;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import ptz_camera.Camera;
+import ptz_camera.Feed;
 import ptz_music.*;
 import ptz_histogram.*;
 
@@ -11,9 +15,10 @@ class Active {
 
 	Engine_Ball_Bar histogram;
 	AcidGenerator acidGenerator;
-	Camera cam;
 	TextureSphere sphere;
-	Active(PApplet parent, Camera cam) {
+	TextureCube tc;
+	
+	Active(PApplet parent, Feed feed) {
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
 		this.sphere = new TextureSphere(parent);
@@ -27,22 +32,33 @@ class Active {
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		builder.text = text;
 	
-		this.cam = cam;
+		set_Sphere_Feed(feed);
 		this.histogram = builder.build(parent.width, parent.height, parent);
+		
+		tc = new TextureCube(this.parent);
+	}
+	
+	void set_Sphere_Feed (Feed feed) {
+		sphere.setFeed(feed);
 	}
 
-	void draw() {
+	void draw(Feed feed) {
 		parent.clear();
 		parent.background(255);
 		parent.fill(255);
-		
-		//parent.image(cam.get_sequence_of_images_by_index(1).get(0), 0, 0);
-		sphere.draw();
+		parent.noStroke();
 		acidGenerator.update();
 		
-		sphere.setTexture(cam.get_sequence_of_images_by_index(1).get(0));
-		//PImage histogram_img = histogram.draw(acidGenerator.drumMachine.spectrum);
+
+		PImage histogram_img = histogram.draw(acidGenerator.drumMachine.spectrum);
+		
+		
+		List<Feed> feeds = new ArrayList<Feed>();
+		for (int i = 0; i < 6; i++) {
+			feeds.add(feed);
+		}
+		tc.draw(feeds);
 		//parent.image(histogram_img, 0, 0);	
-		sphere.draw();
+		//sphere.draw();
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import processing.core.*;
 import ptz_camera.Camera;
+import ptz_camera.Feed;
 
 public class Idle {
 	PApplet parent;
@@ -14,19 +15,19 @@ public class Idle {
 	Background bg;
 	DigitalRain dr;
 	TextureCube tc;
-	Camera cam;
+    List<Feed> feeds;
 	
-	Idle(PApplet p, Camera cam) {
+	Idle(PApplet p, List<Feed> feeds) {
 		this.parent = p;
 		bg = new Background(this.parent);
 		dr = new DigitalRain(this.parent);
 		tc = new TextureCube(this.parent);
-		this.cam = cam;
+		this.feeds = feeds;
 	}
 
 	void draw() {
 		bg.draw();
 		dr.draw();
-		tc.draw(cam.get_sequence_of_images_by_index(6));
+		tc.draw(feeds);
 	}
 }

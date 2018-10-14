@@ -72,7 +72,7 @@ public class PanTiltZoom extends PApplet {
 		cam.shuffle_feeds();
 		cam.download_multiple_images_in_sequence(6,1,3);
 		
-		idle = new Idle(this, cam);
+		idle = new Idle(this, cam.get_feeds(6));
 		
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
@@ -97,7 +97,7 @@ public class PanTiltZoom extends PApplet {
 				break;
 			case ACTIVE:
 				// draw the active object
-				active.draw();
+				active.draw(cam.get_feed(0));
 				
 				// check if we have elapsed the active time frame
 				if(millis() > timeAtTransition + millisActive) {
@@ -126,7 +126,7 @@ public class PanTiltZoom extends PApplet {
 	
 			case ACTIVE_TO_IDLE:
 				if(fadeTime < millisTransition/2) {
-					active.draw();
+					active.draw(cam.get_feed(0));
 				} else {
 					idle.draw();
 				}
@@ -137,7 +137,7 @@ public class PanTiltZoom extends PApplet {
 				if(fadeTime < millisTransition/2) {
 					idle.draw();
 				} else {
-					active.draw();
+					active.draw(cam.get_feed(0));
 				}
 				fade();
 				break;
@@ -181,7 +181,7 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this, cam);
+			active = new Active(this, cam.get_feed(0));
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
