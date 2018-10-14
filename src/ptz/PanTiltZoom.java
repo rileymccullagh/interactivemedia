@@ -3,12 +3,16 @@ package ptz;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
 import processing.opengl.PShader;
+import ptz_camera.Camera;
 import ptz_camera.Word;
 
 
@@ -17,11 +21,12 @@ public class PanTiltZoom extends PApplet {
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
-
+	Camera cam;
+	
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
-	final int millisIdle       = 10000;
+	final int millisIdle       = 30000;
 	final int millisTransition = 5000;
 
 	Idle idle;
@@ -34,6 +39,7 @@ public class PanTiltZoom extends PApplet {
 
 	public static void main(String[] args) {
 		PApplet.main("ptz.PanTiltZoom");
+		
 		Word w = new Word();
 		String[] out = w.frequencyAnalysis("https://en.wikipedia.org/wiki/Mount_Laurel,_New_Jersey", 10);
 		System.out.println("Data");
@@ -57,15 +63,24 @@ public class PanTiltZoom extends PApplet {
 	@Override
 	public void setup(){
 		frame.setBackground(new java.awt.Color(0, 0, 0));
-		idle = new Idle(this);
+		
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
+		
+		cam = new Camera(this);
+		cam.shuffle_feeds();
+		cam.download_multiple_images_in_sequence(6,1,3);
+		
+		idle = new Idle(this, cam);
+		
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
+		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
 		noise = createGraphics(width/2, height/2, P2D);
+		System.out.println("Finished Setup");
 	}
 
 	@Override
@@ -166,7 +181,7 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this);
+			active = new Active(this, cam);
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;

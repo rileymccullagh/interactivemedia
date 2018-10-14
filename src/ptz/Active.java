@@ -2,6 +2,7 @@ package ptz;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import ptz_camera.Camera;
 import ptz_music.*;
 import ptz_histogram.*;
 
@@ -10,10 +11,12 @@ class Active {
 
 	Engine_Ball_Bar histogram;
 	AcidGenerator acidGenerator;
-	
-	Active(PApplet parent) {
+	Camera cam;
+	TextureSphere sphere;
+	Active(PApplet parent, Camera cam) {
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
+		this.sphere = new TextureSphere(parent);
 		String text = "Hello World";
 	
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
@@ -24,13 +27,22 @@ class Active {
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		builder.text = text;
 	
-		this.histogram = builder.build(parent.width, parent.height, parent); //new Engine_Ball_Bar(parent.width, parent.height, acidGenerator.drumMachine.bands, parent);
+		this.cam = cam;
+		this.histogram = builder.build(parent.width, parent.height, parent);
 	}
 
 	void draw() {
 		parent.clear();
+		parent.background(255);
+		parent.fill(255);
+		
+		//parent.image(cam.get_sequence_of_images_by_index(1).get(0), 0, 0);
+		sphere.draw();
 		acidGenerator.update();
-		PImage histogram_img = histogram.draw(acidGenerator.drumMachine.spectrum);
-		parent.image(histogram_img, 0, 0);	
+		
+		sphere.setTexture(cam.get_sequence_of_images_by_index(1).get(0));
+		//PImage histogram_img = histogram.draw(acidGenerator.drumMachine.spectrum);
+		//parent.image(histogram_img, 0, 0);	
+		sphere.draw();
 	}
 }

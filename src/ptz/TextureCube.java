@@ -8,28 +8,8 @@ class TextureCube {
 
 	PApplet parent;
 
-	PImage tex1;
-	PImage tex2;
-	PImage tex3;
-	PImage tex4;
-	PImage tex5;
-	PImage tex6;
-	String url1 = "https://picsum.photos/400/400/?random";
-	String url2 = "https://picsum.photos/400/400/?random";
-	String url3 = "https://picsum.photos/400/400/?random";
-	String url4 = "https://picsum.photos/400/400/?random";
-	String url5 = "https://picsum.photos/400/400/?random";
-	String url6 = "https://picsum.photos/400/400/?random";
-
 	TextureCube(PApplet p) {
 		this.parent = p;
-
-		tex1 = parent.loadImage(url1, "jpeg");
-		tex2 = parent.loadImage(url2, "jpeg");
-		tex3 = parent.loadImage(url3, "jpeg");
-		tex4 = parent.loadImage(url4, "jpeg");
-		tex5 = parent.loadImage(url5, "jpeg");
-		tex6 = parent.loadImage(url6, "jpeg");
 	}
 
 	void draw(List<PImage> images) {

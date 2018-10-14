@@ -15,24 +15,18 @@ public class Idle {
 	DigitalRain dr;
 	TextureCube tc;
 	Camera cam;
-	List<String> camera_urls = new ArrayList<String>();
-	Idle(PApplet p) {
+	
+	Idle(PApplet p, Camera cam) {
 		this.parent = p;
 		bg = new Background(this.parent);
 		dr = new DigitalRain(this.parent);
 		tc = new TextureCube(this.parent);
-		cam = new Camera(this.parent);
-		
-		for (int i = 0; i < cam.cameras.size(); i++) { 
-			camera_urls.add(cam.cameras.get(i)); 
-		};
-		Collections.shuffle(camera_urls);
-		cam.download_multiple_images_in_sequence(camera_urls.subList(0, 6),1,1,3);
+		this.cam = cam;
 	}
 
 	void draw() {
 		bg.draw();
 		dr.draw();
-		tc.draw(cam.get_multiple_images(camera_urls).subList(0, 6));
+		tc.draw(cam.get_sequence_of_images_by_index(6));
 	}
 }
