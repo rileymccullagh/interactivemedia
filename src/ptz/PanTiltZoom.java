@@ -88,10 +88,14 @@ public class PanTiltZoom extends PApplet {
 	//If setup() takes 5 seconds, it crashes, so we will run it in draw.
 	void setup_longer () {
 		System.out.println("Beginning initialisation");
-		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
+		/*
+		* Disable temporarily 
+		* Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
+		*
+		*/
 		idle = new Idle(this, feeds.subList(0, 6));
-		
 	}
+	
 	@Override
 	public void draw(){
 		if (loading_counter == 2) {

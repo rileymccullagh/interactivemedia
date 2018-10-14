@@ -250,7 +250,7 @@ public class Feed {
 	}
 	
 	public void set_default_image(PApplet parent) {
-		boolean retrieve_default = true;
+		boolean retrieve_default = false;
 		
 		if (parent.dataFile(default_image_filename()).exists() && retrieve_default) {
 			this.default_image = parent.loadImage(default_image_filename());
