@@ -1,7 +1,7 @@
 package ptz;
 
 import processing.core.PApplet;
-
+import processing.core.PImage;
 import ptz_music.*;
 import ptz_histogram.*;
 
@@ -30,6 +30,7 @@ class Active {
 	void draw() {
 		parent.clear();
 		acidGenerator.update();
-		parent.image(histogram.draw(acidGenerator.drumMachine.spectrum), 0, 0);	
+		PImage histogram_img = histogram.draw(acidGenerator.drumMachine.spectrum);
+		parent.image(histogram_img, 0, 0);	
 	}
 }
