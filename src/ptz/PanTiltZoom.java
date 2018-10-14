@@ -68,15 +68,14 @@ public class PanTiltZoom extends PApplet {
 		
 		Collections.shuffle(feeds);
 		
+		//Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
 		
+		//idle = new Idle(this, feeds.subList(0, 6));
 		
-		
-		
-		Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
-		
-		idle = new Idle(this, feeds.subList(0, 6));
+		/*
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
+		*/
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
@@ -89,11 +88,16 @@ public class PanTiltZoom extends PApplet {
 	void setup_longer () {
 		System.out.println("Beginning initialisation");
 		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
+		idle = new Idle(this, feeds.subList(0, 6));
+		
 	}
 	@Override
 	public void draw(){
 		if (needs_setup) {
+			background(0);
+			textSize(32);
 			color(255);
+			System.out.println("Running");
 			text("Initialising", width / 2, height / 2);
 			needs_setup = false;
 			setup_longer();
