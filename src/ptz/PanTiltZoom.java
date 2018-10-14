@@ -68,7 +68,7 @@ public class PanTiltZoom extends PApplet {
 		
 		Collections.shuffle(feeds);
 		
-		//Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
+		Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 		
 		//idle = new Idle(this, feeds.subList(0, 6));
 		
@@ -83,8 +83,9 @@ public class PanTiltZoom extends PApplet {
 		
 		System.out.println("Finished Setup");
 	}
-	boolean needs_setup = true;
+	int loading_counter = 2;
 	
+	//If setup() takes 5 seconds, it crashes, so we will run it in draw.
 	void setup_longer () {
 		System.out.println("Beginning initialisation");
 		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
@@ -93,17 +94,22 @@ public class PanTiltZoom extends PApplet {
 	}
 	@Override
 	public void draw(){
-		if (needs_setup) {
+		if (loading_counter == 2) {
 			background(0);
 			textSize(32);
 			color(255);
 			System.out.println("Running");
 			text("Initialising", width / 2, height / 2);
-			needs_setup = false;
+			loading_counter--;
+			return;
+		}
+		if (loading_counter == 1) 
+		{
+			loading_counter--;
 			setup_longer();
 			return;
 		}
-		System.out.println("Beginning draw");
+		
 		if (wait) {
 			drawTitle();
 			return;
