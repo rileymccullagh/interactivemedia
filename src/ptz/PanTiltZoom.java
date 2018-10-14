@@ -23,7 +23,7 @@ public class PanTiltZoom extends PApplet {
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 	Camera cam;
-	List<Feed> feeds = new ArrayList<Feed>();
+	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
@@ -69,12 +69,10 @@ public class PanTiltZoom extends PApplet {
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
 		
-		for (int i = 0; i < 6; i++) {
-			feeds.add(Feed.get_feed(i));
-		}
-		Feed.download_feeds(feeds, this, 1, 3);
+		Collections.shuffle(feeds);
+		Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
 		
-		idle = new Idle(this, feeds);
+		idle = new Idle(this, feeds.subList(0, 6));
 		
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
@@ -100,6 +98,7 @@ public class PanTiltZoom extends PApplet {
 			case ACTIVE:
 				// draw the active object
 				active.draw(feeds.get(0));
+				Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 				
 				// check if we have elapsed the active time frame
 				if(millis() > timeAtTransition + millisActive) {

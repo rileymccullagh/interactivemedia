@@ -15,10 +15,8 @@ public class Feed {
 	
 	ArrayList<PImage> images = new ArrayList<PImage>();
 	private Feed (String wiki, String cameraurl){
-		
 		this.wiki = wiki;
 		this.camera_url = cameraurl;
-		this.default_image = default_image;
 	}
 	
 	void set_default(PImage image) {
@@ -75,37 +73,7 @@ public class Feed {
 		return true;
 	}
 	
-	void retrieve_images (int count, PApplet parent) {
-		if (count < 1) {
-			return;
-		} else {
-			new Thread (new Runnable() 
-			{
-				@Override
-				public void run() {
-					try {
-						TimeUnit.MILLISECONDS.sleep(250);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					++thread_count;
-					
-					final int index = images.size();
-					images.add(null);
-					retrieve_images(index - 1, parent);
-					
-					try {
-						images.set(index, parent.loadImage(camera_url));
-					} catch (Exception e) {
-						
-					}
-					--thread_count;
-				}}).start();
-		}
-		
-	}
+	
 	public static void download_feeds (List<Feed> feeds, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time) {
 		new Thread (new Runnable() {
 			@Override
@@ -129,11 +97,37 @@ public class Feed {
 						}
 					}
 					
-					feeds.get(i).retrieve_images(total_images_per_camera, parent);
+					for (int j = 0; j < total_images_per_camera; j++) {
+						feeds.get(i).retrieve_images(parent);
+						try {
+							TimeUnit.MILLISECONDS.sleep(250); 
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
 				}
 			}
 		}).start();
-		
+	}
+	
+	void retrieve_images (PApplet parent) {
+		new Thread (new Runnable() 
+		{
+			@Override
+			public void run() {
+				++thread_count;
+				
+				final int index = images.size();
+				images.add(null);
+				
+				try {
+					images.set(index, parent.loadImage(camera_url));
+				} catch (Exception e) {
+				}
+				--thread_count;
+			}}).start();	
 	}
 	
 	private static final List<Feed> feeds;
@@ -144,6 +138,16 @@ public class Feed {
 	
 	public static Feed get_feed (int i) {
 		return feeds.get(i);
+	}
+	private void reset_feed () {
+		images = new ArrayList<PImage>();
+		latest_retrieved = 0;
+	}
+	public static void reset_feeds (List<Feed> feeds_to_reset) {
+		for (Feed item : feeds_to_reset) {
+			item.reset_feed();
+		}
+		
 	}
 	static {
 		feeds = new ArrayList<Feed>();
