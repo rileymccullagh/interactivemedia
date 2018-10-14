@@ -229,6 +229,13 @@ public class Camera {
 		return true;
 	}
 
+	public List<PImage> get_multiple_images(List<String> images){
+		List<PImage> images_ret = new ArrayList<PImage>();
+		for (String img : images) {
+			images_ret.add(getNextImage(img));
+		}
+		return images_ret;
+	}
 	public PImage getNextImage(String camera_url) {
 		if (images_retrieved.get(camera_url).isEmpty()){
 			return empty_image;
