@@ -13,6 +13,7 @@ import processing.core.PImage;
 import processing.core.PGraphics;
 import processing.opengl.PShader;
 import ptz_camera.Camera;
+import ptz_camera.Feed;
 import ptz_camera.Word;
 
 
@@ -22,7 +23,7 @@ public class PanTiltZoom extends PApplet {
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 	Camera cam;
-	
+	List<Feed> feeds = new ArrayList<Feed>();
 	boolean wait = true;
 	
 	final int millisActive     = 30000;
@@ -68,11 +69,12 @@ public class PanTiltZoom extends PApplet {
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
 		
-		cam = new Camera(this);
-		cam.shuffle_feeds();
-		cam.download_multiple_images_in_sequence(6,1,3);
+		for (int i = 0; i < 6; i++) {
+			feeds.add(Feed.get_feed(i));
+		}
+		Feed.download_feeds(feeds, this, 1, 3);
 		
-		idle = new Idle(this, cam.get_feeds(6));
+		idle = new Idle(this, feeds);
 		
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
@@ -97,7 +99,7 @@ public class PanTiltZoom extends PApplet {
 				break;
 			case ACTIVE:
 				// draw the active object
-				active.draw(cam.get_feed(0));
+				active.draw(feeds.get(0));
 				
 				// check if we have elapsed the active time frame
 				if(millis() > timeAtTransition + millisActive) {
@@ -126,7 +128,7 @@ public class PanTiltZoom extends PApplet {
 	
 			case ACTIVE_TO_IDLE:
 				if(fadeTime < millisTransition/2) {
-					active.draw(cam.get_feed(0));
+					active.draw(feeds.get(0));
 				} else {
 					idle.draw();
 				}
@@ -137,7 +139,7 @@ public class PanTiltZoom extends PApplet {
 				if(fadeTime < millisTransition/2) {
 					idle.draw();
 				} else {
-					active.draw(cam.get_feed(0));
+					active.draw(feeds.get(0));
 				}
 				fade();
 				break;
@@ -181,7 +183,7 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this, cam.get_feed(0));
+			active = new Active(this, feeds.get(0));
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;

@@ -57,6 +57,7 @@ class Active {
 		for (int i = 0; i < 6; i++) {
 			feeds.add(feed);
 		}
+		
 		tc.draw(feeds);
 		//parent.image(histogram_img, 0, 0);	
 		//sphere.draw();
