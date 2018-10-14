@@ -244,11 +244,13 @@ public class Feed {
 	}
 	
 	String default_image_filename () {
-		return ("defaults/" + wiki.split("/")[wiki.split("/").length -1] + ".jpg");
+		String name = ("defaults/" + wiki.split("/")[wiki.split("/").length -1] + ".jpg");
+		name = name.replace(',', '_');
+		return name;
 	}
 	
 	public void set_default_image(PApplet parent) {
-		boolean retrieve_default = false;
+		boolean retrieve_default = true;
 		
 		if (parent.dataFile(default_image_filename()).exists() && retrieve_default) {
 			this.default_image = parent.loadImage(default_image_filename());
