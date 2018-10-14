@@ -65,23 +65,40 @@ public class PanTiltZoom extends PApplet {
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
 		
+		
 		Collections.shuffle(feeds);
-		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,0);
+		
+		
+		
+		
+		
 		Feed.download_feeds(feeds.subList(0, 6), this, 3, 3);
 		
 		idle = new Idle(this, feeds.subList(0, 6));
-		
 		idle.draw(); //initial fade in doesn't work without this??
 		background(0);
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
 		noise = createGraphics(width/2, height/2, P2D);
+		
 		System.out.println("Finished Setup");
 	}
-
+	boolean needs_setup = true;
+	
+	void setup_longer () {
+		System.out.println("Beginning initialisation");
+		Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
+	}
 	@Override
 	public void draw(){
+		if (needs_setup) {
+			color(255);
+			text("Initialising", width / 2, height / 2);
+			needs_setup = false;
+			setup_longer();
+			return;
+		}
 		System.out.println("Beginning draw");
 		if (wait) {
 			drawTitle();
