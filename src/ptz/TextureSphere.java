@@ -7,8 +7,6 @@ class TextureSphere {
 	PApplet parent;
 
 	PShape globe;
-	float a1;
-	float a2;
 	PImage tex1;
 	String url1 = "https://picsum.photos/400/400/?random";
 
@@ -23,12 +21,10 @@ class TextureSphere {
 	void draw() {
 		parent.pushMatrix();
 		parent.translate(parent.width / 2, parent.height / 2, -200);
-		parent.rotateY(a1);
-		parent.rotateX(a2);
+		parent.rotateY(parent.frameCount * PApplet.PI / 360);
+		parent.rotateX(parent.frameCount * PApplet.PI / 720);
 		globe.setStroke(false);
 		parent.shape(globe);
 		parent.popMatrix();
-		a1 += .02;
-		a2 += .025;
 	}
 }
