@@ -19,7 +19,7 @@ public class Idle {
     List<Feed> feeds;
 	PImage img; 
 	Prism skybox;
-	
+	TextureSphere sphere;
 	Idle(PApplet p, List<Feed> feeds) {
 		this.parent = p;
 		img = parent.loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg");
@@ -27,7 +27,7 @@ public class Idle {
 		dr = new DigitalRain(this.parent);
 		tc = new TextureCube(this.parent, img);
 		this.feeds = feeds;
-		
+		this.sphere = new TextureSphere(parent, img);
 		skybox = new Prism(0,0,0,1000);
 		
 	}
@@ -57,13 +57,15 @@ public class Idle {
 		
 		
 		List<PImage> images = new ArrayList<PImage>();
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			images.add(img);
 		}
 		
 		draw_outer_prism(images);
+		sphere.setFeed(feeds.get(0));
+		sphere.draw();
 		
-		tc.draw(feeds);
+		//tc.draw(feeds);
 		
 		//bg.draw();
 		//dr.draw();
