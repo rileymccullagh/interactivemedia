@@ -29,13 +29,13 @@ class Active {
 	PImage img;
 	
 	Active(PApplet parent, Feed feed) {
-		img = parent.loadImage("https://steamuserimages-a.akamaihd.net/ugc/902140326814422921/DE9D1E14C64EBB9164CFA2C34BF0CD12A05422E1/");
+		img = parent.loadImage("http://31.51.157.21/cgi-bin/viewer/video.jpg");
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
 		this.sphere = new TextureSphere(parent, img);
 		ca = new colorAverage(parent);
 		
-		PImage img = feed.getNextImage(parent, 1).orElse(parent.createImage(50, 50, parent.ARGB));
+		//PImage img = feed.getNextImage(parent, 1).orElse(parent.createImage(50, 50, parent.ARGB));
 		
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
@@ -94,6 +94,7 @@ class Active {
 		for (int i = 0; i < 6; i++) {
 			feeds.add(feed);
 		}
+		tc.draw(feeds);		
 		histograms();
 		tc.draw(feeds);
 		sphere.draw();

@@ -20,13 +20,13 @@ public class Idle {
 	Prism skybox;
 	Idle(PApplet p, List<Feed> feeds) {
 		this.parent = p;
-		img = parent.loadImage("https://steamuserimages-a.akamaihd.net/ugc/902140326814422921/DE9D1E14C64EBB9164CFA2C34BF0CD12A05422E1/");
+		img = parent.loadImage("http://31.51.157.21/cgi-bin/viewer/video.jpg");
 		bg = new Background(this.parent);
 		dr = new DigitalRain(this.parent);
 		tc = new TextureCube(this.parent, img);
 		this.feeds = feeds;
 		
-		skybox = new Prism(0,0,0,300);
+		skybox = new Prism(0,0,0,1000);
 		
 	}
 	void draw_hollow() {
