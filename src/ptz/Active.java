@@ -29,7 +29,7 @@ class Active {
 	PImage img;
 	
 	Active(PApplet parent, Feed feed) {
-		img = parent.loadImage("http://31.51.157.21/cgi-bin/viewer/video.jpg");
+		img = parent.loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg");
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
 		this.sphere = new TextureSphere(parent, img);
@@ -52,7 +52,7 @@ class Active {
 		
 		set_Sphere_Feed(feed);
 		
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 12; i++) {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		
@@ -65,9 +65,11 @@ class Active {
 		sphere.setFeed(feed);
 	}
 	
-	void histograms() {
+	void draw_outer_prism() {
+		
 		skybox.rotate();
 		parent.pushMatrix();
+		
 		parent.translate(
 				(float)(parent.width / 2.0f), 
 				(float)(parent.height / 2.0f), 
@@ -83,6 +85,7 @@ class Active {
 		skybox.draw(images, images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
+	
 	void draw(Feed feed) {
 		parent.clear();
 		parent.background(255);
@@ -94,9 +97,11 @@ class Active {
 		for (int i = 0; i < 6; i++) {
 			feeds.add(feed);
 		}
+		
 		tc.draw(feeds);		
-		histograms();
-		tc.draw(feeds);
+		
+		draw_outer_prism();
+		
 		sphere.draw();
 	}
 }

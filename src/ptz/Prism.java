@@ -78,27 +78,22 @@ public class Prism {
       p.vertex(x.get(i), y.get(i), prism_height / 2.0f,1,0);
       p.endShape();
     }
+
+    draw_square(prism_height / 2.0f, top_image, p);
+    draw_square(-prism_height / 2.0f, bottom_image, p);
     
-    p.fill(0,255,0);
-    //draw_shape(0);
-    //draw_square(prism_height, top_image, p);
-    
-    p.fill(255,0,0);
-    
-    //draw_square(0, bottom_image, p);
-    //draw_shape(prism_height); 
-    
-    //p.rotateZ(-rotation);
+    p.rotateZ(-rotation);    
     p.translate(-x_pos,-y_pos);
-    p.scale(1);
+    p.scale(1);   
   }
+  
   void draw_square(float z, PImage img, PApplet p) {
-    p.beginShape();
+    p.beginShape(p.QUADS);
     p.texture(img);
-    p.vertex(0,0,z,0,0);
-    p.vertex(1,0,z,1,0);
-    p.vertex(1,1,z,1,1);
-    p.vertex(0,1,z,0,1);
+    p.vertex(-1,-1,z,1,1);
+    p.vertex(1,-1,z,0,1);
+    p.vertex(1,1,z,0,0);
+    p.vertex(-1,1,z,1,0);
     p.endShape();
   }
   
