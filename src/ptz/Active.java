@@ -27,14 +27,15 @@ class Active {
 	colorAverage ca; 
 	Prism skybox;
 	PImage img;
+	
 	Active(PApplet parent, Feed feed) {
-		img = parent.loadImage("http://31.51.157.21/cgi-bin/viewer/video.jpg");
+		img = parent.loadImage("https://steamuserimages-a.akamaihd.net/ugc/902140326814422921/DE9D1E14C64EBB9164CFA2C34BF0CD12A05422E1/");
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
-		this.sphere = new TextureSphere(parent);
+		this.sphere = new TextureSphere(parent, img);
 		ca = new colorAverage(parent);
 		
-		PImage img = Optional.ofNullable(feed.getNextImage(parent,1)).orElse(parent.createImage(50, 50, parent.RGB));
+		PImage img = feed.getNextImage(parent, 1).orElse(parent.createImage(50, 50, parent.ARGB));
 		
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
@@ -56,7 +57,7 @@ class Active {
 		}
 		
 		skybox = new Prism(0,0,0,500);
-		tc = new TextureCube(this.parent);
+		tc = new TextureCube(this.parent, img);
 		System.out.println("Made output");
 	}
 	

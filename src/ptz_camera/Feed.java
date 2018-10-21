@@ -3,6 +3,7 @@ package ptz_camera;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +37,7 @@ public class Feed {
 	}
 	
 	//WIP
-	public PImage getNextImage(PApplet parent, int desired_framerate) {
+	public Optional<PImage> getNextImage(PApplet parent, int desired_framerate) {
 		int time_difference = parent.millis() - latest_retrieved_time;
 		float millis_per_image = 1000.0f / desired_framerate;
 		
@@ -49,7 +50,7 @@ public class Feed {
 		}
 	}
 	
-	private PImage getNextImage() {
+	private Optional<PImage> getNextImage() {
 		latest_retrieved++;
 		boolean looped_already = false;
 			//while (true) {
@@ -58,14 +59,14 @@ public class Feed {
 			
 			if (latest_retrieved++ > images.size() - 1) {
 				if (looped_already) {
-					return default_image;
+					return Optional.empty();
 				} else {
 					latest_retrieved = 0;
 					looped_already = true;
 				}
 			}
 		}
-		return images.get(latest_retrieved);
+		return Optional.of(images.get(latest_retrieved));
 	}
 	
 	public void prune_images () {
