@@ -28,7 +28,7 @@ public class Idle {
 		tc = new TextureCube(this.parent, img);
 		this.feeds = feeds;
 		this.sphere = new TextureSphere(parent, img);
-		skybox = new Prism(0,0,0,1000);
+		skybox = new Prism(0,0,0,800);
 		
 	}
 	
