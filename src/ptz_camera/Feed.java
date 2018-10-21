@@ -1,5 +1,6 @@
 package ptz_camera;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -15,13 +16,19 @@ public class Feed {
 	PImage default_image = null;
 	int thread_count = 0;
 	final int words_per_feed = 6;
-	String[] words_analysed = new String[0];
-	Word word_analyser = new Word();
+	public String[] words_analysed = new String[]{""};
+	
+	public void analyse(int num_to_retrieve) {
+		if (words_analysed.length == 0) {
+			words_analysed = new Word().frequencyAnalysis(wiki, num_to_retrieve);
+		}
+	}
 	
 	ArrayList<PImage> images = new ArrayList<PImage>();
 	private Feed (String wiki, String cameraurl){
 		this.wiki = wiki;
 		this.camera_url = cameraurl;
+		words_analysed[0] = default_image_filename();
 	}
 	
 	void set_default(PImage image) {
@@ -263,6 +270,15 @@ public class Feed {
 				this.default_image.save(default_image_filename()); 
 			}
 		}
+	}
+	
+	boolean ping () {
+		try{
+            InetAddress address = InetAddress.getByName(camera_url);
+            return address.isReachable(10000);
+        } catch (Exception e){
+        	return false;
+        }
 	}
 	
 	static {

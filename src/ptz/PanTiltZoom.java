@@ -52,7 +52,8 @@ public class PanTiltZoom extends PApplet {
 		if(fullscreen) {
 			fullScreen(P3D);
 		} else {
-			size(480, 360, P3D);
+			size(720, 720, P3D);
+			
 		}
 		smooth();
 	}
@@ -70,13 +71,6 @@ public class PanTiltZoom extends PApplet {
 		
 		Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 		
-		//idle = new Idle(this, feeds.subList(0, 6));
-		
-		/*
-		idle.draw(); //initial fade in doesn't work without this??
-		background(0);
-		*/
-		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
 		noise = createGraphics(width/2, height/2, P2D);
@@ -91,7 +85,6 @@ public class PanTiltZoom extends PApplet {
 		/*
 		* Disable temporarily 
 		* Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
-		*
 		*/
 		idle = new Idle(this, feeds.subList(0, 6));
 	}
@@ -127,7 +120,7 @@ public class PanTiltZoom extends PApplet {
 			case ACTIVE:
 				// draw the active object
 				active.draw(feeds.get(0));
-				Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
+				//Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 				
 				// check if we have elapsed the active time frame
 				if(millis() > timeAtTransition + millisActive) {
