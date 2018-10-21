@@ -3,6 +3,7 @@ package ptz;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import processing.core.*;
 import ptz_camera.Camera;
@@ -15,19 +16,29 @@ public class Idle {
 	// Let's start with all the classes that we will need in the main project.
 	Background bg;
 	DigitalRain dr;
-	TextureCube tc;
+	
     List<Feed> feeds;
 	PImage img; 
 	Prism skybox;
-	TextureSphere sphere;
-	Idle(PApplet p, List<Feed> feeds) {
+	
+	Drawable center_shape; 
+	
+	Idle(PApplet p, List<Feed> feeds, PImage default_img) {
 		this.parent = p;
-		img = parent.loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg");
+		img = default_img;
 		bg = new Background(this.parent);
 		dr = new DigitalRain(this.parent);
-		tc = new TextureCube(this.parent, img);
+
 		this.feeds = feeds;
-		this.sphere = new TextureSphere(parent, img);
+		
+		Optional<List<Feed>> working_feeds = Feed.get_shuffled_list(6);
+		if (working_feeds.isPresent() == false) {
+			center_shape = new TextureSphere(parent,img,feeds.get(0));
+		} else {
+			center_shape = new TextureCube(this.parent, img, feeds);
+			
+		}
+		
 		skybox = new Prism(0,0,0,800);
 		
 	}
@@ -44,7 +55,6 @@ public class Idle {
 		);
 		
 		parent.rotateX(parent.PI /2.0f);
-		
 		skybox.draw(images, images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
@@ -62,15 +72,10 @@ public class Idle {
 		}
 		
 		draw_outer_prism(images);
-		sphere.setFeed(feeds.get(0));
-		sphere.draw();
-		
-		//tc.draw(feeds);
+		center_shape.draw();
 		
 		//bg.draw();
 		//dr.draw();
 		
-		
-		//draw_hollow();
 	}
 }

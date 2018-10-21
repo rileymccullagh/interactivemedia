@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 //Helps control building of the class
 public class Engine_Ball_Bar_Builder {
-	public Engine_Ball_Bar_Builder() {}
+  public Engine_Ball_Bar_Builder() {}
   public int num_of_bars;
   public int num_of_balls; 
   public int[] ball_color; 

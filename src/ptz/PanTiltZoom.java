@@ -1,6 +1,7 @@
 package ptz;
 
 import java.io.FileDescriptor;
+
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import processing.opengl.PShader;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
 import ptz_camera.Word;
+import processing.*;
 
 
 public class PanTiltZoom extends PApplet {
@@ -22,14 +24,16 @@ public class PanTiltZoom extends PApplet {
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
+	
 	Camera cam;
 	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
+	String title_subtext = "Loading";
 	
 	final int millisActive     = 90000;
 	final int millisIdle       = 3000;
 	final int millisTransition = 5000;
-
+	
 	Idle idle;
 	Active active;
 
@@ -67,9 +71,7 @@ public class PanTiltZoom extends PApplet {
 		frameRate(60);
 		
 		
-		Collections.shuffle(feeds);
 		
-		Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
@@ -79,38 +81,71 @@ public class PanTiltZoom extends PApplet {
 	}
 	int loading_counter = 2;
 	
+	
 	//If setup() takes 5 seconds, it crashes, so we will run it in draw.
 	void setup_longer () {
+		
 		System.out.println("Beginning initialisation");
+		PApplet p = this;
+		new Thread (new Runnable() {
+			@Override
+			public void run() {
+				final int minimum_number_of_feeds = 6;
+				
+				Feed.get_minimum_feeds(6, p, 1, 3);
+				if (Feed.valid_feeds_count() < 6) {
+					System.out.println("Couldn't retrieve 6 feeds! Let's copy");
+					if (Feed.valid_feeds_count() == 0) {
+						System.out.println("We did no retrievals, we're fucked");
+					} else {
+						for (int i = 0; i < minimum_number_of_feeds - Feed.valid_feeds_count(); i++) {
+							feeds.add(Feed.get_feed(i));
+						}
+					}
+				}
+				
+			}
+		}).start();
+		
 		/*
 		* Disable temporarily 
 		* Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
 		*/
-		idle = new Idle(this, feeds.subList(0, 6));
+		
 	}
+	
 	
 	@Override
 	public void draw(){
 		if (loading_counter == 2) {
-			background(0);
-			textSize(32);
-			color(255);
-			System.out.println("Running");
-			text("Initialising", width / 2, height / 2);
 			loading_counter--;
 			return;
 		}
 		if (loading_counter == 1) 
 		{
 			loading_counter--;
-			setup_longer();
+			setup_longer(); //Can be soon replaced
 			return;
 		}
 		
 		if (wait) {
+			
+			title_subtext = "Loaded: " + Feed.valid_feeds_count() + "/6";
+			if (Feed.valid_feeds_count() == 6) {
+				wait = false;
+				//Always retrieve the first 6, because we know they are reliable
+				idle = new Idle(
+						this, 
+						feeds.subList(0, 6),  
+						loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg"));
+			}
+			
 			drawTitle();
+			
+			
 			return;
 		}
+		
 		int fadeTime = millis() - timeAtTransition;
 		switch(state) {
 			case INIT:
@@ -119,7 +154,7 @@ public class PanTiltZoom extends PApplet {
 				break;
 			case ACTIVE:
 				// draw the active object
-				active.draw(feeds.get(0));
+				active.draw();
 				//Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
 				
 				// check if we have elapsed the active time frame
@@ -149,7 +184,7 @@ public class PanTiltZoom extends PApplet {
 	
 			case ACTIVE_TO_IDLE:
 				if(fadeTime < millisTransition/2) {
-					active.draw(feeds.get(0));
+					active.draw();
 				} else {
 					idle.draw();
 				}
@@ -160,7 +195,7 @@ public class PanTiltZoom extends PApplet {
 				if(fadeTime < millisTransition/2) {
 					idle.draw();
 				} else {
-					active.draw(feeds.get(0));
+					active.draw();
 				}
 				fade();
 				break;
@@ -204,7 +239,8 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this, feeds.get(0));
+			
+			active = new Active(this, Feed.get_shuffled_list(1).get().get(0));
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
@@ -224,8 +260,10 @@ public class PanTiltZoom extends PApplet {
 		textAlign(RIGHT);
 		textSize((int)height/8);
 		fill(255);
-		text("Pan\nTilt\nZoom", width-10, height/2); 
-		
+		text("Pan\nTilt\nZoom", width-10, height/2);
+		textSize((int)height/12);
+		textAlign(CENTER,BOTTOM);
+		text(title_subtext, width / 2, height);
 		// color aberration
 		PImage clean = get();  
 	    background(0);

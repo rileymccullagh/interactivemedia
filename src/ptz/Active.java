@@ -23,19 +23,19 @@ class Active {
 	List<Engine_Ball_Bar> histogram = new ArrayList<Engine_Ball_Bar>();
 	AcidGenerator acidGenerator;
 	TextureSphere sphere;
-	TextureCube tc;
 	colorAverage ca; 
 	Prism skybox;
 	PImage img;
-	
+	Feed feed; 
 	Active(PApplet parent, Feed feed) {
-		img = parent.loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg");
+		this.feed = feed;
+		img = feed.getNextImage(parent).get();
+		
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
-		this.sphere = new TextureSphere(parent, img);
+		this.sphere = new TextureSphere(parent, img, feed);
 		ca = new colorAverage(parent);
 		
-		//PImage img = feed.getNextImage(parent, 1).orElse(parent.createImage(50, 50, parent.ARGB));
 		
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
@@ -44,26 +44,22 @@ class Active {
 		
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ca.colorsComp;
-		builder.bar_color = new int[][] {new int[] {0,255,0}/*ca.colorsAnal*/};
+		builder.bar_color = new int[][] {ca.colorsAnal};
 		builder.text_color = ca.colorsAnal;
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = feed.words_analysed.length;
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		
-		set_Sphere_Feed(feed);
-		
+		//Set histogram up
 		for (int i = 0; i < 12; i++) {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		
 		skybox = new Prism(0,0,0,850);
-		tc = new TextureCube(this.parent, img);
-		System.out.println("Made output");
+		
 	}
 	
-	void set_Sphere_Feed (Feed feed) {
-		sphere.setFeed(feed);
-	}
+	
 	
 	void draw_outer_prism() {
 		
@@ -78,6 +74,7 @@ class Active {
 		
 		List<PImage> images = new ArrayList<PImage>();
 		parent.rotateX(parent.PI /2.0f);
+		
 		for (Engine_Ball_Bar item : histogram) {
 			images.add(item.draw(acidGenerator.drumMachine.spectrum));
 		}
@@ -86,23 +83,14 @@ class Active {
 		parent.popMatrix();
 	}
 	
-	void draw(Feed feed) {
+	void draw() {
 		parent.clear();
 		parent.background(255);
 		parent.fill(255);
 		parent.noStroke();
 		acidGenerator.update();
 		
-		List<Feed> feeds = new ArrayList<Feed>();
-		for (int i = 0; i < 6; i++) {
-			feeds.add(feed);
-		}
-		sphere.setFeed(feeds.get(0));
-		
-				
-		
 		draw_outer_prism();
-		tc.draw(feeds);
 		sphere.draw();
 	}
 }

@@ -2,6 +2,7 @@ package ptz_camera;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Feed {
+public class Feed implements GetImage{
 	final String camera_url, wiki; 
 	int latest_retrieved;
 	int latest_retrieved_time; 
@@ -18,7 +19,19 @@ public class Feed {
 	int thread_count = 0;
 	final int words_per_feed = 6;
 	public String[] words_analysed = new String[]{""};
+	int desired_framerate = 1;
 	
+	public void set_framerate(int val) {this.desired_framerate = val; }
+	
+	public static int valid_feeds_count() {
+		int count = 0;
+		for (Feed entry : feeds) {
+			if (entry.getNextImage().isPresent()){
+				count++;
+			}
+		}
+		return count;
+	}
 	public void analyse(int num_to_retrieve) {
 		if (words_analysed.length == 0) {
 			words_analysed = new Word().frequencyAnalysis(wiki, num_to_retrieve);
@@ -37,7 +50,7 @@ public class Feed {
 	}
 	
 	//WIP
-	public Optional<PImage> getNextImage(PApplet parent, int desired_framerate) {
+	public Optional<PImage> getNextImage(PApplet parent) {
 		int time_difference = parent.millis() - latest_retrieved_time;
 		float millis_per_image = 1000.0f / desired_framerate;
 		
@@ -53,7 +66,8 @@ public class Feed {
 	private Optional<PImage> getNextImage() {
 		latest_retrieved++;
 		boolean looped_already = false;
-			//while (true) {
+		
+		
 		while (validate_image(latest_retrieved) == false) {
 			latest_retrieved++;
 			
@@ -66,7 +80,12 @@ public class Feed {
 				}
 			}
 		}
-		return Optional.of(images.get(latest_retrieved));
+		if (validate_image(latest_retrieved)) {
+			return Optional.of(images.get(latest_retrieved));
+		} else {
+			return Optional.empty();
+		}
+		
 	}
 	
 	public void prune_images () {
@@ -128,46 +147,102 @@ public class Feed {
 		
 	}
 	
+	public static void get_minimum_feeds(int minimum_number, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time) {
+			//We assume the list is already shuffled
+			int feeds_needed = minimum_number;
+			
+			while (Feed.valid_feeds_count() < minimum_number && feeds.size() >= 1) {
+				System.out.println("Beginning Retrieval");
+				List<Feed> retrieve = feeds.subList(Feed.valid_feeds_count(), Math.min(feeds.size(), minimum_number));
+				
+				download_feeds_sync(retrieve, parent, total_images_per_camera, feeds_at_a_time);
+				System.out.println("Exited Retrieval");
+				
+				 
+				List<Feed> invalids = new ArrayList();
+				
+				for (int i = 0; i < retrieve.size() - 1; i++) {
+					if (retrieve.get(i).getNextImage().isPresent() == false) {
+						System.out.println("Removing invalid feed");
+						invalids.add(retrieve.get(i));
+					}
+				}
+				
+				feeds.removeAll(invalids);
+				feeds_needed = minimum_number - Feed.valid_feeds_count();
+				System.out.println("We need: " + feeds_needed);
+			}
+			
+	}
+	
+	public static void download_feeds_sync (List<Feed> feeds_to_retrieve, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time) {
+		Word analyser = new Word();
+		for (int i = 0; i < feeds_to_retrieve.size(); i++) {
+			
+			if (feeds_to_retrieve.get(i).words_analysed.length == 0) {
+				feeds_to_retrieve.get(i).words_analysed = analyser.frequencyAnalysis(feeds_to_retrieve.get(i).wiki, 5);
+			}
+			
+			while (true) {
+				int feeds_retrieving = 0;
+				for (int j = 0; j < i; j++) {
+					if (feeds_to_retrieve.get(j).thread_count > 0) {
+						feeds_retrieving++;
+					}
+				}
+				if (feeds_retrieving < feeds_at_a_time) {
+					break;
+				}
+				
+				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (Exception e) {	
+					
+				}
+			}
+			
+			for (int j = 0; j < total_images_per_camera; j++) {
+				feeds_to_retrieve.get(i).retrieve_images(parent);
+				
+				try {
+					TimeUnit.MILLISECONDS.sleep(250); 
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		
+		while (true)
+		{
+			boolean exit = true;
+			
+			for (Feed entry : feeds_to_retrieve) { 
+				if (entry.thread_count > 0) { 
+					exit = false; 
+					System.out.println("Waiting on: " + entry.camera_url);
+				} 
+			}
+			
+			if (exit) { break; }
+			
+			try {
+				TimeUnit.MILLISECONDS.sleep(1000); 
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println("Waiting");
+		}
+	}	
+	
 	
 	public static void download_feeds (List<Feed> feeds, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time) {
 		new Thread (new Runnable() {
 			@Override
 			public void run() {
-				Word analyser = new Word();
-				for (int i = 0; i < feeds.size(); i++) {
-					if (feeds.get(i).words_analysed.length == 0) {
-						feeds.get(i).words_analysed = analyser.frequencyAnalysis(feeds.get(i).wiki, 5);
-					}
-					
-					while (true) {
-						int feeds_retrieving = 0;
-						for (int j = 0; j < i; j++) {
-							if (feeds.get(j).thread_count > 0) {
-								feeds_retrieving++;
-							}
-						}
-						if (feeds_retrieving < feeds_at_a_time) {
-							break;
-						}
-						
-						try {
-							TimeUnit.MILLISECONDS.sleep(100);
-						} catch (Exception e) {	
-							
-						}
-					}
-					
-					for (int j = 0; j < total_images_per_camera; j++) {
-						feeds.get(i).retrieve_images(parent);
-						try {
-							TimeUnit.MILLISECONDS.sleep(250); 
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-					
-				}
+				download_feeds_sync(feeds, parent, total_images_per_camera, feeds_at_a_time);
 			}
 		}).start();
 	}
@@ -255,6 +330,35 @@ public class Feed {
 		String name = ("defaults/" + wiki.split("/")[wiki.split("/").length -1] + ".jpg");
 		name = name.replace(',', '_');
 		return name;
+	}
+	public static Optional<List<Feed>> get_shuffled_list(int size){
+		List<Feed> valid_feeds = get_valid_feeds(feeds);
+		
+		if (valid_feeds.size() == 0) {
+			return Optional.empty();
+		}
+		
+		if (valid_feeds.size() == size - 1) {
+			//Add webcam as a feed
+		}
+		
+		if (valid_feeds.size() < size) {
+			//What to do when we don't have enough
+			
+		} 
+		
+		Collections.shuffle(valid_feeds);
+		return Optional.of(valid_feeds.subList(0, size));
+	}
+	
+	public static List<Feed> get_valid_feeds(List<Feed> masterList){
+		List<Feed> valids = new ArrayList<Feed>();
+		for (Feed entry : masterList) {
+			if (entry.getNextImage().isPresent()) {
+				valids.add(entry);
+			}
+		}
+		return valids;
 	}
 	
 	public void set_default_image(PApplet parent) {

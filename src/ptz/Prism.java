@@ -17,7 +17,7 @@ public class Prism {
   float accel = 0.001f;
   float x_pos = 0;
   float y_pos = 0;
-
+  
   public Prism(int starting_x, int starting_y, int starting_rot, int scale) {
 	  x_pos = starting_x;
 	  y_pos = starting_y;
@@ -57,6 +57,7 @@ public class Prism {
   void rotate() {
 	  rotation += accel;
   }
+  
   //Height is 0-1
   void draw(List<PImage> wall_images, PImage top_image, PImage bottom_image, PApplet p) {
     p.scale(scale);
