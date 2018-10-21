@@ -26,8 +26,8 @@ public class PanTiltZoom extends PApplet {
 	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
 	
-	final int millisActive     = 30000;
-	final int millisIdle       = 30000;
+	final int millisActive     = 90000;
+	final int millisIdle       = 3000;
 	final int millisTransition = 5000;
 
 	Idle idle;

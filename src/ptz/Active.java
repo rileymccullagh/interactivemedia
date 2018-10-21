@@ -56,7 +56,7 @@ class Active {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		
-		skybox = new Prism(0,0,0,500);
+		skybox = new Prism(0,0,0,850);
 		tc = new TextureCube(this.parent, img);
 		System.out.println("Made output");
 	}
@@ -97,11 +97,12 @@ class Active {
 		for (int i = 0; i < 6; i++) {
 			feeds.add(feed);
 		}
+		sphere.setFeed(feeds.get(0));
 		
-		tc.draw(feeds);		
+				
 		
 		draw_outer_prism();
-		
+		tc.draw(feeds);
 		sphere.draw();
 	}
 }
