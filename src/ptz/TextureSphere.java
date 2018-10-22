@@ -13,16 +13,12 @@ class TextureSphere implements Drawable {
 	float a2;
 	Feed feed; 
 	PImage default_image;
-	TextureSphere(PApplet p, PImage default_image, Feed feed) {
+	TextureSphere(PApplet p, PImage default_image, Feed feed, int size) {
 		this.parent = p;
 		this.default_image = default_image;
-		globe = parent.createShape(PApplet.SPHERE, 175);
+		globe = parent.createShape(PApplet.SPHERE, size);
 		this.feed = feed;
 		
-		/*
-		this.default_image = p.createImage(640, 640, p.ARGB);
-		for (int i = 0; i < p.pixels.length; i++) { p.pixels[i] = 150;} 
-		*/
 	}
 
 	

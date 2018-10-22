@@ -33,7 +33,7 @@ public class Idle {
 		
 		Optional<List<Feed>> working_feeds = Feed.get_shuffled_list(6);
 		if (working_feeds.isPresent() == false) {
-			center_shape = new TextureSphere(parent,img,feeds.get(0));
+			center_shape = new TextureSphere(parent,img,feeds.get(0), 100);
 		} else {
 			center_shape = new TextureCube(this.parent, img, feeds);
 			

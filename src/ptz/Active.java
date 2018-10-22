@@ -33,7 +33,7 @@ class Active {
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
-		this.sphere = new TextureSphere(parent, img, feed);
+		this.sphere = new TextureSphere(parent, img, feed, 100);
 		ca = new colorAverage(parent);
 		
 		ca.loadAnal(ca.getAverageColor(img));
