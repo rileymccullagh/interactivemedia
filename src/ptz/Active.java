@@ -43,8 +43,8 @@ class Active {
 		builder.ball_color = new int[]{0,0,255};
 		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
 		builder.text_color = new int[]{0,0,0};
-		builder.text = "PanTiltZOOM";
-		builder.num_of_balls = feed.words_analysed.length;
+		builder.text = feed.words_analysed[0];
+		builder.num_of_balls = builder.text.length();
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		
 		//Set histogram up

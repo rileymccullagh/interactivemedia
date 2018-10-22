@@ -33,7 +33,7 @@ public class Feed implements GetImage{
 		return count;
 	}
 	public void analyse(int num_to_retrieve) {
-		if (words_analysed.length == 0) {
+		if (words_analysed.length < 2) {
 			words_analysed = new Word().frequencyAnalysis(wiki, num_to_retrieve);
 		}
 	}
