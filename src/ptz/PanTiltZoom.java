@@ -22,7 +22,7 @@ import processing.*;
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = true;
+	boolean fullscreen = false;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
@@ -30,7 +30,8 @@ public class PanTiltZoom extends PApplet {
 	Camera cam;
 	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
-	String title_subtext = "Loading";
+	boolean loading = true;
+	String title_subtext = "loading";
 	
 
 	final int millisActive     = 90000;
@@ -60,7 +61,7 @@ public class PanTiltZoom extends PApplet {
 		if(fullscreen) {
 			fullScreen(P3D);
 		} else {
-			size(720, 720, P3D);
+			size(480, 360, P3D);
 			
 		}
 		smooth();
@@ -122,18 +123,24 @@ public class PanTiltZoom extends PApplet {
 			return;
 		}
 		
-		if (wait) {
+		if (loading) {
 			
-			title_subtext = "Loaded: " + Feed.valid_feeds_count() + "/6";
+			title_subtext = "loaded: " + (int)(((float)Feed.valid_feeds_count()/6)*100) + "%";
 			if (Feed.valid_feeds_count() == 6) {
-				//wait = false;
+				loading = false;
+				drawTitle(); // this will show 6 briefly while idle is instantiated
 				//Always retrieve the first 6, because we know they are reliable
 				idle = new Idle(
 						this, 
 						feeds.subList(0, 6),  
 						feeds.get(0).getNextImage(this).get());
+				title_subtext = "ready";
+				greenHasBeenBlurred = false;
 			}
-			
+			drawTitle();
+			return;
+		}
+		if (wait) {
 			drawTitle();
 			return;
 		}
