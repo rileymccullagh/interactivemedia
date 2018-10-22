@@ -20,7 +20,7 @@ import processing.*;
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = false;
+	boolean fullscreen = true;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
@@ -32,7 +32,7 @@ public class PanTiltZoom extends PApplet {
 	
 	final int millisActive     = 90000;
 	final int millisIdle       = 30000;
-	final int millisTransition = 500;
+	final int millisTransition = 5000;
 	
 	Idle idle;
 	Active active;
@@ -121,7 +121,7 @@ public class PanTiltZoom extends PApplet {
 			
 			title_subtext = "Loaded: " + Feed.valid_feeds_count() + "/6";
 			if (Feed.valid_feeds_count() == 6) {
-				wait = false;
+				//wait = false;
 				//Always retrieve the first 6, because we know they are reliable
 				idle = new Idle(
 						this, 
