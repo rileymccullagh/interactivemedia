@@ -54,7 +54,7 @@ class Active {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		
-		skybox = new Prism(0,0,0,850);
+		skybox = new Prism(0,0,0,800);
 		
 	}
 	

@@ -26,14 +26,7 @@ public class Prism {
   }
 
   public int camera_max() {
-	  if (x.size() == 0) {
-		  return 0;
-	  } else {
-		  
-	  
-	  int val =  (int)(x.get(1) -  x.get(0)) * scale; 
-	  return val;
-	  }
+	  return (int)(scale * 0.5f);
   }
 
   public void update_sides(int sides, PApplet p) {
