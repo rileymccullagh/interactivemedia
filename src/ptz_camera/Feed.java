@@ -151,7 +151,7 @@ public class Feed implements GetImage{
 			//We assume the list is already shuffled
 			int feeds_needed = minimum_number;
 			
-			while (Feed.valid_feeds_count() < minimum_number && feeds.size() >= 1) {
+			while (Feed.valid_feeds_count() < minimum_number && feeds.size() > 0) {
 				System.out.println("Beginning Retrieval");
 				List<Feed> retrieve = feeds.subList(Feed.valid_feeds_count(), Math.min(feeds.size(), minimum_number));
 				
@@ -161,10 +161,10 @@ public class Feed implements GetImage{
 				 
 				List<Feed> invalids = new ArrayList();
 				
-				for (int i = 0; i < retrieve.size() - 1; i++) {
-					if (retrieve.get(i).getNextImage().isPresent() == false) {
+				for (Feed item : retrieve) {
+					if (item.getNextImage().isPresent() == false) {
 						System.out.println("Removing invalid feed");
-						invalids.add(retrieve.get(i));
+						invalids.add(item);
 					}
 				}
 				
