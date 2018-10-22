@@ -50,7 +50,7 @@ class Active {
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		
 		//Set histogram up
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 4; i++) {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		

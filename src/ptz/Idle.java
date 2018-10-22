@@ -54,8 +54,10 @@ public class Idle {
 				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
 		);
 		
+		//parent.translate(0, 0, skybox.camera_max());
+		
 		parent.rotateX(parent.PI /2.0f);
-		skybox.draw(images, images.get(0), images.get(0), parent);
+		skybox.draw(images.subList(0, 4), images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
 	
