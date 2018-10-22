@@ -69,7 +69,6 @@ public class Idle {
 					(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
 			);
 			int val = skybox.camera_max();
-			System.out.println(val);
 			parent.translate(0, 0, -val);
 			parent.rotateX(parent.PI /2.0f);
 			
