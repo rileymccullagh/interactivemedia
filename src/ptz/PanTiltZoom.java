@@ -12,6 +12,7 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
+
 import processing.opengl.PShader;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
@@ -19,8 +20,9 @@ import ptz_camera.Word;
 import processing.*;
 
 
+
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = true;
+	boolean fullscreen = false;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
@@ -28,10 +30,12 @@ public class PanTiltZoom extends PApplet {
 	Camera cam;
 	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
-	String title_subtext = "Loading";
+	boolean loading = true;
+	String title_subtext = "loading";
 	
+
 	final int millisActive     = 90000;
-	final int millisIdle       = 5000;
+	final int millisIdle       = 30000;
 	final int millisTransition = 5000;
 	
 	Idle idle;
@@ -56,7 +60,7 @@ public class PanTiltZoom extends PApplet {
 		if(fullscreen) {
 			fullScreen(P3D);
 		} else {
-			size(720, 720, P3D);
+			size(480, 360, P3D);
 			
 		}
 		smooth();
@@ -64,6 +68,7 @@ public class PanTiltZoom extends PApplet {
 
 	@Override
 	public void setup(){
+		System.out.println("starting setup");
 		frame.setBackground(new java.awt.Color(0, 0, 0));
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
@@ -117,18 +122,24 @@ public class PanTiltZoom extends PApplet {
 			return;
 		}
 		
-		if (wait) {
+		if (loading) {
 			
-			title_subtext = "Loaded: " + Feed.valid_feeds_count() + "/6";
+			title_subtext = "loaded: " + (int)(((float)Feed.valid_feeds_count()/6)*100) + "%";
 			if (Feed.valid_feeds_count() == 6) {
-				//wait = false;
+				loading = false;
+				drawTitle(); // this will show 6 briefly while idle is instantiated
 				//Always retrieve the first 6, because we know they are reliable
 				idle = new Idle(
 						this, 
 						feeds.subList(0, 6),  
 						feeds.get(0).getNextImage(this).get());
+				title_subtext = "ready";
+				greenHasBeenBlurred = false;
 			}
-			
+			drawTitle();
+			return;
+		}
+		if (wait) {
 			drawTitle();
 			return;
 		}
@@ -227,6 +238,7 @@ public class PanTiltZoom extends PApplet {
 				state = State.INIT_TO_IDLE;
 			} else {
 				state = State.ACTIVE_TO_IDLE;
+				active.willMoveFromActive(millisTransition/2);
 			}
 			activeHasBeenReinitialised = false;
 			timeAtTransition = millis();
@@ -249,7 +261,7 @@ public class PanTiltZoom extends PApplet {
 		PImage clean = get();  
 	    background(0);
 		
-	    // needs to be done like this because filter(BLUR) is hideously slow
+	    // needs to be done like this because filter(BLUR) is hideously slow	
 	    if(!greenHasBeenBlurred) {
 			green.beginDraw();
 			green.tint(0, 255, 0);
@@ -269,8 +281,10 @@ public class PanTiltZoom extends PApplet {
 		noise.updatePixels();
 		noise.endDraw();
 
-		int offset = (int)random(0, 10);
-		if(offset > 8) {
+		int offset = (int)random(0, 50);
+		if(offset == 1) {
+			offset = -1;
+		} else if (offset == 2){
 			offset = 1;
 		} else {
 			offset = 0;
@@ -278,6 +292,7 @@ public class PanTiltZoom extends PApplet {
 		
 		image(clean.get(), offset, 0);
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
+
 		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
 
 	}
