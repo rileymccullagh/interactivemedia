@@ -1,5 +1,4 @@
 .DS_Store
-bin/
 applet
 application.linux32
 application.linux64
