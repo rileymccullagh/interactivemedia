@@ -12,7 +12,7 @@ public class Prism {
   private List<Float> y = new ArrayList<Float>();
   float prism_height = 1;
   
-  int scale = 90;
+  int scale = 100;
   float rotation = 0.1f;
   float accel = 0.001f;
   float x_pos = 0;
@@ -25,6 +25,16 @@ public class Prism {
 	  this.scale = scale;
   }
 
+  public int camera_max() {
+	  if (x.size() == 0) {
+		  return 0;
+	  } else {
+		  
+	  
+	  int val =  (int)(x.get(1) -  x.get(0)) * scale; 
+	  return val;
+	  }
+  }
 
   public void update_sides(int sides, PApplet p) {
     float angle_per_edge = p.radians(360.0F / sides);  

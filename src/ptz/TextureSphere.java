@@ -18,6 +18,7 @@ class TextureSphere implements Drawable {
 		this.default_image = default_image;
 		globe = parent.createShape(PApplet.SPHERE, 175);
 		this.feed = feed;
+		
 		/*
 		this.default_image = p.createImage(640, 640, p.ARGB);
 		for (int i = 0; i < p.pixels.length; i++) { p.pixels[i] = 150;} 
@@ -27,7 +28,7 @@ class TextureSphere implements Drawable {
 	
 	public void draw() {
 		parent.pushMatrix();
-		parent.translate(parent.width / 2, parent.height / 2, -200);
+		parent.translate(parent.width / 2, parent.height / 2, 0);
 		parent.rotateY(a1);
 		parent.rotateX(a2);
 		
@@ -37,7 +38,6 @@ class TextureSphere implements Drawable {
 		parent.popMatrix();
 		a1 += .02;
 		a2 += .025;
-		//globe.setTexture(feed.getNextImage(parent, 3).orElse(default_image));
 		//globe.draw(parent.g);
 	}
 }

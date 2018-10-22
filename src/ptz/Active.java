@@ -26,16 +26,15 @@ class Active {
 	colorAverage ca; 
 	Prism skybox;
 	PImage img;
-	Feed feed; 
+	Feed feed;
+	
 	Active(PApplet parent, Feed feed) {
 		this.feed = feed;
 		img = feed.getNextImage(parent).get();
-		
 		this.parent = parent;
 		this.acidGenerator = new AcidGenerator(parent);
 		this.sphere = new TextureSphere(parent, img, feed);
 		ca = new colorAverage(parent);
-		
 		
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
@@ -51,7 +50,7 @@ class Active {
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		
 		//Set histogram up
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 6; i++) {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		
@@ -69,8 +68,11 @@ class Active {
 		parent.translate(
 				(float)(parent.width / 2.0f), 
 				(float)(parent.height / 2.0f), 
-				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
+				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0))
 		);
+		int val = skybox.camera_max();
+		
+		parent.translate(0, 0, val);
 		
 		List<PImage> images = new ArrayList<PImage>();
 		parent.rotateX(parent.PI /2.0f);
@@ -91,6 +93,8 @@ class Active {
 		acidGenerator.update();
 		
 		draw_outer_prism();
+		
+		
 		sphere.draw();
 	}
 }

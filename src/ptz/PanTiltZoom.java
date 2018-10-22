@@ -31,8 +31,8 @@ public class PanTiltZoom extends PApplet {
 	String title_subtext = "Loading";
 	
 	final int millisActive     = 90000;
-	final int millisIdle       = 3000;
-	final int millisTransition = 5000;
+	final int millisIdle       = 30000;
+	final int millisTransition = 500;
 	
 	Idle idle;
 	Active active;
@@ -65,13 +65,9 @@ public class PanTiltZoom extends PApplet {
 	@Override
 	public void setup(){
 		frame.setBackground(new java.awt.Color(0, 0, 0));
-		
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
 		frameRate(60);
-		
-		
-		
 		
 		green = createGraphics(width, height, P2D);  
 		glow = createGraphics(width, height, P2D);
@@ -103,15 +99,8 @@ public class PanTiltZoom extends PApplet {
 						}
 					}
 				}
-				
 			}
 		}).start();
-		
-		/*
-		* Disable temporarily 
-		* Feed.forcefully_retrieve_defaults(feeds.subList(0, 6),this,3,5000); 
-		*/
-		
 	}
 	
 	
@@ -141,8 +130,6 @@ public class PanTiltZoom extends PApplet {
 			}
 			
 			drawTitle();
-			
-			
 			return;
 		}
 		
@@ -153,16 +140,11 @@ public class PanTiltZoom extends PApplet {
 				this.transition(false);
 				break;
 			case ACTIVE:
-				// draw the active object
 				active.draw();
-				//Feed.download_feeds(feeds.subList(0, 6), this, 1, 3);
-				
-				// check if we have elapsed the active time frame
 				if(millis() > timeAtTransition + millisActive) {
 					this.transition(false);
 				}
 				break;
-	
 			case IDLE:
 				// draw the active object
 				idle.draw();
@@ -239,8 +221,7 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			
-			active = new Active(this, Feed.get_shuffled_list(1).get().get(0));
+			active = new Active(this,Feed.get_feed(0));
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
