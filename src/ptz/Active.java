@@ -39,8 +39,6 @@ class Active {
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
 		
-		feed.analyse(1);
-		
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ca.colorsComp;
 		builder.bar_color = new int[][] {ca.colorsAnal};

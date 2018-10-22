@@ -22,10 +22,10 @@ public class Camera {
 	
 	PImage empty_image;
 	
-
 	public Camera(PApplet p) {
 		this.parent = p;
 		empty_image = p.createImage(0, 0, 0);
+
 	}
 
 

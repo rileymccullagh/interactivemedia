@@ -126,7 +126,7 @@ public class PanTiltZoom extends PApplet {
 				idle = new Idle(
 						this, 
 						feeds.subList(0, 6),  
-						loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg"));
+						createImage(0,0,RGB));
 			}
 			
 			drawTitle();
