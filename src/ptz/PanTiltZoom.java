@@ -35,7 +35,7 @@ public class PanTiltZoom extends PApplet {
 	
 
 	final int millisActive     = 90000;
-	final int millisIdle       = 30000;
+	final int millisIdle       = 10000;
 	final int millisTransition = 5000;
 	
 	Idle idle;
@@ -232,7 +232,7 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this,Feed.get_feed(0));
+			active = new Active(this,Feed.get_feed((int)random(6)));
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
@@ -293,7 +293,7 @@ public class PanTiltZoom extends PApplet {
 		image(clean.get(), offset, 0);
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
 
-		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
+		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height, ADD);
 
 	}
 

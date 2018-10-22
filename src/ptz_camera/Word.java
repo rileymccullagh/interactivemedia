@@ -27,6 +27,7 @@ public class Word {
 		Map <String, Integer> map = new HashMap <String, Integer> ();
 
 		for (String str: words) {
+			if(str == "Retrieved" || str == "Archived") continue;
 			if (map.containsKey(str)) {
 				map.put(str, map.get(str) + 1);
 			} else {

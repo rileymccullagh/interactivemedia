@@ -33,7 +33,6 @@ class Active {
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
 
-
 		this.sphere = new TextureSphere(parent, img, feed, 100);
 		ca = new colorAverage(parent);
 		
@@ -74,6 +73,8 @@ class Active {
 		parent.fill(255);
 		parent.noStroke();
 		acidGenerator.update();
+		
+		feed.analyse(6);
 		
 		List<PImage> images = new ArrayList<PImage>();	
 		for (Engine_Ball_Bar item : histogram) {

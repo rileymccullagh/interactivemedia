@@ -125,10 +125,10 @@ public class Feed implements GetImage{
 	 */
 	public static void forcefully_retrieve_feeds (List<Feed> feeds, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time, final int minimum_number_of_images, int timeout) throws InterruptedException {
 		download_feeds(feeds,parent,total_images_per_camera, feeds_at_a_time);
-		int start_time = parent.second();
+		int start_time = PApplet.second();
 		
 		while (true) {
-			if (parent.second() > start_time + timeout ) {
+			if (PApplet.second() > start_time + timeout ) {
 				throw new InterruptedException();
 			}
 			
@@ -159,7 +159,7 @@ public class Feed implements GetImage{
 				System.out.println("Exited Retrieval");
 				
 				 
-				List<Feed> invalids = new ArrayList();
+				List<Feed> invalids = new ArrayList<Feed>();
 				
 				for (Feed item : retrieve) {
 					if (item.getNextImage().isPresent() == false) {
