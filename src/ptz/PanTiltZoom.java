@@ -12,11 +12,13 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
+
 import processing.opengl.PShader;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
 import ptz_camera.Word;
 import processing.*;
+
 
 
 public class PanTiltZoom extends PApplet {
@@ -30,8 +32,10 @@ public class PanTiltZoom extends PApplet {
 	boolean wait = true;
 	String title_subtext = "Loading";
 	
+
 	final int millisActive     = 90000;
 	final int millisIdle       = 30000;
+
 	final int millisTransition = 5000;
 	
 	Idle idle;
@@ -64,6 +68,7 @@ public class PanTiltZoom extends PApplet {
 
 	@Override
 	public void setup(){
+		System.out.println("starting setup");
 		frame.setBackground(new java.awt.Color(0, 0, 0));
 		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		titlefont = createFont("VT323-Regular.ttf", (int)height/8);
@@ -227,6 +232,7 @@ public class PanTiltZoom extends PApplet {
 				state = State.INIT_TO_IDLE;
 			} else {
 				state = State.ACTIVE_TO_IDLE;
+				active.willMoveFromActive(millisTransition/2);
 			}
 			activeHasBeenReinitialised = false;
 			timeAtTransition = millis();
@@ -249,7 +255,7 @@ public class PanTiltZoom extends PApplet {
 		PImage clean = get();  
 	    background(0);
 		
-	    // needs to be done like this because filter(BLUR) is hideously slow
+	    // needs to be done like this because filter(BLUR) is hideously slow	
 	    if(!greenHasBeenBlurred) {
 			green.beginDraw();
 			green.tint(0, 255, 0);
@@ -270,7 +276,9 @@ public class PanTiltZoom extends PApplet {
 		noise.endDraw();
 
 		int offset = (int)random(0, 10);
-		if(offset > 8) {
+		if(offset == 9) {
+			offset = -1;
+		} else if (offset == 1){
 			offset = 1;
 		} else {
 			offset = 0;
@@ -278,6 +286,7 @@ public class PanTiltZoom extends PApplet {
 		
 		image(clean.get(), offset, 0);
 		blend(noise.get(), 0, 0, noise.width, noise.height, 0, 0, width, height, ADD);
+
 		blend(green.get(), 0, 0, width, height, offset, offset, width+offset, height+offset, ADD);
 
 	}

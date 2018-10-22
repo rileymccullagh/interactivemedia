@@ -32,13 +32,16 @@ class Active {
 		this.feed = feed;
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
-		this.acidGenerator = new AcidGenerator(parent);
+
+
 		this.sphere = new TextureSphere(parent, img, feed, 100);
 		ca = new colorAverage(parent);
 		
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
-		
+				
+		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
+
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = new int[]{0,0,255};
 		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
@@ -52,6 +55,8 @@ class Active {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		skybox = new Prism(0,0,0,800);	
+		
+
 	}
 	
 	
@@ -72,7 +77,7 @@ class Active {
 		
 		List<PImage> images = new ArrayList<PImage>();	
 		for (Engine_Ball_Bar item : histogram) {
-			images.add(item.draw(acidGenerator.drumMachine.spectrum));
+			images.add(item.draw(acidGenerator.drumMachine.spectrum[0]));
 		}
 		
 		parent.pushMatrix();
@@ -90,5 +95,9 @@ class Active {
 		sphere.draw();
 		parent.translate(0, 0, -val);
 		parent.popMatrix();
+	}
+	
+	void willMoveFromActive(int transitionTime) {
+		
 	}
 }
