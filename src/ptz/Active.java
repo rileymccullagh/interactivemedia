@@ -60,27 +60,9 @@ class Active {
 	
 	
 	
-	void draw_outer_prism() {
-		
+	void draw_outer_prism(List<PImage> images) {
 		skybox.rotate();
 		parent.pushMatrix();
-		
-		parent.translate(
-				(float)(parent.width / 2.0f), 
-				(float)(parent.height / 2.0f), 
-				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0))
-		);
-		int val = skybox.camera_max();
-		
-		parent.translate(0, 0, val);
-		
-		List<PImage> images = new ArrayList<PImage>();
-		parent.rotateX(parent.PI /2.0f);
-		
-		for (Engine_Ball_Bar item : histogram) {
-			images.add(item.draw(acidGenerator.drumMachine.spectrum));
-		}
-		
 		skybox.draw(images, images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
@@ -92,7 +74,25 @@ class Active {
 		parent.noStroke();
 		acidGenerator.update();
 		
-		draw_outer_prism();
+		List<PImage> images = new ArrayList<PImage>();	
+		for (Engine_Ball_Bar item : histogram) {
+			images.add(item.draw(acidGenerator.drumMachine.spectrum));
+		}
+		
+		parent.pushMatrix();
+		parent.translate(
+				(float)(parent.width / 2.0f), 
+				(float)(parent.height / 2.0f), 
+				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
+		);
+		int val = skybox.camera_max();
+		System.out.println(val);
+		parent.translate(0, 0, -val);
+		parent.rotateX(parent.PI /2.0f);
+		
+		draw_outer_prism(images);
 		sphere.draw();
+		parent.translate(0, 0, -val);
+		parent.popMatrix();
 	}
 }

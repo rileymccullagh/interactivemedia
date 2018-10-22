@@ -46,7 +46,7 @@ public class Idle {
 	void draw_outer_prism(List<PImage> images) {
 		skybox.rotate();
 		parent.pushMatrix();
-		skybox.draw(images.subList(0, 6), images.get(0), images.get(0), parent);
+		skybox.draw(images, images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
 	

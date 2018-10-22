@@ -28,7 +28,6 @@ class TextureSphere implements Drawable {
 	
 	public void draw() {
 		parent.pushMatrix();
-		parent.translate(parent.width / 2, parent.height / 2, 0);
 		parent.rotateY(a1);
 		parent.rotateX(a2);
 		
