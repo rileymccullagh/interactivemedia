@@ -44,19 +44,8 @@ public class Idle {
 	}
 	
 	void draw_outer_prism(List<PImage> images) {
-		
 		skybox.rotate();
 		parent.pushMatrix();
-		
-		parent.translate(
-				(float)(parent.width / 2.0f), 
-				(float)(parent.height / 2.0f), 
-				(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
-		);
-		
-		//parent.translate(0, 0, skybox.camera_max());
-		
-		parent.rotateX(parent.PI /2.0f);
 		skybox.draw(images.subList(0, 4), images.get(0), images.get(0), parent);
 		parent.popMatrix();
 	}
@@ -73,11 +62,20 @@ public class Idle {
 			images.add(img);
 		}
 		
-		draw_outer_prism(images);
-		center_shape.draw();
+		parent.pushMatrix();
+			parent.translate(
+					(float)(parent.width / 2.0f), 
+					(float)(parent.height / 2.0f), 
+					(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
+			);
+			parent.translate(0, 0, -300);
+			parent.rotateX(parent.PI /2.0f);
+			
+			draw_outer_prism(images);
+			center_shape.draw();
+		parent.popMatrix();
 		
 		//bg.draw();
 		//dr.draw();
-		
 	}
 }

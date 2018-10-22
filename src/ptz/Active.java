@@ -93,8 +93,6 @@ class Active {
 		acidGenerator.update();
 		
 		draw_outer_prism();
-		
-		
 		sphere.draw();
 	}
 }
