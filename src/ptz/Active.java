@@ -33,7 +33,6 @@ class Active {
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
 
-		this.acidGenerator = new AcidGenerator(parent);
 
 		this.sphere = new TextureSphere(parent, img, feed, 100);
 		ca = new colorAverage(parent);
@@ -42,6 +41,8 @@ class Active {
 		ca.loadComp(ca.getAverageColor(img));
 		
 		feed.analyse(1);
+		
+		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
 		
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ca.colorsComp;
@@ -56,6 +57,8 @@ class Active {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		skybox = new Prism(0,0,0,800);	
+		
+
 	}
 	
 	

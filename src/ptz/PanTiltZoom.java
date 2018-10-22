@@ -32,9 +32,9 @@ public class PanTiltZoom extends PApplet {
 	boolean wait = true;
 	String title_subtext = "Loading";
 	
-	final int millisActive     = 90000;
-	final int millisIdle       = 30000;
-	final int millisTransition = 500;
+	final int millisActive     = 10000;
+	final int millisIdle       = 10000;
+	final int millisTransition = 5000;
 	
 	Idle idle;
 	Active active;
@@ -129,6 +129,7 @@ public class PanTiltZoom extends PApplet {
 						this, 
 						feeds.subList(0, 6),  
 						loadImage("http://96.78.107.22/cgi-bin/viewer/video.jpg"));
+				title_subtext = "";
 			} else {
 				title_subtext = "Loaded: " + Feed.valid_feeds_count() + "/6";
 			}

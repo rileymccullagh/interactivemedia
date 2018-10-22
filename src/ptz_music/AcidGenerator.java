@@ -23,16 +23,24 @@ public class AcidGenerator implements Instrument {
 		output = minim.getLineOut();
 		output.setTempo(tempo);
 		
+		for(int i = 0; i < words.length; i++) {
+			System.out.println("Word is: " + words[i]);
+		}
+		
 		if(words.length > 0) {
 			bassSynth = new BassSynth(parent, wordToBassSequence(words[0]));
 		} else {
 			bassSynth = new BassSynth(parent, new int[16]);
 		}
 		
-		boolean[][] drumSequence = new boolean[words.length-1][16];
+		int numberOfSequences = words.length-1;
+		if(numberOfSequences < 0) numberOfSequences = 0;
 		
-		for(int i = 0; i < words.length; i++) {
-			drumSequence[i] = wordToDrumSequence(words[i+1]);
+		boolean[][] drumSequence = new boolean[numberOfSequences][16];
+		if (numberOfSequences != 0) {
+			for(int i = 0; i < words.length; i++) {
+				drumSequence[i] = wordToDrumSequence(words[i+1]);
+			}
 		}
 		drumMachine = new DrumMachine(parent, drumSequence);
 		
