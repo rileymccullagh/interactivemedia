@@ -17,7 +17,7 @@ public class DrumMachine {
 	public int bands = 8;
 	public float[][] spectrum = new float[11][bands];
 
-	public DrumMachine(PApplet parent) {
+	public DrumMachine(PApplet parent, boolean[] ...newPatterns) {
 		this.parent = parent;
 
 		minim = new Minim(parent);
@@ -35,22 +35,10 @@ public class DrumMachine {
 		
 		summer.patch(output);
 		
-
-		// four to the floor for the hell of it.
-		patterns[0][0] = true;
-//		patterns[0][4] = true;
-		patterns[0][8] = true;
-//		patterns[0][12] = true;
-
-//		patterns[1][0] = true;
-		patterns[1][4] = true;
-//		patterns[1][8] = true;
-		patterns[1][12] = true;
-
-		patterns[7][2] = true;
-		patterns[7][6] = true;
-		patterns[7][10] = true;
-		patterns[7][14] = true;
+		for (int i = 0; i < newPatterns.length; i++) {
+			patterns[i] = newPatterns[i];
+		}
+		
 	}
 
 	public void noteOn(int step) {
