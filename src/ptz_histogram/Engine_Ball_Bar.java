@@ -6,14 +6,12 @@ import processing.core.PApplet;
 
 //A class to handle balls and bars
 public class Engine_Ball_Bar {
+	
   private int screen_width = 0;
   private int screen_height = 0;
   private PGraphics pg; 
   private Bar_Manager bar_manager;
   private Ball_Manager ball_manager;
-  
-  
-  
 
   //If bar_color is smaller than the number of balls, it will cycle through the colors
   public Engine_Ball_Bar (int screen_width, int screen_height, int num_of_bars, int num_of_balls, PApplet parent, int[] ball_color, int[][] bar_color, int[] text_color, String text) {

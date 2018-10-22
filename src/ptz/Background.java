@@ -3,16 +3,26 @@ package ptz;
 import processing.core.*;
 
 class Background {
-  PApplet parent;
-  PImage bgi;
-  Background(PApplet p) {
-    this.parent = p;
-  }
-  
-  void draw() {
+	PApplet parent;
 
-    bgi = parent.loadImage("space.png");
-    bgi.resize(parent.width,parent.height);
-    parent.image(bgi,0,0);
-  }
+	PImage bgi;
+
+	Background(PApplet p) {
+		this.parent = p;
+		bgi = parent.loadImage("Unknown.png");
+		bgi.resize(parent.width, parent.height);
+
+	}
+
+	void draw() {
+		parent.pushMatrix();
+		parent.translate(0, 0, -500);
+		parent.background(bgi);
+		parent.popMatrix();
+
+	}
+
+	PImage get() {
+		return bgi;
+	}
 }
