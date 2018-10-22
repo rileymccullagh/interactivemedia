@@ -40,10 +40,10 @@ class Active {
 		ca.loadComp(ca.getAverageColor(img));
 		
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
-		builder.ball_color = ca.colorsComp;
-		builder.bar_color = new int[][] {ca.colorsAnal};
-		builder.text_color = ca.colorsAnal;
-		builder.text = feed.words_analysed[0];
+		builder.ball_color = new int[]{0,0,255};
+		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
+		builder.text_color = new int[]{0,0,0};
+		builder.text = "PanTiltZOOM";
 		builder.num_of_balls = feed.words_analysed.length;
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
 		
