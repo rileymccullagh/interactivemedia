@@ -18,7 +18,7 @@ public class Feed implements GetImage{
 	PImage default_image = null;
 	int thread_count = 0;
 	final int words_per_feed = 6;
-	public String[] words_analysed = new String[]{""};
+	public String[] words_analysed;
 	int desired_framerate = 1;
 	
 	public void set_framerate(int val) {this.desired_framerate = val; }
@@ -39,10 +39,10 @@ public class Feed implements GetImage{
 	}
 	
 	ArrayList<PImage> images = new ArrayList<PImage>();
+	
 	private Feed (String wiki, String cameraurl){
 		this.wiki = wiki;
 		this.camera_url = cameraurl;
-		words_analysed[0] = default_image_filename();
 	}
 	
 	void set_default(PImage image) {
@@ -179,7 +179,7 @@ public class Feed implements GetImage{
 		Word analyser = new Word();
 		for (int i = 0; i < feeds_to_retrieve.size(); i++) {
 			
-			if (feeds_to_retrieve.get(i).words_analysed.length == 0) {
+			if (feeds_to_retrieve.get(i).words_analysed == null) {
 				feeds_to_retrieve.get(i).words_analysed = analyser.frequencyAnalysis(feeds_to_retrieve.get(i).wiki, 5);
 			}
 			
@@ -285,52 +285,7 @@ public class Feed implements GetImage{
 		}
 	}
 	
-	/*
-	 * Will forcefully download and set the default image for each feed
-	*/
 	
-	public static void forcefully_retrieve_defaults (List<Feed> feeds, PApplet parent, int threads_at_a_time, final int timeout) {
-		Stack<Thread> prepared_threads = new Stack<Thread>();
-		List<Thread> running_threads = new ArrayList<Thread>();
-		
-		for (Feed item : feeds ) {
-			prepared_threads.add(new Thread (new Runnable() {
-			@Override
-			public void run() {
-				item.set_default_image(parent);
-			}	
-			}));
-		}
-		
-		for (int i = 0; i < threads_at_a_time; i++) {
-			if (prepared_threads.isEmpty()) {
-				break;
-			}
-			running_threads.add(prepared_threads.pop());
-		}
-		
-		while (running_threads.isEmpty() == false) {
-			for (int i = 0; i < running_threads.size(); i++) {
-				if (running_threads.get(i).isAlive()) {
-					continue;
-				}
-				if (prepared_threads.isEmpty()) {
-					running_threads.remove(i);
-					i = 0;
-					continue;
-				}
-				
-				running_threads.set(i, prepared_threads.pop());
-				running_threads.get(i).run();
-			}
-		}	
-	}
-	
-	String default_image_filename () {
-		String name = ("defaults/" + wiki.split("/")[wiki.split("/").length -1] + ".jpg");
-		name = name.replace(',', '_');
-		return name;
-	}
 	public static Optional<List<Feed>> get_shuffled_list(int size){
 		List<Feed> valid_feeds = get_valid_feeds(feeds);
 		
@@ -361,21 +316,6 @@ public class Feed implements GetImage{
 		return valids;
 	}
 	
-	public void set_default_image(PApplet parent) {
-		boolean retrieve_default = false;
-		
-		if (parent.dataFile(default_image_filename()).exists() && retrieve_default) {
-			this.default_image = parent.loadImage(default_image_filename());
-			
-		} else {
-			//We could add a local image here that we can default back to
-			this.default_image = parent.loadImage(camera_url);
-			//We also save it for when we run again
-			if (validate_image(default_image)) {
-				this.default_image.save(default_image_filename()); 
-			}
-		}
-	}
 	
 	boolean ping () {
 		try{
