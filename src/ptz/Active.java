@@ -53,7 +53,7 @@ class Active {
 		builder.text_color = barColor2;
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
-		builder.num_of_bars = 8;//acidGenerator.drumMachine.bands;
+		builder.num_of_bars = acidGenerator.bands;
 
 		// Set histogram up
 		for (int i = 0; i < 4; i++) {
@@ -80,7 +80,7 @@ class Active {
 
 		List<PImage> images = new ArrayList<PImage>();
 		for (Engine_Ball_Bar item : histogram) {
-			images.add(item.draw(acidGenerator.drumMachine.spectrum[0]));
+			images.add(item.draw(acidGenerator.spectrum));
 		}
 
 		parent.pushMatrix();

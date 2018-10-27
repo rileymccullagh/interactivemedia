@@ -46,18 +46,19 @@ public class BassSynth  {
 	}
 	
 	public void update() {
-	  if ((parent.millis() > trigger) && (note<sequence.length)) {
+	  int timeStarted = parent.millis();
+	  if ((timeStarted > trigger) && (note<sequence.length)) {
 		
 		// DSP section
 	    triOsc.play((float) midiToFreq(sequence[note]), 0.8f);
 	    env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	    
 	    // set next trigger time
-	    trigger = parent.millis() + duration;
+	    trigger = timeStarted + duration;
 	    //loop
 	    note = (note + 1) % 16; 
 	  }
-	  cutoff = (float)(trigger - parent.millis()) / duration;
+	  cutoff = (float)(trigger - timeStarted) / duration;
 	  cutoff *= 4000;
 	  lowPass.freq(cutoff);
 	}

@@ -23,7 +23,7 @@ import processing.*;
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = false;
+	boolean fullscreen = true;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;

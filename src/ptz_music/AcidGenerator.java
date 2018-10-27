@@ -1,43 +1,77 @@
 package ptz_music;
 
+import ddf.minim.AudioOutput;
+import ddf.minim.Minim;
+import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 
 public class AcidGenerator {
 	PApplet parent;
+	Minim minim;
+	public AudioOutput output;
 	
 	BassSynth bassSynth;
-	public DrumMachine drumMachine;
+	DrumMachine drumMachine;
+	
+	FFT fft;
+	
+	boolean[] kick;
+	boolean[] ch;
+	boolean[] oh;
 	
 	boolean active = false;
 	
+	public int bands = 8;
+	public float[] spectrum = new float[bands];
+	
 	public AcidGenerator(PApplet parent, String ...words) {
 		this.parent = parent;
-		int[] midiSequence = {40, 40, 48, 48, 51, 36, 36, 38, 40, 40, 48, 48, 51, 36, 36, 38}; 
-
-		bassSynth = new BassSynth(parent, midiSequence);
 		
-		boolean[] kick = new boolean[16];
+		minim = new Minim(parent);
+		output = minim.getLineOut();
+		fft = new FFT(output.bufferSize(), output.sampleRate());
+		drumMachine = new DrumMachine(parent);
+
+		
+		kick = new boolean[16];
 		kick[0] = true;
 		kick[4] = true;
 		kick[8] = true;
 		kick[12] = true;
-		drumMachine = new DrumMachine(parent, kick);
+		
+		ch = new boolean[16];
+		ch[0] = true;
+		ch[4] = true;
+		ch[8] = true;
+		ch[12] = true;
+		
+		oh = new boolean[16];
+		oh[2] = true;
+		oh[6] = true;
+		oh[10] = true;
+		oh[14] = true;
 	}
 	
 	public void update() {
 		if (active) {
 			bassSynth.update();
 		}
+		drumMachine.update();
+			
+		fft.forward(output.mix);
+		fft.linAverages(bands);
 	}
 	
 	public void active(String word) {
 		active = true;
 		int[] sequence = wordToBassSequence(word);
 		bassSynth = new BassSynth(parent, sequence);
+		drumMachine = new DrumMachine(parent, kick, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],ch, oh);
 	}
 	
 	public void idle() {
 		active = false;
+		drumMachine = new DrumMachine(parent, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],new boolean[16], ch, oh);
 	}
 	
 	public int[] wordToBassSequence(String word) {
@@ -49,13 +83,13 @@ public class AcidGenerator {
 			if(temp >= 'a' && temp <= 'z') { //97~122
 				int num = (int)temp;
 				num -= 97; // get rid of unicode offset
-				num += 48; // add midi offset to c3
+				num += 38; // add midi offset to c3
 				sequence[i] = num;
 			}
 			if(temp >= 'A' && temp <= 'Z') { //65~90
 				int num = (int)temp;
 				num -= 65; // get rid of unicode offset
-				num += 48; // add midi offset to c3
+				num += 38; // add midi offset to c3
 				sequence[i] = num;
 				i += 3;
 			}
