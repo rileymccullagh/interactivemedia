@@ -14,7 +14,7 @@ public class Engine_Ball_Bar {
   private Ball_Manager ball_manager;
 
   //If bar_color is smaller than the number of balls, it will cycle through the colors
-  public Engine_Ball_Bar (int screen_width, int screen_height, int num_of_bars, int num_of_balls, PApplet parent, int[] ball_color, int[][] bar_color, int[] text_color, String text) {
+  public Engine_Ball_Bar (int screen_width, int screen_height, int num_of_bars, int num_of_balls, PApplet parent, int ball_color, int bar_color, int[] text_color, String text) {
     this.bar_manager = new Bar_Manager(screen_width, screen_height, num_of_bars, bar_color);
     this.ball_manager = new Ball_Manager(num_of_balls, (int)(Math.ceil(screen_width * 0.03)), ball_color, text_color, text); 
     this.screen_width = screen_width; 

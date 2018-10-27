@@ -7,8 +7,8 @@ class Bar_Manager {
   private int screen_height;
   private short[] bars_height;
   private short[] bars_previous_height;
-  private int[][] bar_color;
-  Bar_Manager(int screen_width, int screen_height, int num_of_bars, int[][] bar_color) {
+  private int bar_color;
+  Bar_Manager(int screen_width, int screen_height, int num_of_bars, int bar_color) {
     this.screen_width = screen_width;
     this.screen_height = screen_height;
     this.bar_color = bar_color;
@@ -32,7 +32,7 @@ class Bar_Manager {
   PGraphics draw(PGraphics pg) {
 
     for (int i = 0; i < bars_height.length; i++) {
-      pg.fill(bar_color[i % bar_color.length][0],bar_color[i % bar_color.length][1],bar_color[i % bar_color.length][2]);
+      pg.fill(bar_color);
       pg.rect(get_bar_width() * (i), get_height(i), get_bar_width(), bars_height[i]);
     }
     return pg;

@@ -37,11 +37,11 @@ public class AcidGenerator implements Instrument {
 		if(numberOfSequences < 0) numberOfSequences = 0;
 		
 		boolean[][] drumSequence = new boolean[numberOfSequences][16];
-		if (numberOfSequences != 0) {
-			for(int i = 0; i < words.length; i++) {
-				drumSequence[i] = wordToDrumSequence(words[i+1]);
-			}
-		}
+//		if (numberOfSequences != 0) {
+//			for(int i = 0; i < words.length; i++) {
+//				drumSequence[i] = wordToDrumSequence(words[i+1]);
+//			}
+//		}
 		drumMachine = new DrumMachine(parent, drumSequence);
 		
 		
@@ -76,22 +76,22 @@ public class AcidGenerator implements Instrument {
 		bassSynth.output.shiftGain(0, -80, transitionTime);
 	}
 	
-	public boolean[] wordToDrumSequence(String word) {
-		boolean sequence[] = new boolean[16];
-		
-		for(int i = 0; i < 16; i++) {
-			char temp = word.charAt(i);
-			if(temp == 'a' || temp == 'e' || temp == 'i' || temp == 'o' || temp == 'u') {
-				sequence[i] = true;
-			}
-			if(temp == 'A' || temp == 'E' || temp == 'I' || temp == 'O' || temp == 'U') {
-				sequence[i] = true;
-				i += 3;
-			}
-		}
-		
-		return sequence;
-	}
+//	public boolean[] wordToDrumSequence(String word) {
+//		boolean sequence[] = new boolean[16];
+//		
+//		for(int i = 0; i < 16; i++) {
+//			char temp = word.charAt(i);
+//			if(temp == 'a' || temp == 'e' || temp == 'i' || temp == 'o' || temp == 'u') {
+//				sequence[i] = true;
+//			}
+//			if(temp == 'A' || temp == 'E' || temp == 'I' || temp == 'O' || temp == 'U') {
+//				sequence[i] = true;
+//				i += 3;
+//			}
+//		}
+//		
+//		return sequence;
+//	}
 	
 	public int[] wordToBassSequence(String word) {
 		int[] sequence = new int[16];

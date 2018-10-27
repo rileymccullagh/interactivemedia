@@ -24,6 +24,9 @@ class Active {
 	AcidGenerator acidGenerator;
 	TextureSphere sphere;
 	colorAverage ca; 
+	int ballColor;
+	int barColor1;
+	int barColor2;
 	Prism skybox;
 	PImage img;
 	Feed feed;
@@ -40,12 +43,14 @@ class Active {
 	
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
-
+		ballColor = ca.colorsAnal[(int)parent.random(8)];
+		barColor1 = ca.colorsComp[(int)parent.random(8)];
+		barColor2 = ca.colorsComp[(int)parent.random(8)];		
 		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
-		builder.ball_color = new int[]{0,0,255};
-		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
+		builder.ball_color = ballColor;
+		builder.bar_color = barColor1;
 		builder.text_color = new int[]{0,0,0};
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();

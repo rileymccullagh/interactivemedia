@@ -7,8 +7,8 @@ public class Engine_Ball_Bar_Builder {
   public Engine_Ball_Bar_Builder() {}
   public int num_of_bars;
   public int num_of_balls; 
-  public int[] ball_color; 
-  public int[][] bar_color; 
+  public int ball_color; 
+  public int bar_color; 
   public int[] text_color; 
   public String text;
   public Engine_Ball_Bar build (int screen_width, int screen_height, PApplet parent){
