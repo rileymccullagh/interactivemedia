@@ -43,15 +43,17 @@ class Active {
 	
 		ca.loadAnal(ca.getAverageColor(img));
 		ca.loadComp(ca.getAverageColor(img));
-		ballColor = ca.colorsAnal[(int)parent.random(8)];
-		barColor1 = ca.colorsComp[(int)parent.random(8)];
-		barColor2 = ca.colorsComp[(int)parent.random(8)];		
+		
+		ballColor = ca.colorsComp[(int)parent.random(8)];
+		barColor1 = ca.colorsAnal[(int)parent.random(8)];
+		barColor2 = ca.colorsComp[(int)parent.random(8)];	
+		
 		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ballColor;
 		builder.bar_color = barColor1;
-		builder.text_color = new int[]{0,0,0};
+		builder.text_color = barColor2;
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
 		builder.num_of_bars = acidGenerator.drumMachine.bands;

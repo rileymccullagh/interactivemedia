@@ -23,9 +23,9 @@ public class AcidGenerator implements Instrument {
 		output = minim.getLineOut();
 		output.setTempo(tempo);
 		
-		for(int i = 0; i < words.length; i++) {
-			System.out.println("Word is: " + words[i]);
-		}
+//		for(int i = 0; i < words.length; i++) {
+//			System.out.println("Word is: " + words[i]);
+//		}
 		
 		if(words.length > 0) {
 			bassSynth = new BassSynth(parent, wordToBassSequence(words[0]));

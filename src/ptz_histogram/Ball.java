@@ -17,10 +17,10 @@ class Ball {
     return PVector.sub(get_Vel(), rhs.get_Vel());
   }
 
-  PGraphics draw(PGraphics pg, int radius, char text, int ball_color, int[] text_color) {
+  PGraphics draw(PGraphics pg, int radius, char text, int ball_color, int text_color) {
     pg.fill(ball_color);
     pg.ellipse(x, y, radius * 2, radius * 2); 
-    pg.fill(text_color[0], text_color[1], text_color[2]);
+    pg.fill(text_color);
     pg.text(text, x, y - (radius / 4));
     return pg;
   }

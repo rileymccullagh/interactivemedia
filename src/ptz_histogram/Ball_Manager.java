@@ -8,9 +8,9 @@ class Ball_Manager {
   private int radius;
   private String displaytext; 
   private int ball_color; 
-  private int[] text_color;
+  private int text_color;
 
-  Ball_Manager(int ball_count, int radius, int ball_color, int[] text_color, String displaytext) {
+  Ball_Manager(int ball_count, int radius, int ball_color, int text_color, String displaytext) {
     balls = new Ball[ball_count];
     this.radius = radius;
     this.ball_color = ball_color; 
