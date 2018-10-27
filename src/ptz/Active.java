@@ -27,35 +27,39 @@ class Active {
 	Prism skybox;
 	PImage img;
 	Feed feed;
-	
-	
+	List<Feed> feeds;
+	PImage default_image;
+
 	Active(PApplet parent, Feed feed) {
 		this.feed = feed;
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
 
 		this.sphere = new TextureSphere(parent, img, feed, 100);
+		ca = new colorAverage(parent, feeds, feed, default_image);
 	
-				
+		ca.loadAnal(ca.getAverageColor(img));
+		ca.loadComp(ca.getAverageColor(img));
+
 		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = new int[]{0,0,255};
-		builder.bar_color = new int[][] {new int	[] {255,0,0}, new int[] {0,255,0}};
+		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
 		builder.text_color = new int[]{0,0,0};
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
 		builder.num_of_bars = acidGenerator.drumMachine.bands;
-		
+
 		//Set histogram up
 		for (int i = 0; i < 4; i++) {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		skybox = new Prism(0,0,0,800);	
-		
 
+		
 	}
-	
+
 	
 	
 	void draw_outer_prism(List<PImage> images) {

@@ -34,8 +34,8 @@ public class PanTiltZoom extends PApplet {
 	String title_subtext = "loading";
 	
 
-	final int millisActive     = 90000;
-	final int millisIdle       = 10000000; // 10000;
+	final int millisActive     = 9000000;
+	final int millisIdle       = 10000; // 10000;
 	final int millisTransition = 5000;
 	
 	Idle idle;

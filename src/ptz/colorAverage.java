@@ -13,6 +13,7 @@ public class colorAverage {
 
 	PApplet parent;
 	List<Feed> feeds;
+	Feed feed;
 	PImage default_image;
 	ColorHarmony colorHarmony;
 
@@ -20,15 +21,16 @@ public class colorAverage {
 	int[] colorsAnal = new int[8];
 	String hexValue;
 
-	colorAverage(PApplet parent, List<Feed> feeds, PImage default_image) {
+	public colorAverage(PApplet parent, List<Feed> feeds, Feed feed, PImage default_image) {
 		this.parent = parent;
 		this.default_image = default_image;
+		this.feed = feed;
 		this.feeds = feeds;
 		colorHarmony = new ColorHarmony(parent);
 	
 	}
 
-	String getAverageColor(PImage img) {
+	public String getAverageColor(PImage img) {
 		img.loadPixels();
 		int r = 0, g = 0, b = 0;
 		for (int i = 0; i < img.pixels.length; i++) {
@@ -45,12 +47,12 @@ public class colorAverage {
 		return hexValue;
 	}
 
-	int[] loadAnal(String hexValue) {
+	public int[] loadAnal(String hexValue) {
 		colorsAnal = colorHarmony.Analogous(hexValue);
 		return colorsAnal;
 	}
 
-	int[] loadComp(String hexValue) {
+	public int[] loadComp(String hexValue) {
 		colorsComp = colorHarmony.Complementary(hexValue);
 		return colorsComp;
 	}

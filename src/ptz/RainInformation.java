@@ -7,14 +7,13 @@ import java.util.List;
 
 import processing.core.*;
 import ptz_camera.Feed;
-import ptz_camera.Word;
 
 class RainInformation {
 	PApplet parent;
 	colorAverage ca;
 	PImage default_image;
 	List<Feed> feeds; 
-	Word words;
+	Feed feed;
 	
 	float x;
 	float y;
@@ -31,7 +30,8 @@ class RainInformation {
 	RainInformation(PApplet parent, List<Feed> feeds, PImage default_image) {
 		this.parent = parent;
 		this.feeds = feeds;
-		ca = new colorAverage(parent, feeds, default_image);
+		this.feed = feed;
+		ca = new colorAverage(parent, feeds , feed, default_image);
 		ca.loadAnal(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		ca.loadComp(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
