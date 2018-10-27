@@ -8,6 +8,7 @@ import com.cage.colorharmony.ColorConvertor;
 import com.cage.colorharmony.ColorHarmony;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
@@ -16,9 +17,9 @@ import ptz_histogram.*;
 
 class Active {
 	PApplet parent;
+	AcidGenerator acidGenerator;
 
 	List<Engine_Ball_Bar> histogram = new ArrayList<Engine_Ball_Bar>();
-	AcidGenerator acidGenerator;
 	TextureSphere sphere;
 	colorAverage ca;
 	int ballColor;
@@ -30,7 +31,8 @@ class Active {
 	List<Feed> feeds;
 	PImage default_image;
 
-	Active(PApplet parent, Feed feed) {
+	Active(PApplet parent, Feed feed, AcidGenerator acidGenerator) {
+		this.acidGenerator = acidGenerator;
 		this.feed = feed;
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
@@ -45,15 +47,13 @@ class Active {
 		barColor1 = ca.colorsAnal[(int) parent.random(8)];
 		barColor2 = ca.colorsComp[(int) parent.random(8)];
 
-		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
-
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ballColor;
 		builder.bar_color = barColor1;
 		builder.text_color = barColor2;
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
-		builder.num_of_bars = acidGenerator.drumMachine.bands;
+		builder.num_of_bars = acidGenerator.bands;
 
 		// Set histogram up
 		for (int i = 0; i < 4; i++) {
@@ -75,21 +75,20 @@ class Active {
 		parent.background(255);
 		parent.fill(255);
 		parent.noStroke();
-		acidGenerator.update();
 
 		feed.analyse(6);
 
 		List<PImage> images = new ArrayList<PImage>();
 		for (Engine_Ball_Bar item : histogram) {
-			images.add(item.draw(acidGenerator.drumMachine.spectrum[0]));
+			images.add(item.draw(acidGenerator.spectrum));
 		}
 
 		parent.pushMatrix();
 		parent.translate((float) (parent.width / 2.0f), (float) (parent.height / 2.0f),
-				(float) ((parent.height / 2.0) / Math.tan(parent.PI * 30.0 / 180.0)));
+				(float) ((parent.height / 2.0) / Math.tan(PConstants.PI * 30.0 / 180.0)));
 		int val = skybox.camera_max();
 		parent.translate(0, 0, -val);
-		parent.rotateX(parent.PI / 2.0f);
+		parent.rotateX(PConstants.PI / 2.0f);
 
 		draw_outer_prism(images);
 		sphere.draw();

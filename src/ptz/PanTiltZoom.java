@@ -17,12 +17,13 @@ import processing.opengl.PShader;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
 import ptz_camera.Word;
+import ptz_music.AcidGenerator;
 import processing.*;
 
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = false;
+	boolean fullscreen = true;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
@@ -35,7 +36,7 @@ public class PanTiltZoom extends PApplet {
 	
 
 	final int millisActive     = 20000;
-	final int millisIdle       = 20000;
+	final int millisIdle       = 10000;
 	final int millisTransition = 5000;
 	
 	Idle idle;
@@ -45,6 +46,8 @@ public class PanTiltZoom extends PApplet {
 	
 	boolean activeHasBeenReinitialised = false;
 	int timeAtTransition = 0;
+	
+	AcidGenerator acidGenerator;
 
 	public static void main(String[] args) {
 		PApplet.main("ptz.PanTiltZoom");
@@ -78,6 +81,8 @@ public class PanTiltZoom extends PApplet {
 		glow = createGraphics(width, height, P2D);
 		noise = createGraphics(width/2, height/2, P2D);
 		
+		acidGenerator = new AcidGenerator(this);
+		
 		System.out.println("Finished Setup");
 	}
 	int loading_counter = 2;
@@ -93,7 +98,7 @@ public class PanTiltZoom extends PApplet {
 			public void run() {
 				final int minimum_number_of_feeds = 6;
 				
-				Feed.get_minimum_feeds(6, p, 6, 3);
+				Feed.get_minimum_feeds(6, p, 1, 3);
 				if (Feed.valid_feeds_count() < 6) {
 					System.out.println("Couldn't retrieve 6 feeds! Let's copy");
 					if (Feed.valid_feeds_count() == 0) {
@@ -121,6 +126,8 @@ public class PanTiltZoom extends PApplet {
 			setup_longer(); //Can be soon replaced
 			return;
 		}
+		
+		acidGenerator.update();
 		
 		if (loading) {
 			
@@ -232,7 +239,9 @@ public class PanTiltZoom extends PApplet {
 		if (toActive) {
 			state = State.IDLE_TO_ACTIVE;
 			timeAtTransition = millis();
-			active = new Active(this,Feed.get_feed((int)random(6)));
+			Feed feed = Feed.get_feed((int)random(6));
+			acidGenerator.active(feed.words_analysed[0]);
+			active = new Active(this, feed, acidGenerator);
 		} else {
 			if(state == State.INIT) {
 				state = State.INIT_TO_IDLE;
@@ -242,6 +251,7 @@ public class PanTiltZoom extends PApplet {
 			}
 			activeHasBeenReinitialised = false;
 			timeAtTransition = millis();
+			acidGenerator.idle();
 		}
 	}
 	

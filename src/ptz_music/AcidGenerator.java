@@ -1,99 +1,81 @@
 package ptz_music;
 
-import processing.core.PApplet;
 import ddf.minim.AudioOutput;
 import ddf.minim.Minim;
-import ddf.minim.ugens.Instrument;
+import ddf.minim.analysis.FFT;
+import processing.core.PApplet;
 
-public class AcidGenerator implements Instrument {
+public class AcidGenerator {
 	PApplet parent;
-	public DrumMachine drumMachine;
-	public BassSynth bassSynth;
-	
-	public AudioOutput output;
 	Minim minim;
-
-	int tempo = 120;
-	int currentStep = 0;
+	public AudioOutput output;
+	
+	BassSynth bassSynth;
+	DrumMachine drumMachine;
+	
+	FFT fft;
+	
+	boolean[] kick;
+	boolean[] ch;
+	boolean[] oh;
+	
+	boolean active = false;
+	
+	public int bands = 8;
+	public float[] spectrum = new float[bands];
 	
 	public AcidGenerator(PApplet parent, String ...words) {
 		this.parent = parent;
 		
 		minim = new Minim(parent);
 		output = minim.getLineOut();
-		output.setTempo(tempo);
-		
-//		for(int i = 0; i < words.length; i++) {
-//			System.out.println("Word is: " + words[i]);
-//		}
-		
-		if(words.length > 0) {
-			bassSynth = new BassSynth(parent, wordToBassSequence(words[0]));
-		} else {
-			bassSynth = new BassSynth(parent, new int[16]);
-		}
-		
-		int numberOfSequences = words.length-1;
-		if(numberOfSequences < 0) numberOfSequences = 0;
-		
-		boolean[][] drumSequence = new boolean[numberOfSequences][16];
-//		if (numberOfSequences != 0) {
-//			for(int i = 0; i < words.length; i++) {
-//				drumSequence[i] = wordToDrumSequence(words[i+1]);
-//			}
-//		}
-		drumMachine = new DrumMachine(parent, drumSequence);
-		
-		
-		
-//		drumMachine.output.patch(output);
-	}
-	
-	@Override
-	public void noteOn(float arg0) {
-			drumMachine.noteOn(currentStep);
-			bassSynth.noteOn(currentStep);
+		fft = new FFT(output.bufferSize(), output.sampleRate());
+		drumMachine = new DrumMachine(parent);
 
-
-	}
-
-	@Override
-	public void noteOff() {
-		currentStep++;
-		if (currentStep >= 16) {
-			currentStep = 0;
-		}
-		output.playNote(0, 0.25f, this);
+		
+		kick = new boolean[16];
+		kick[0] = true;
+		kick[4] = true;
+		kick[8] = true;
+		kick[12] = true;
+		
+		ch = new boolean[16];
+		ch[0] = true;
+		ch[4] = true;
+		ch[8] = true;
+		ch[12] = true;
+		
+		oh = new boolean[16];
+		oh[2] = true;
+		oh[6] = true;
+		oh[10] = true;
+		oh[14] = true;
 	}
 	
 	public void update() {
-		drumMachine.updateFFT();
-		
+		if (active) {
+			bassSynth.update();
+		}
+		drumMachine.update();
+			
+		fft.forward(output.mix);
+		fft.linAverages(bands);
 	}
 	
-	public void willMoveFromActive(int transitionTime) {
-		drumMachine.output.shiftGain(0, -80, transitionTime);
-		bassSynth.output.shiftGain(0, -80, transitionTime);
+	public void active(String word) {
+		active = true;
+		int[] sequence = wordToBassSequence(word);
+		bassSynth = new BassSynth(parent, sequence);
+		drumMachine = new DrumMachine(parent, kick, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],ch, oh);
 	}
 	
-//	public boolean[] wordToDrumSequence(String word) {
-//		boolean sequence[] = new boolean[16];
-//		
-//		for(int i = 0; i < 16; i++) {
-//			char temp = word.charAt(i);
-//			if(temp == 'a' || temp == 'e' || temp == 'i' || temp == 'o' || temp == 'u') {
-//				sequence[i] = true;
-//			}
-//			if(temp == 'A' || temp == 'E' || temp == 'I' || temp == 'O' || temp == 'U') {
-//				sequence[i] = true;
-//				i += 3;
-//			}
-//		}
-//		
-//		return sequence;
-//	}
+	public void idle() {
+		active = false;
+		drumMachine = new DrumMachine(parent, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],new boolean[16], ch, oh);
+	}
 	
 	public int[] wordToBassSequence(String word) {
+		System.out.println("Making sequence from " + word);
 		int[] sequence = new int[16];
 		
 		for(int i = 0; i < 16 && i < word.length(); i++) {
@@ -101,13 +83,13 @@ public class AcidGenerator implements Instrument {
 			if(temp >= 'a' && temp <= 'z') { //97~122
 				int num = (int)temp;
 				num -= 97; // get rid of unicode offset
-				num += 48; // add midi offset to c3
+				num += 38; // add midi offset to c3
 				sequence[i] = num;
 			}
 			if(temp >= 'A' && temp <= 'Z') { //65~90
 				int num = (int)temp;
 				num -= 65; // get rid of unicode offset
-				num += 48; // add midi offset to c3
+				num += 38; // add midi offset to c3
 				sequence[i] = num;
 				i += 3;
 			}
