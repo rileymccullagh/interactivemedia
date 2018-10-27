@@ -8,6 +8,7 @@ import ddf.minim.analysis.*;
 
 public class DrumMachine {
 	PApplet parent;
+	AudioOutput output;
 	Sampler[] voices = new Sampler[11];
 	boolean[][] patterns = new boolean[11][16];
 	Minim minim;
@@ -23,7 +24,7 @@ public class DrumMachine {
 		this.parent = parent;
 
 		minim = new Minim(parent);		
-		AudioOutput output = minim.getLineOut();
+		this.output = minim.getLineOut();
 
 		String[] files = { "bd.wav", "sd.wav", "rs.wav", "cp.wav", "ht.wav", "mt.wav", "lt.wav", "ch.wav", "oh.wav", "rd.wav", "cr.wav" };
 
