@@ -1,8 +1,6 @@
 package ptz;
 
-import java.io.Console;
 import java.util.List;
-import java.util.Optional;
 
 import com.cage.colorharmony.ColorHarmony;
 
@@ -27,7 +25,7 @@ public class colorAverage {
 		this.feed = feed;
 		this.feeds = feeds;
 		colorHarmony = new ColorHarmony(parent);
-	
+
 	}
 
 	public String getAverageColor(PImage img) {

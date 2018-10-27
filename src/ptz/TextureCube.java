@@ -10,7 +10,7 @@ class TextureCube implements Drawable {
 	PApplet parent;
 	PImage default_image;
 	List<Feed> feeds;
-	
+
 	TextureCube(PApplet p, PImage default_image, List<Feed> feeds) {
 		this.parent = p;
 		this.default_image = default_image;
@@ -21,13 +21,11 @@ class TextureCube implements Drawable {
 		parent.pushMatrix();
 		parent.textureMode(PApplet.NORMAL);
 		parent.noStroke();
-		
+
 		parent.rotateY(parent.frameCount * PApplet.PI / 360);
 		parent.rotateX(parent.frameCount * PApplet.PI / 720);
-		parent.scale(
-				PApplet.map((float)parent.height+(float)parent.width, 
-				(float)0,((float)parent.height+(float)parent.width)*2,
-				(float)40,(float)100));
+		parent.scale(PApplet.map((float) parent.height + (float) parent.width, (float) 0,
+				((float) parent.height + (float) parent.width) * 2, (float) 40, (float) 100));
 
 		parent.beginShape(PApplet.QUADS);
 		parent.fill(0, 0, 0);

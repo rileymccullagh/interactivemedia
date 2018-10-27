@@ -12,9 +12,9 @@ class RainInformation {
 	PApplet parent;
 	colorAverage ca;
 	PImage default_image;
-	List<Feed> feeds; 
+	List<Feed> feeds;
 	Feed feed;
-	
+
 	float x;
 	float y;
 	float z;
@@ -30,13 +30,12 @@ class RainInformation {
 	RainInformation(PApplet parent, List<Feed> feeds, PImage default_image) {
 		this.parent = parent;
 		this.feeds = feeds;
-		this.feed = feed;
-		ca = new colorAverage(parent, feeds , feed, default_image);
+		ca = new colorAverage(parent, feeds, feed, default_image);
 		ca.loadAnal(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		ca.loadComp(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
-		x = parent.random(-1000,400); // gives each drop a random x value
-		y = parent.random(-2000, -1500); // gives each drop a random y value
+		x = parent.random(-parent.width, parent.width); // gives each drop a random x value
+		y = parent.random(-parent.height * (int)4.5, -parent.height * (int) 2.5); // gives each drop a random y value
 		z = parent.random(0, 20); // gives each drop a random z value
 		yspeed = PApplet.map(z, 0, 20, 1, 10);
 		boxWidth = (int) PApplet.map(z, 0, 20, 0, 23); // Scales the width of the text field, to wforce each character
@@ -44,34 +43,21 @@ class RainInformation {
 		tCount = (int) parent.random(1, 10); // Determines a metaStr to be displayed from 6 options.
 		rainColor = ca.colorsComp[(int) parent.random(8)];
 		xspeed = PApplet.map(z, 0, 20, 0, 3);
-		metaStr = feeds.get(0).words_analysed[(int)parent.random(0,5)];
+		metaStr = feeds.get(0).words_analysed[(int) parent.random(0, 5)];
 	}
 
 	void fall() {
 		y = y + yspeed; // Makes them fall
 		x = x + xspeed;
 		if (y > parent.height) { // reset once below the screen
-			y = parent.random(-4000, -1500);
+			y = parent.random(-parent.height * (int)4.5, -parent.height * (int) 2.5);
 			yspeed = PApplet.map(z, 0, 20, 1, 10);
 			xspeed = PApplet.map(z, 0, 20, 0, 3);
-			x = parent.random(-1000,400);
+			x = parent.random(-parent.width, parent.width);
 		}
 	}
 
 	void show() {
-//		if (tCount < 2) { // Determines a metaStr to be displayed from 6 options.
-//			metaStr = "locationdata";
-//		} else if (tCount < 4) {
-//			metaStr = "wordfrequency";
-//		} else if (tCount < 6) {
-//			metaStr = "text";
-//		} else if (tCount < 8) {
-//			metaStr = "loading";
-//		} else if (tCount < 10) {
-//			metaStr = "live love laugh";
-//		} else {
-//			metaStr = "ERRORLOL";
-//		}
 		parent.pushMatrix();
 		parent.textFont(mono); // Needed to have a monospaced font for the boxWidth to work.
 		parent.textSize(textS);
