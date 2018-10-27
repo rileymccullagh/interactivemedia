@@ -1,6 +1,6 @@
 package ptz;
 
-enum State {
+public enum State {
   INIT,
   IDLE,
   ACTIVE,
