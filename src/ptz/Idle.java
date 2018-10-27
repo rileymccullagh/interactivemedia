@@ -18,6 +18,7 @@ public class Idle {
 	DigitalRain dr;
 	
     List<Feed> feeds;
+    Feed feed;
 	PImage img; 
 	Prism skybox;
 	
@@ -27,7 +28,7 @@ public class Idle {
 		this.parent = p;
 		img = default_img;
 		bg = new Background(this.parent);
-		dr = new DigitalRain(this.parent);
+		dr = new DigitalRain(parent,feeds,img);
 
 		this.feeds = feeds;
 		
@@ -52,11 +53,11 @@ public class Idle {
 	
 	void draw() {
 		parent.clear();
-		parent.background(255);
-		parent.fill(255);
+		parent.background(0);
+		parent.fill(0);
+		
 		parent.noStroke();
-		
-		
+	
 		List<PImage> images = new ArrayList<PImage>();
 		for (int i = 0; i < 8; i++) {
 			images.add(img);
@@ -68,15 +69,18 @@ public class Idle {
 					(float)(parent.height / 2.0f), 
 					(float)((parent.height/2.0) / Math.tan(parent.PI * 30.0 / 180.0) )
 			);
+			
 			int val = skybox.camera_max();
 			parent.translate(0, 0, -val);
 			parent.rotateX(parent.PI /2.0f);
 			
 			draw_outer_prism(images);
+			
 			center_shape.draw();
 			parent.translate(0, 0, -val);
+			
 		parent.popMatrix();
-		
+		dr.draw();
 		//bg.draw();
 		//dr.draw();
 	}

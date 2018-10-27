@@ -1,26 +1,34 @@
 package ptz;
 
+import java.io.Console;
+import java.util.List;
+import java.util.Optional;
+
 import com.cage.colorharmony.ColorHarmony;
 
 import processing.core.*;
+import ptz_camera.Feed;
 
 public class colorAverage {
 
 	PApplet parent;
-
+	List<Feed> feeds;
+	PImage default_image;
 	ColorHarmony colorHarmony;
 
 	int[] colorsComp = new int[8];
 	int[] colorsAnal = new int[8];
 	String hexValue;
 
-	colorAverage(PApplet parent) {
+	colorAverage(PApplet parent, List<Feed> feeds, PImage default_image) {
 		this.parent = parent;
+		this.default_image = default_image;
+		this.feeds = feeds;
 		colorHarmony = new ColorHarmony(parent);
-
+	
 	}
 
-	String getAverageColor(PImage img) throws NullPointerException {
+	String getAverageColor(PImage img) {
 		img.loadPixels();
 		int r = 0, g = 0, b = 0;
 		for (int i = 0; i < img.pixels.length; i++) {

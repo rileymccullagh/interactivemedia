@@ -28,22 +28,20 @@ class Active {
 	PImage img;
 	Feed feed;
 	
+	
 	Active(PApplet parent, Feed feed) {
 		this.feed = feed;
 		img = feed.getNextImage(parent).get();
 		this.parent = parent;
 
 		this.sphere = new TextureSphere(parent, img, feed, 100);
-		ca = new colorAverage(parent);
-		
-		ca.loadAnal(ca.getAverageColor(img));
-		ca.loadComp(ca.getAverageColor(img));
+	
 				
 		this.acidGenerator = new AcidGenerator(parent, feed.words_analysed);
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = new int[]{0,0,255};
-		builder.bar_color = new int[][] {new int[] {255,0,0}, new int[] {0,255,0}};
+		builder.bar_color = new int[][] {new int	[] {255,0,0}, new int[] {0,255,0}};
 		builder.text_color = new int[]{0,0,0};
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
