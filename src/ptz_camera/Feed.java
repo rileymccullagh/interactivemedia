@@ -32,6 +32,11 @@ public class Feed implements GetImage{
 		}
 		return count;
 	}
+	
+	public static void shuffle_list() {
+		Collections.shuffle(feeds);
+	}
+	
 	public void analyse(int num_to_retrieve) {
 		if (words_analysed.length < 2) {
 			words_analysed = new Word().frequencyAnalysis(wiki, num_to_retrieve);
@@ -328,15 +333,15 @@ public class Feed implements GetImage{
 	
 	static {
 		feeds = new ArrayList<Feed>();
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Falmouth,_Cornwall", "http://31.51.157.21/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Boston", "http://24.60.80.6:8090/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Bucharest", "http://109.102.176.21/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Mount_Laurel,_New_Jersey", "http://96.78.107.22/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/San,_Argentina", "http://200.107.99.38:8080/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Little_Rock,_Arkansas", "http://162.40.158.193/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Santiago", "http://181.75.96.249:5000/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/San_Juan,_Trinidad_and_Tobago", "http://190.213.182.16:8084/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Nuremberg", "http://93.214.124.11/cgi-bin/viewer/video.jpg"));
-		feeds.add(new Feed("https://en.wikipedia.org/wiki/Nov%C3%A1ky", "http://85.163.238.8/cgi-bin/viewer/video.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Falmouth,_Cornwall", "https://custom-axsn.frb.io/images/1.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Boston", "https://custom-axsn.frb.io/images/2.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Bucharest", "https://custom-axsn.frb.io/images/3.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Mount_Laurel,_New_Jersey", "https://custom-axsn.frb.io/images/4.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/San,_Argentina", "https://custom-axsn.frb.io/images/5.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Little_Rock,_Arkansas", "https://custom-axsn.frb.io/images/6.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Santiago", "https://custom-axsn.frb.io/images/7.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/San_Juan,_Trinidad_and_Tobago", "https://custom-axsn.frb.io/images/8.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Nuremberg", "https://custom-axsn.frb.io/images/9.jpg"));
+		feeds.add(new Feed("https://en.wikipedia.org/wiki/Nov%C3%A1ky", "https://custom-axsn.frb.io/images/10.jpg"));
 	}
 }

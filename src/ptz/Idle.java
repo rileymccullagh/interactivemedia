@@ -20,6 +20,8 @@ public class Idle {
 	Feed feed;
 	PImage img;
 	Prism skybox;
+	Vortex vortex;
+
 
 	Drawable center_shape;
 
@@ -27,6 +29,7 @@ public class Idle {
 		this.parent = p;
 		img = default_img;
 		dr = new DigitalRain(parent, feeds, img);
+		vortex = new Vortex(parent);
 
 		this.feeds = feeds;
 
@@ -70,6 +73,8 @@ public class Idle {
 		parent.rotateX(PApplet.PI / 2.0f);
 
 		draw_outer_prism(images);
+		
+		vortex.draw();
 
 		center_shape.draw();
 		parent.translate(0, 0, -val);

@@ -4,7 +4,6 @@ import processing.core.PApplet;
 
 import ddf.minim.*;
 import ddf.minim.ugens.*;
-import ddf.minim.analysis.*;
 
 public class DrumMachine {
 	PApplet parent;
@@ -40,10 +39,8 @@ public class DrumMachine {
 	}
 
 	public void update() {
-		System.out.println("Updating drum machine");
 		int timeStarted = parent.millis();
 		if (timeStarted > trigger) {
-			System.out.println("Triggering drum machine");
 			for (int i = 0; i < patterns.length; i++) {
 				if (patterns[i][step]) {
 					voices[i].trigger();

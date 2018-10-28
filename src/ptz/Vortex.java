@@ -13,6 +13,12 @@ public class Vortex {
 	PImage img;
 	int n=0;
 	
+	public Vortex(PApplet parent) {
+		this.parent = parent;
+		minim = new Minim(this.parent);
+		this.output = minim.getLineOut();
+	}
+	
 	public Vortex(PApplet parent, AudioOutput output) {
 		this.parent = parent;
 		minim = new Minim(this.parent);
@@ -20,6 +26,7 @@ public class Vortex {
 	}
 	
 	public void draw() {
+		parent.pushMatrix();
 		parent.translate(parent.width/2,parent.height/2);
 		for(int i = 0; i <= output.bufferSize() - 1; i++)  {
 			parent.rotateX((float) (n*-PApplet.PI/6*0.05));
@@ -28,6 +35,7 @@ public class Vortex {
 			parent.fill(parent.random(255),parent.random(255),parent.random(255));
 			parent.rect(i,i,output.left.get(i)*50,output.left.get(i)*5000);
 		}
+		parent.popMatrix();
 		n++;
 	}
 

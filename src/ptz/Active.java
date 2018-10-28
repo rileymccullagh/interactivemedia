@@ -60,6 +60,7 @@ class Active {
 			histogram.add(builder.build(parent.width, parent.height, parent));
 		}
 		skybox = new Prism(0, 0, 0, 800);
+		
 
 	}
 
@@ -76,7 +77,7 @@ class Active {
 		parent.fill(255);
 		parent.noStroke();
 
-		feed.analyse(6);
+		feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
 
 		List<PImage> images = new ArrayList<PImage>();
 		for (Engine_Ball_Bar item : histogram) {
@@ -91,12 +92,10 @@ class Active {
 		parent.rotateX(PConstants.PI / 2.0f);
 
 		draw_outer_prism(images);
+		
+		
 		sphere.draw();
 		parent.translate(0, 0, -val);
 		parent.popMatrix();
-	}
-
-	void willMoveFromActive(int transitionTime) {
-
 	}
 }

@@ -23,7 +23,7 @@ import processing.*;
 
 
 public class PanTiltZoom extends PApplet {
-	boolean fullscreen = true;
+	boolean fullscreen = false;
 	PFont titlefont;
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
@@ -90,12 +90,15 @@ public class PanTiltZoom extends PApplet {
 	
 	//If setup() takes 5 seconds, it crashes, so we will run it in draw.
 	void setup_longer () {
+		Feed.shuffle_list();
+
 		
 		System.out.println("Beginning initialisation");
 		PApplet p = this;
 		new Thread (new Runnable() {
 			@Override
 			public void run() {
+				
 				final int minimum_number_of_feeds = 6;
 				
 				Feed.get_minimum_feeds(6, p, 1, 3);
@@ -247,7 +250,6 @@ public class PanTiltZoom extends PApplet {
 				state = State.INIT_TO_IDLE;
 			} else {
 				state = State.ACTIVE_TO_IDLE;
-				active.willMoveFromActive(millisTransition/2);
 			}
 			activeHasBeenReinitialised = false;
 			timeAtTransition = millis();
