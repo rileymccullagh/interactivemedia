@@ -176,12 +176,17 @@ public class Feed implements GetImage{
 				feeds.removeAll(invalids);
 				feeds_needed = minimum_number - Feed.valid_feeds_count();
 				System.out.println("We need: " + feeds_needed);
+				if (invalids.isEmpty()) {
+					System.out.println("Break, we ran out of feeds");
+					break;
+				}
 			}
 			
 	}
-	
+	final static int sleep_seconds_max = 100;
 	public static void download_feeds_sync (List<Feed> feeds_to_retrieve, PApplet parent, final int total_images_per_camera, final int feeds_at_a_time) {
 		Word analyser = new Word();
+		
 		for (int i = 0; i < feeds_to_retrieve.size(); i++) {
 			
 			if (feeds_to_retrieve.get(i).words_analysed == null) {
@@ -190,17 +195,20 @@ public class Feed implements GetImage{
 			
 			while (true) {
 				int feeds_retrieving = 0;
+				
 				for (int j = 0; j < i; j++) {
 					if (feeds_to_retrieve.get(j).thread_count > 0) {
 						feeds_retrieving++;
 					}
 				}
-				if (feeds_retrieving < feeds_at_a_time) {
+				
+				if (feeds_retrieving < feeds_at_a_time ) {
 					break;
 				}
 				
 				try {
-					TimeUnit.MILLISECONDS.sleep(100);
+					TimeUnit.MILLISECONDS.sleep(1000);
+					
 				} catch (Exception e) {	
 					
 				}
@@ -218,15 +226,19 @@ public class Feed implements GetImage{
 			}
 		}
 		
-		
+		int sleep_seconds = sleep_seconds_max;
 		while (true)
 		{
 			boolean exit = true;
 			
 			for (Feed entry : feeds_to_retrieve) { 
+				if (sleep_seconds <= 0) {
+					System.out.println("Timeout");
+				} else
 				if (entry.thread_count > 0) { 
 					exit = false; 
-					System.out.println("Waiting on: " + entry.camera_url);
+					System.out.println("Waiting on: " + entry.camera_url + " Timeout: " + sleep_seconds);
+					
 				} 
 			}
 			
@@ -234,6 +246,7 @@ public class Feed implements GetImage{
 			
 			try {
 				TimeUnit.MILLISECONDS.sleep(1000); 
+				--sleep_seconds;
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
