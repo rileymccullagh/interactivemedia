@@ -31,7 +31,6 @@ class RainInformation {
 		this.parent = parent;
 		this.feeds = feeds;
 		ca = new colorAverage(parent, feeds, feed, default_image);
-		ca.loadAnal(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		ca.loadComp(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
 		x = parent.random(-parent.width, parent.width); // gives each drop a random x value

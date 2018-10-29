@@ -45,7 +45,7 @@ class Active {
 
 		ballColor = ca.colorsComp[(int) parent.random(8)];
 		barColor1 = ca.colorsAnal[(int) parent.random(8)];
-		barColor2 = ca.colorsComp[(int) parent.random(8)];
+		barColor2 = ca.colorsAnal[(int) parent.random(8)];
 		
 		feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
 

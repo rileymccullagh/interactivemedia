@@ -30,7 +30,7 @@ public class Idle {
 		this.parent = p;
 		img = default_img;
 		dr = new DigitalRain(parent, feeds, img);
-		vortex = new Vortex(parent, output);
+		vortex = new Vortex(parent, output, feeds, img);
 
 		this.feeds = feeds;
 
@@ -82,8 +82,6 @@ public class Idle {
 
 		parent.popMatrix();
 		dr.draw();
-		// bg.draw();
-		// dr.draw();
 
 	}
 }
