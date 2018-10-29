@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import ddf.minim.AudioOutput;
 import processing.core.*;
 import ptz_camera.Camera;
 import ptz_camera.Feed;
@@ -25,11 +26,11 @@ public class Idle {
 
 	Drawable center_shape;
 
-	Idle(PApplet p, List<Feed> feeds, PImage default_img) {
+	Idle(PApplet p, AudioOutput output, List<Feed> feeds, PImage default_img) {
 		this.parent = p;
 		img = default_img;
 		dr = new DigitalRain(parent, feeds, img);
-		vortex = new Vortex(parent);
+		vortex = new Vortex(parent, output);
 
 		this.feeds = feeds;
 
@@ -75,7 +76,7 @@ public class Idle {
 		draw_outer_prism(images);
 		
 		vortex.draw();
-
+		
 		center_shape.draw();
 		parent.translate(0, 0, -val);
 
@@ -83,5 +84,6 @@ public class Idle {
 		dr.draw();
 		// bg.draw();
 		// dr.draw();
+
 	}
 }

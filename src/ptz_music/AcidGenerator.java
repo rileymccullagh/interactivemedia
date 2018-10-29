@@ -30,7 +30,7 @@ public class AcidGenerator {
 		minim = new Minim(parent);
 		output = minim.getLineOut();
 		fft = new FFT(output.bufferSize(), output.sampleRate());
-		drumMachine = new DrumMachine(parent);
+		drumMachine = new DrumMachine(parent, output);
 
 		
 		kick = new boolean[16];
@@ -62,6 +62,7 @@ public class AcidGenerator {
 		fft.linAverages(bands);
 		for (int i = 0; i < bands; i++) {
 			spectrum[i] = PApplet.map(fft.getBand(i), 0.0f, 500.0f, 0.0f, 1.0f);
+			System.out.println("band " + i + " is " + spectrum[i]);
 		}
 	}
 	
@@ -69,12 +70,12 @@ public class AcidGenerator {
 		active = true;
 		int[] sequence = wordToBassSequence(word);
 		bassSynth = new BassSynth(parent, sequence);
-		drumMachine = new DrumMachine(parent, kick, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],ch, oh);
+		drumMachine = new DrumMachine(parent, output, kick, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],ch, oh);
 	}
 	
 	public void idle() {
 		active = false;
-		drumMachine = new DrumMachine(parent, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],new boolean[16], ch, oh);
+		drumMachine = new DrumMachine(parent, output, new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16], new boolean[16],new boolean[16], ch, oh);
 	}
 	
 	public int[] wordToBassSequence(String word) {

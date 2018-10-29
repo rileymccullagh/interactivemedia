@@ -26,6 +26,7 @@ public class Vortex {
 	}
 	
 	public void draw() {
+		System.out.println("vortex drawing");
 		parent.pushMatrix();
 		parent.translate(parent.width/2,parent.height/2);
 		for(int i = 0; i <= output.bufferSize() - 1; i++)  {

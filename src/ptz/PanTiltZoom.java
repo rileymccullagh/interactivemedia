@@ -91,7 +91,6 @@ public class PanTiltZoom extends PApplet {
 	//If setup() takes 5 seconds, it crashes, so we will run it in draw.
 	void setup_longer () {
 		Feed.shuffle_list();
-
 		
 		System.out.println("Beginning initialisation");
 		PApplet p = this;
@@ -141,6 +140,7 @@ public class PanTiltZoom extends PApplet {
 				//Always retrieve the first 6, because we know they are reliable
 				idle = new Idle(
 						this, 
+						acidGenerator.output,
 						feeds.subList(0, 6),  
 						feeds.get(0).getNextImage(this).get());
 				title_subtext = "ready";

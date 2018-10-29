@@ -19,11 +19,11 @@ public class DrumMachine {
 	int step = 0;
 
 
-	public DrumMachine(PApplet parent, boolean[] ...newPatterns) {
+	public DrumMachine(PApplet parent, AudioOutput output, boolean[] ...newPatterns) {
 		this.parent = parent;
 
 		minim = new Minim(parent);		
-		this.output = minim.getLineOut();
+		this.output = output;
 
 		String[] files = { "bd.wav", "sd.wav", "rs.wav", "cp.wav", "ht.wav", "mt.wav", "lt.wav", "ch.wav", "oh.wav", "rd.wav", "cr.wav" };
 

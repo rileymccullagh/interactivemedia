@@ -46,6 +46,8 @@ class Active {
 		ballColor = ca.colorsComp[(int) parent.random(8)];
 		barColor1 = ca.colorsAnal[(int) parent.random(8)];
 		barColor2 = ca.colorsComp[(int) parent.random(8)];
+		
+		feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ballColor;
@@ -77,7 +79,7 @@ class Active {
 		parent.fill(255);
 		parent.noStroke();
 
-		feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
+		//feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
 
 		List<PImage> images = new ArrayList<PImage>();
 		for (Engine_Ball_Bar item : histogram) {
