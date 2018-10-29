@@ -13,7 +13,7 @@ public class DrumMachine {
 	Minim minim;
 
 	// Set the duration between the notes
-	int duration = 200;
+	int duration = 100;
 	// time last triggered
 	int trigger = 0; 
 	int step = 0;
