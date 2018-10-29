@@ -43,7 +43,7 @@ class RainInformation {
 		rainColor = ca.colorsComp[(int) parent.random(8)];
 		xspeed = PApplet.map(z, 0, 20, 0, 3);
 		feeds.get(0).analyse(5);
-		metaStr = feeds.get(0).words_analysed[(int) parent.random(0, 5)];
+		metaStr = feeds.get(0).words_analysed[(int) parent.random(1, 5)];
 	}
 
 	void fall() {
