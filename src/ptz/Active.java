@@ -24,7 +24,7 @@ class Active {
 	colorAverage ca;
 	int ballColor;
 	int barColor1;
-	int barColor2;
+	int textColor;
 	Prism skybox;
 	PImage img;
 	Feed feed;
@@ -45,14 +45,14 @@ class Active {
 
 		ballColor = ca.colorsComp[(int) parent.random(8)];
 		barColor1 = ca.colorsAnal[(int) parent.random(8)];
-		barColor2 = ca.colorsAnal[(int) parent.random(8)];
+		textColor = parent.color(255-parent.red(ballColor), 255-parent.green(ballColor), 255-parent.blue(ballColor));	
 		
 		feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
 
 		Engine_Ball_Bar_Builder builder = new Engine_Ball_Bar_Builder();
 		builder.ball_color = ballColor;
 		builder.bar_color = barColor1;
-		builder.text_color = barColor2;
+		builder.text_color = textColor;
 		builder.text = feed.words_analysed[0];
 		builder.num_of_balls = builder.text.length();
 		builder.num_of_bars = acidGenerator.bands;
@@ -76,7 +76,7 @@ class Active {
 	void draw() {
 		parent.clear();
 		parent.background(255);
-		parent.fill(255);
+		parent.fill(ca.colorsComp[(int) parent.random(8)]);
 		parent.noStroke();
 
 		//feed.analyse(6); // this seems like it should be really slow?????!!! call this in constructor!
