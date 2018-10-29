@@ -12,7 +12,6 @@ class RainInformation {
 	PApplet parent;
 	colorAverage ca;
 	PImage default_image;
-	List<Feed> feeds;
 	Feed feed;
 
 	float x;
@@ -27,11 +26,11 @@ class RainInformation {
 	int rainColor;
 	float xspeed;
 
-	RainInformation(PApplet parent, List<Feed> feeds, PImage default_image) {
+	RainInformation(PApplet parent, Feed feed, PImage default_image) {
 		this.parent = parent;
-		this.feeds = feeds;
-		ca = new colorAverage(parent, feeds, feed, default_image);
-		ca.loadComp(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
+		this.feed = feed;
+		ca = new colorAverage(parent, feed, default_image);
+		ca.loadComp(ca.getAverageColor(feed.getNextImage(parent).orElse(default_image)));
 		mono = parent.createFont("Inconsolata-Bold.ttf", 100);
 		x = parent.random(-parent.width, parent.width); // gives each drop a random x value
 		y = parent.random(-parent.height * (int)4.5, -parent.height * (int) 2.5); // gives each drop a random y value
@@ -42,8 +41,7 @@ class RainInformation {
 		tCount = (int) parent.random(1, 10); // Determines a metaStr to be displayed from 6 options.
 		rainColor = ca.colorsComp[(int) parent.random(8)];
 		xspeed = PApplet.map(z, 0, 20, 0, 3);
-		feeds.get(0).analyse(5);
-		metaStr = feeds.get(0).words_analysed[(int) parent.random(0, 5)];
+		metaStr = feed.words_analysed[(int) parent.random(0, 5)];
 	}
 
 	void fall() {

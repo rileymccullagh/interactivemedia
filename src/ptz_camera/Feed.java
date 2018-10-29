@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;

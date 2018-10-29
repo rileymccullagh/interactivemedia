@@ -1,10 +1,9 @@
 package ptz_camera;
 
 import java.util.Optional;
-
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.*;
+
 public class PC_Webcam implements GetImage {
 	String webcam_name;
 	

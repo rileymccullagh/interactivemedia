@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 
 public class Prism {
@@ -30,7 +31,7 @@ public class Prism {
   }
 
   public void update_sides(int sides, PApplet p) {
-    float angle_per_edge = p.radians(360.0F / sides);  
+    float angle_per_edge = PApplet.radians(360.0F / sides);  
 
     List<Float> x = new ArrayList<Float>();
     List<Float> y = new ArrayList<Float>();
@@ -74,7 +75,7 @@ public class Prism {
     
     for (int i = 0; i < x.size() - 1; i++)
     {
-      p.beginShape(p.QUADS);
+      p.beginShape(PConstants.QUADS);
       p.texture(wall_images.get(i));
       p.vertex(x.get(i), y.get(i), -prism_height / 2.0f,1,1);
       p.vertex(x.get(i + 1), y.get(i+1), -prism_height / 2.0f, 0, 1);
@@ -92,7 +93,7 @@ public class Prism {
   }
   
   void draw_square(float z, PImage img, PApplet p) {
-    p.beginShape(p.QUADS);
+    p.beginShape(PConstants.QUADS);
     p.texture(img);
     p.vertex(-1,-1,z,1,1);
     p.vertex(1,-1,z,0,1);

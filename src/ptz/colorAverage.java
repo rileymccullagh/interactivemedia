@@ -1,7 +1,5 @@
 package ptz;
 
-import java.util.List;
-
 import com.cage.colorharmony.ColorHarmony;
 
 import processing.core.*;
@@ -10,7 +8,6 @@ import ptz_camera.Feed;
 public class colorAverage {
 
 	PApplet parent;
-	List<Feed> feeds;
 	Feed feed;
 	PImage default_image;
 	ColorHarmony colorHarmony;
@@ -19,11 +16,10 @@ public class colorAverage {
 	int[] colorsAnal = new int[8];
 	String hexValue;
 
-	public colorAverage(PApplet parent, List<Feed> feeds, Feed feed, PImage default_image) {
+	public colorAverage(PApplet parent, Feed feed, PImage default_image) {
 		this.parent = parent;
 		this.default_image = default_image;
 		this.feed = feed;
-		this.feeds = feeds;
 		colorHarmony = new ColorHarmony(parent);
 
 	}

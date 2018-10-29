@@ -1,9 +1,6 @@
 package ptz;
 
-import java.util.List;
-
 import processing.core.*;
-import ptz_camera.Camera;
 import ptz_camera.Feed;
 
 class TextureSphere implements Drawable {

@@ -1,15 +1,12 @@
 package ptz;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import ddf.minim.AudioOutput;
 import processing.core.*;
-import ptz_camera.Camera;
 import ptz_camera.Feed;
-import ptz_histogram.Engine_Ball_Bar;
 
 public class Idle {
 	PApplet parent;
@@ -29,7 +26,7 @@ public class Idle {
 	Idle(PApplet p, AudioOutput output, List<Feed> feeds, PImage default_img) {
 		this.parent = p;
 		img = default_img;
-		dr = new DigitalRain(parent, feeds, img);
+		//dr = new DigitalRain(parent, feeds, img);
 		vortex = new Vortex(parent, output, feeds, img);
 
 		this.feeds = feeds;
@@ -81,7 +78,7 @@ public class Idle {
 		parent.translate(0, 0, -val);
 
 		parent.popMatrix();
-		dr.draw();
+		//dr.draw();
 
 	}
 }

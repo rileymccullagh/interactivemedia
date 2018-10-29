@@ -22,7 +22,7 @@ public class Vortex {
 	public Vortex(PApplet parent, List<Feed> feeds, PImage default_image) {
 		this.parent = parent;
 		this.feeds = feeds;
-		ca = new colorAverage(parent, feeds, feed, default_image);
+		ca = new colorAverage(parent, feed, default_image);
 		ca.loadAnal(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		vColor = ca.colorsAnal[(int) parent.random(8)];
 		minim = new Minim(this.parent);
@@ -34,14 +34,13 @@ public class Vortex {
 		this.parent = parent;
 		minim = new Minim(this.parent);
 		this.feeds = feeds;
-		ca = new colorAverage(parent, feeds, feed, default_image);
+		ca = new colorAverage(parent, feed, default_image);
 		ca.loadAnal(ca.getAverageColor(feeds.get(0).getNextImage(parent).orElse(default_image)));
 		vColor = ca.colorsAnal[(int) parent.random(8)];
 		this.output = output;
 	}
 	
 	public void draw() {
-		System.out.println("vortex drawing");
 		parent.pushMatrix();
 		parent.translate(parent.width/2,parent.height/2);
 		for(int i = 0; i <= output.bufferSize() - 1; i++)  {

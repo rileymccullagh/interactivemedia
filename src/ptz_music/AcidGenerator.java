@@ -62,7 +62,6 @@ public class AcidGenerator {
 		fft.linAverages(bands);
 		for (int i = 0; i < bands; i++) {
 			spectrum[i] = PApplet.map(fft.getBand(i), 0.0f, 500.0f, 0.0f, 1.0f);
-			System.out.println("band " + i + " is " + spectrum[i]);
 		}
 	}
 	

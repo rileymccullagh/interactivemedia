@@ -8,17 +8,17 @@ import ptz_camera.Feed;
 class DigitalRain {
 
 	PApplet parent;
-	List<Feed> feeds;
+	Feed feed;
 	PImage img;
 
 	RainInformation[] rain = new RainInformation[100];
 
-	DigitalRain(PApplet parent, List<Feed> feeds, PImage default_image) {
+	DigitalRain(PApplet parent, Feed feed, PImage default_image) {
 		this.parent = parent;
-		this.feeds = feeds;
+		this.feed = feed;
 
 		for (int i = 0; i < rain.length; i++) {
-			rain[i] = new RainInformation(parent, feeds, img);
+			rain[i] = new RainInformation(parent, feed, img);
 		}
 	}
 

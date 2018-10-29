@@ -4,8 +4,6 @@ import java.io.FileDescriptor;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import processing.core.PApplet;
@@ -13,13 +11,8 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PGraphics;
 
-import processing.opengl.PShader;
-import ptz_camera.Camera;
 import ptz_camera.Feed;
-import ptz_camera.Word;
 import ptz_music.AcidGenerator;
-import processing.*;
-
 
 
 public class PanTiltZoom extends PApplet {
@@ -28,7 +21,6 @@ public class PanTiltZoom extends PApplet {
 	PGraphics green, glow, noise;
 	boolean greenHasBeenBlurred = false;
 	
-	Camera cam;
 	List<Feed> feeds = Feed.get_all_feeds();
 	boolean wait = true;
 	boolean loading = true;
